@@ -8,7 +8,7 @@ public class Usuario {
 	private String tipo;
 	
 	public Usuario(){
-		
+		//HOLA MUNDO
 	}
 
 	public String getUsername() {
