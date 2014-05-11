@@ -1,5 +1,6 @@
-package ues.semo;
+package sv.ues.fia.semo.activity;
 
+import ues.semo.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
