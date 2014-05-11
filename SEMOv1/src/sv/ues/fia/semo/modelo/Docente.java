@@ -1,4 +1,4 @@
-package ues.semo.entidades;
+package sv.ues.fia.semo.modelo;
 
 public class Docente {
 	private String coddocente;
