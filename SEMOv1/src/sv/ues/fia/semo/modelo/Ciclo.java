@@ -2,27 +2,27 @@ package sv.ues.fia.semo.modelo;
 
 public class Ciclo {
 
-	private String anio;
-	private String ciclo;
+	private int anio;
+	private int ciclo;
 	private String estado;
 	
 	public Ciclo() {
 		super();
 	}
 
-	public String getAnio() {
+	public int getAnio() {
 		return anio;
 	}
 
-	public String getCiclo() {
+	public int getCiclo() {
 		return ciclo;
 	}
 
-	public void setAnio(String anio) {
+	public void setAnio(int anio) {
 		this.anio = anio;
 	}
 
-	public void setCiclo(String ciclo) {
+	public void setCiclo(int ciclo) {
 		this.ciclo = ciclo;
 	}
 

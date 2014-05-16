@@ -3,7 +3,7 @@ package sv.ues.fia.semo.modelo;
 public class Materia {
 	private String codigo;
 	private String nombreMateria;
-	private String cicloPensum;
+	private int cicloPensum;
 	
 	public Materia() {
 	}
@@ -24,11 +24,11 @@ public class Materia {
 		this.nombreMateria = nombreMateria;
 	}
 
-	public String getCicloPensum() {
+	public int getCicloPensum() {
 		return cicloPensum;
 	}
 
-	public void setCicloPensum(String cicloPensum) {
+	public void setCicloPensum(int cicloPensum) {
 		this.cicloPensum = cicloPensum;
 	}
 	
