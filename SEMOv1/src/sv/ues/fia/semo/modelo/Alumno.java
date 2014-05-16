@@ -6,7 +6,7 @@ public class Alumno {
 	private String apellido;
 	private Usuario usuario;
 	
-	private Alumno(){
+	public Alumno(){
 		
 	}
 	
