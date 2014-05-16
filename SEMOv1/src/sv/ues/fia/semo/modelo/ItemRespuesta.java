@@ -1,14 +1,15 @@
 package sv.ues.fia.semo.modelo;
 
 public class ItemRespuesta {
-	private String idItem;
+	private int idItem;
 	private Pregunta pregunta;
 	private String respuesta;
-	private String puntosRespuesta;
-	public String getIdItem() {
+	private int puntosRespuesta;
+	
+	public int getIdItem() {
 		return idItem;
 	}
-	public void setIdItem(String idItem) {
+	public void setIdItem(int idItem) {
 		this.idItem = idItem;
 	}
 	public Pregunta getPregunta() {
@@ -23,10 +24,10 @@ public class ItemRespuesta {
 	public void setRespuesta(String respuesta) {
 		this.respuesta = respuesta;
 	}
-	public String getPuntosRespuesta() {
+	public int getPuntosRespuesta() {
 		return puntosRespuesta;
 	}
-	public void setPuntosRespuesta(String puntosRespuesta) {
+	public void setPuntosRespuesta(int puntosRespuesta) {
 		this.puntosRespuesta = puntosRespuesta;
 	}
 	

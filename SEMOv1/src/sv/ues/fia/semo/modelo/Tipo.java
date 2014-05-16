@@ -3,7 +3,8 @@ package sv.ues.fia.semo.modelo;
 public class Tipo {
 	private String codTipo;
 	private String tipoPregunta;
-	private String numRespuesta;
+	private int numRespuesta;
+	
 	public String getCodTipo() {
 		return codTipo;
 	}
@@ -16,10 +17,10 @@ public class Tipo {
 	public void setTipoPregunta(String tipoPregunta) {
 		this.tipoPregunta = tipoPregunta;
 	}
-	public String getNumRespuesta() {
+	public int getNumRespuesta() {
 		return numRespuesta;
 	}
-	public void setNumRespuesta(String numRespuesta) {
+	public void setNumRespuesta(int numRespuesta) {
 		this.numRespuesta = numRespuesta;
 	}
 	

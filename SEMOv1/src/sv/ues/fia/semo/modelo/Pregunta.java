@@ -1,16 +1,16 @@
 package sv.ues.fia.semo.modelo;
 
 public class Pregunta {
-	private String idPregunta;
+	private int idPregunta;
 	private Subcategoria sc;
 	private Tipo tipo;
 	private String pregunta;
-	private String puntajePregunta;
+	private int puntajePregunta;
 	
-	public String getIdPregunta() {
+	public int getIdPregunta() {
 		return idPregunta;
 	}
-	public void setIdPregunta(String idPregunta) {
+	public void setIdPregunta(int idPregunta) {
 		this.idPregunta = idPregunta;
 	}
 	public Subcategoria getSc() {
@@ -31,10 +31,10 @@ public class Pregunta {
 	public void setPregunta(String pregunta) {
 		this.pregunta = pregunta;
 	}
-	public String getPuntajePregunta() {
+	public int getPuntajePregunta() {
 		return puntajePregunta;
 	}
-	public void setPuntajePregunta(String puntajePregunta) {
+	public void setPuntajePregunta(int puntajePregunta) {
 		this.puntajePregunta = puntajePregunta;
 	}
 	

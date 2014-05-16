@@ -1,16 +1,16 @@
 package sv.ues.fia.semo.modelo;
 
 public class Categoria {
-	private String idCategoria;
+	private int idCategoria;
 	private Curso curso;
 	private String nombreCategoria;
 	private String descripcionCategoria;
 	public Categoria() {
 	}
-	public String getIdCategoria() {
+	public int getIdCategoria() {
 		return idCategoria;
 	}
-	public void setIdCategoria(String idCategoria) {
+	public void setIdCategoria(int idCategoria) {
 		this.idCategoria = idCategoria;
 	}
 	public Curso getCurso() {

@@ -1,5 +1,5 @@
 package sv.ues.fia.semo.bd;
-//NOTA: Voy por Crud Evaluacion
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +10,7 @@ import java.util.List;
 
 import sv.ues.fia.semo.modelo.*;
 
+import android.R.id;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -418,8 +419,8 @@ public class ControlBD {
 			Cursor cursor = db.query("ciclo", camposCiclo, "anio = ? AND ciclo", id,null, null, null);
 			if(cursor.moveToFirst()){
 				Ciclo c = new Ciclo();
-				c.setCiclo(cursor.getString(1));
-				c.setAnio(cursor.getString(0));
+				c.setCiclo(cursor.getInt(1));
+				c.setAnio(cursor.getInt(0));
 				c.setEstado(cursor.getString(2));
 				 return c;		
 			}else{
@@ -433,8 +434,8 @@ public class ControlBD {
 			if(cursor.moveToFirst()){
 				Ciclo ciclo = new Ciclo();
 				do{
-					ciclo.setCiclo(cursor.getString(1));
-					ciclo.setAnio(cursor.getString(0));
+					ciclo.setCiclo(cursor.getInt(1));
+					ciclo.setAnio(cursor.getInt(0));
 					ciclo.setEstado(cursor.getString(2));
 					cicloList.add(ciclo);
 				}
@@ -448,8 +449,7 @@ public class ControlBD {
 		//Actualizar un usuario
 		public String actualizar(Ciclo ciclo){
 			if(true /*verificarIntegridad()*/){
-				String[] id = {ciclo.getAnio(),ciclo.getCiclo()};
-
+				String[] id = {String.valueOf(ciclo.getAnio()),String.valueOf(ciclo.getCiclo())};
 			ContentValues cv = new ContentValues();
 			cv.put("estado", ciclo.getEstado());
 			db.update("ciclo", cv, "anio = ? AND ciclo = ", id);
@@ -503,7 +503,7 @@ public class ControlBD {
 				Materia materia = new Materia();
 				materia.setCodigo(cursor.getString(0));
 				materia.setNombreMateria(cursor.getString(1));
-				materia.setCicloPensum(cursor.getString(2));
+				materia.setCicloPensum(cursor.getInt(2));
 				return materia;		
 			}else{
 			return null;
@@ -518,7 +518,7 @@ public class ControlBD {
 				do{
 					materia.setCodigo(cursor.getString(0));
 					materia.setNombreMateria(cursor.getString(1));
-					materia.setCicloPensum(cursor.getString(2));
+					materia.setCicloPensum(cursor.getInt(2));
 					materiaList.add(materia);
 				}
 				while (cursor.moveToNext());
@@ -594,12 +594,12 @@ public class ControlBD {
 				Materia materia = new Materia();
 				Docente docente = new Docente();
 				
-				ciclo.setAnio(cursor.getString(1));
-				ciclo.setCiclo(cursor.getString(2));
+				ciclo.setAnio(cursor.getInt(1));
+				ciclo.setCiclo(cursor.getInt(2));
 				materia.setCodigo(cursor.getString(3));
 				docente.setCoddocente(cursor.getString(4));
 				
-				curso.setNumCurso(cursor.getString(0));
+				curso.setNumCurso(cursor.getInt(0));
 				curso.setCiclo(ciclo);
 				curso.setMateria(materia);
 				curso.setDocente(docente);
@@ -622,12 +622,12 @@ public class ControlBD {
 					Materia materia = new Materia();
 					Docente docente = new Docente();
 					
-					ciclo.setAnio(cursor.getString(1));
-					ciclo.setCiclo(cursor.getString(2));
+					ciclo.setAnio(cursor.getInt(1));
+					ciclo.setCiclo(cursor.getInt(2));
 					materia.setCodigo(cursor.getString(3));
 					docente.setCoddocente(cursor.getString(4));
 					
-					curso.setNumCurso(cursor.getString(0));
+					curso.setNumCurso(cursor.getInt(0));
 					curso.setCiclo(ciclo);
 					curso.setMateria(materia);
 					curso.setDocente(docente);
@@ -646,7 +646,7 @@ public class ControlBD {
 		public String actualizar(Curso curso){
 			//verificar la integridad del usuario por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
-				String[] id = {curso.getNumCurso()};		
+				String[] id = {String.valueOf(curso.getNumCurso())};		
 			ContentValues cv = new ContentValues();
 			cv.put("anio", curso.getCiclo().getAnio());
 			cv.put("ciclo", curso.getCiclo().getCiclo());
@@ -704,8 +704,8 @@ public class ControlBD {
 				Categoria categoria = new Categoria();
 				Curso curso = new Curso();
 				
-				categoria.setIdCategoria(cursor.getString(0));
-				curso.setNumCurso(cursor.getString(1));
+				categoria.setIdCategoria(cursor.getInt(0));
+				curso.setNumCurso(cursor.getInt(1));
 				categoria.setCurso(curso);
 				categoria.setNombreCategoria(cursor.getString(2));
 				categoria.setDescripcionCategoria(cursor.getString(3));
@@ -723,8 +723,8 @@ public class ControlBD {
 				Categoria categoria = new Categoria();
 				do{					
 					Curso curso = new Curso();
-					categoria.setIdCategoria(cursor.getString(0));
-					curso.setNumCurso(cursor.getString(1));
+					categoria.setIdCategoria(cursor.getInt(0));
+					curso.setNumCurso(cursor.getInt(1));
 					categoria.setCurso(curso);
 					categoria.setNombreCategoria(cursor.getString(2));
 					categoria.setDescripcionCategoria(cursor.getString(3));
@@ -740,7 +740,7 @@ public class ControlBD {
 		public String actualizar(Categoria categoria){
 			//verificar la integridad del usuario por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
-				String[] id = {categoria.getIdCategoria()};	
+				String[] id = {String.valueOf(categoria.getIdCategoria())};	
 				ContentValues cv = new ContentValues();
 				cv.put("numCurso", categoria.getCurso().getNumCurso());
 				cv.put("nombreCategoria", categoria.getNombreCategoria());
@@ -797,8 +797,8 @@ public class ControlBD {
 			if(cursor.moveToFirst()){
 				Subcategoria sc = new Subcategoria();
 				Categoria categoria = new Categoria();
-				categoria.setIdCategoria(cursor.getString(1));
-				sc.setIdSubCategoria(cursor.getString(0));
+				categoria.setIdCategoria(cursor.getInt(1));
+				sc.setIdSubCategoria(cursor.getInt(0));
 				sc.setCategoria(categoria);
 				sc.setNombreSubCategoria(cursor.getString(2));
 				sc.setDescripcionSubcategoria(cursor.getString(3));
@@ -816,8 +816,8 @@ public class ControlBD {
 				Subcategoria sc = new Subcategoria();
 				do{					
 					Categoria categoria = new Categoria();
-					categoria.setIdCategoria(cursor.getString(1));
-					sc.setIdSubCategoria(cursor.getString(0));
+					categoria.setIdCategoria(cursor.getInt(1));
+					sc.setIdSubCategoria(cursor.getInt(0));
 					sc.setCategoria(categoria);
 					sc.setNombreSubCategoria(cursor.getString(2));
 					sc.setDescripcionSubcategoria(cursor.getString(3));
@@ -833,7 +833,7 @@ public class ControlBD {
 		public String actualizar(Subcategoria sc){
 			//verificar la integridad por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
-				String[] id = {sc.getIdSubCategoria()};
+				String[] id = {String.valueOf(sc.getIdSubCategoria())};
 				ContentValues cv = new ContentValues();
 				cv.put("idCategoria", sc.getCategoria().getIdCategoria());
 				cv.put("nombreSubCategoria", sc.getNombreSubCategoria());
@@ -890,7 +890,7 @@ public class ControlBD {
 				Tipo tipo = new Tipo();
 				tipo.setCodTipo(cursor.getString(0));
 				tipo.setTipoPregunta(cursor.getString(1));
-				tipo.setNumRespuesta(cursor.getString(2));
+				tipo.setNumRespuesta(cursor.getInt(2));
 				 return tipo;		
 			}else{
 			return null;
@@ -905,7 +905,7 @@ public class ControlBD {
 				do{
 					tipo.setCodTipo(cursor.getString(0));
 					tipo.setTipoPregunta(cursor.getString(1));
-					tipo.setNumRespuesta(cursor.getString(2));
+					tipo.setNumRespuesta(cursor.getInt(2));
 					tipoList.add(tipo);
 				}
 				while (cursor.moveToNext());
@@ -975,14 +975,14 @@ public class ControlBD {
 				Pregunta pregunta = new Pregunta();
 				Subcategoria sc = new Subcategoria();
 				Tipo tipo = new Tipo();
-				sc.setIdSubCategoria(cursor.getString(1));
+				sc.setIdSubCategoria(cursor.getInt(1));
 				tipo.setCodTipo(cursor.getString(2));
 				
-				pregunta.setIdPregunta(cursor.getString(0));
+				pregunta.setIdPregunta(cursor.getInt(0));
 				pregunta.setSc(sc);
 				pregunta.setTipo(tipo);
 				pregunta.setPregunta(cursor.getString(3));
-				pregunta.setPuntajePregunta(cursor.getString(4));
+				pregunta.setPuntajePregunta(cursor.getInt(4));
 				 return pregunta;		
 			}else{
 			return null;
@@ -997,14 +997,14 @@ public class ControlBD {
 				do{					
 					Subcategoria sc = new Subcategoria();
 					Tipo tipo = new Tipo();
-					sc.setIdSubCategoria(cursor.getString(1));
+					sc.setIdSubCategoria(cursor.getInt(1));
 					tipo.setCodTipo(cursor.getString(2));
 					
-					pregunta.setIdPregunta(cursor.getString(0));
+					pregunta.setIdPregunta(cursor.getInt(0));
 					pregunta.setSc(sc);
 					pregunta.setTipo(tipo);
 					pregunta.setPregunta(cursor.getString(3));
-					pregunta.setPuntajePregunta(cursor.getString(4));
+					pregunta.setPuntajePregunta(cursor.getInt(4));
 					preguntaList.add(pregunta);
 				}
 				while (cursor.moveToNext());
@@ -1017,7 +1017,7 @@ public class ControlBD {
 		public String actualizar(Pregunta pregunta){
 			//verificar la integridadpor codigo o por trigger
 			if(true /*verificarIntegridad()*/){
-				String [] id = {pregunta.getIdPregunta()};		
+				String [] id = {String.valueOf(pregunta.getIdPregunta())};		
 				ContentValues cv = new ContentValues();
 				cv.put("idSubCategoria", pregunta.getSc().getIdSubCategoria());
 				cv.put("codTipo", pregunta.getTipo().getCodTipo());
@@ -1075,12 +1075,12 @@ public class ControlBD {
 			if(cursor.moveToFirst()){
 				ItemRespuesta ir = new ItemRespuesta();
 				Pregunta pregunta = new Pregunta();
-				pregunta.setIdPregunta(cursor.getString(1));
+				pregunta.setIdPregunta(cursor.getInt(1));
 				
-				ir.setIdItem(cursor.getString(0));
+				ir.setIdItem(cursor.getInt(0));
 				ir.setPregunta(pregunta);
 				ir.setRespuesta(cursor.getString(2));
-				ir.setPuntosRespuesta(cursor.getString(3));
+				ir.setPuntosRespuesta(cursor.getInt(3));
 				return ir;		
 			}else{
 			return null;
@@ -1094,12 +1094,12 @@ public class ControlBD {
 				ItemRespuesta ir = new ItemRespuesta();
 				do{					
 					Pregunta pregunta = new Pregunta();
-					pregunta.setIdPregunta(cursor.getString(1));
+					pregunta.setIdPregunta(cursor.getInt(1));
 					
-					ir.setIdItem(cursor.getString(0));
+					ir.setIdItem(cursor.getInt(0));
 					ir.setPregunta(pregunta);
 					ir.setRespuesta(cursor.getString(2));
-					ir.setPuntosRespuesta(cursor.getString(3));
+					ir.setPuntosRespuesta(cursor.getInt(3));
 					itemList.add(ir);
 				}
 				while (cursor.moveToNext());
@@ -1112,7 +1112,7 @@ public class ControlBD {
 		public String actualizar(ItemRespuesta ir){
 			//verificar la integridad por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
-				String[] id = {ir.getIdItem()};
+				String[] id = {String.valueOf(ir.getIdItem())};
 				ContentValues cv = new ContentValues();
 				cv.put("idPregunta", ir.getPregunta().getIdPregunta());
 				cv.put("respuesta", ir.getRespuesta());
@@ -1143,12 +1143,15 @@ public class ControlBD {
 	 * 								Crud Evaluacion								 *
 	 *---------------------------------------------------------------------------*/
 		//insertar registros de usuario
-		public String insertar(Usuario usuario){
+		public String insertar(Evaluacion evaluacion){
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
-			//us.put("atributo",valor (usuario.getAtributo())) asignacion de los datos a los campos
-			contador=db.insert("usuari", null, us);
+			us.put("idEval", evaluacion.getIdEval());
+			us.put("numCurso", evaluacion.getCurso().getNumCurso());
+			us.put("nombreEval", evaluacion.getNombreEval());
+			us.put("porcentajeEval", evaluacion.getPorcentajeEval());
+			contador=db.insert("evaluacion", null, us);
 			if(contador==-1 || contador==0)
 			{
 			regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
@@ -1158,77 +1161,71 @@ public class ControlBD {
 			}
 			return regInsertados;
 		}
-		//consultar un usuario por su id
-		public Usuario consultarUsuario(String username){
-			String[] id = {username};
-			Cursor cursor = db.query("usuario", camposUsuario, "username = ?", id,null, null, null);
+		//consultar una evaluacion por su id
+		public Evaluacion consultarEvaluacion(String idEval){
+			String[] id = {idEval};
+			Cursor cursor = db.query("evaluacion", camposEvaluacion, "idEval = ?", id,null, null, null);
 			if(cursor.moveToFirst()){
-				Usuario usuario = new Usuario();
-				/*
-				 * se setean los atributos de usuario
-				 * usuario.setCarnet(cursor.getString(0));
-				 * */
-				 return usuario;		
+				Evaluacion ev = new Evaluacion();
+				Curso c = new Curso();
+				
+				ev.setIdEval(cursor.getInt(0));
+				c.setNumCurso(cursor.getInt(1));
+				ev.setCurso(c);
+				ev.setNombreEval(cursor.getString(2));
+				ev.setPorcentajeEval(cursor.getDouble(3));
+
+				 return ev;		
 			}else{
 			return null;
 			}
 			}
 		//consultar todos los usuarios
-		public List<Usuario> consultarTodos(){
-			List<Usuario> usuarioList = new ArrayList<Usuario>();
-			Cursor cursor = db.query("usuario", camposUsuario, null, null,null, null, null);
+		public List<Evaluacion> consultarEvaluaciones(){
+			List<Evaluacion> evList = new ArrayList<Evaluacion>();
+			Cursor cursor = db.query("evaluacion", camposEvaluacion, null, null,null, null, null);
 			if(cursor.moveToFirst()){
-				//Se crea el objeto
-				do{
-					/*
-					 Llena la lista de Usuarios hasta que el cursor este vacio
-					 usuario.setCarnet(cursor.getString(0));
-					 
-					 * */
+				Evaluacion ev = new Evaluacion();
+				do{					
+					Curso c = new Curso();					
+					ev.setIdEval(cursor.getInt(0));
+					c.setNumCurso(cursor.getInt(1));
+					ev.setCurso(c);
+					ev.setNombreEval(cursor.getString(2));
+					ev.setPorcentajeEval(cursor.getDouble(3));
+					evList.add(ev);
 				}
 				while (cursor.moveToNext());
-				 //se retorna el objeto
-				return usuarioList;	
+				return evList;	
 			}else{
 			return null;
 			}
 			}
-		//Actualizar un usuario
-		public String actualizar(Usuario usuario){
+		public String actualizar(Evaluacion ev){
 			//verificar la integridad del usuario por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
-				/*
-				 * Se recupera el id en un array tipo string
-				 * String[] id = {usuario.getUsername()};
-				 * */		
+				String[] id = {String.valueOf(ev.getIdEval())};	
 			ContentValues cv = new ContentValues();
-			/*
-			 * Se actualizan los datos excepto el id
-			 * cv.put("atributo", usuario.getAtributo());
-			 * se actualiza el registro
-			 * db.update("usuario", cv, "username = ?", id);
-			 * */
-			
+			cv.put("numCurso", ev.getCurso().getNumCurso());
+			cv.put("nombreEval", ev.getNombreEval());
+			cv.put("porcentajeEval", ev.getPorcentajeEval());
+			db.update("evaluacion", cv, "idEval = ?", id);			
 			return "Registro Actualizado Correctamente";
 			}
 			else{
-			return "Registro con carnet " + usuario.getUsername() + " no existe";
+			return "Registro con ID " + ev.getIdEval() + " no existe";
 			}
 			}
 		
-		//Borrar un usuario
-		public String eliminar(Usuario usuario){
+		public String eliminar(Evaluacion ev){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
 			if (true /*verificarIntegridad()*/) {
 			regAfectados="0";
-			//el usuario no existe
 			}
 			else
 			{
-			//borrar los registros de usuario
-			contador+=db.delete("usuario", "username='"+usuario.getUsername()+"'",
-			null);
+			contador+=db.delete("evaluacion", "idEval='"+ev.getIdEval()+"'",null);
 			regAfectados+=contador;
 			}
 			return regAfectados;
@@ -1236,13 +1233,14 @@ public class ControlBD {
 	/*---------------------------------------------------------------------------*
 	 * 								Crud Configuracion							 *
 	 *---------------------------------------------------------------------------*/
-		//insertar registros de usuario
-		public String insertar(Usuario usuario){
+		public String insertar(Configuracion conf){
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
-			//us.put("atributo",valor (usuario.getAtributo())) asignacion de los datos a los campos
-			contador=db.insert("usuari", null, us);
+			us.put("idSubCategoria",conf.getSc().getIdSubCategoria());
+			us.put("idEval", conf.getEv().getIdEval());
+			us.put("numPreguntas", conf.getNumPreguntas());
+			contador=db.insert("configuracion", null, us);
 			if(contador==-1 || contador==0)
 			{
 			regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
@@ -1252,77 +1250,76 @@ public class ControlBD {
 			}
 			return regInsertados;
 		}
-		//consultar un usuario por su id
-		public Usuario consultarUsuario(String username){
-			String[] id = {username};
-			Cursor cursor = db.query("usuario", camposUsuario, "username = ?", id,null, null, null);
+		//consultar configuracion por id
+		public Configuracion consultarConfiguracion(String idSc, String idEval){
+			String[] id = {idSc,idEval};
+			Cursor cursor = db.query("configuracion", camposConfiguracion, "idSubCategoria = ? AND idEval = ?", id,null, null, null);
 			if(cursor.moveToFirst()){
-				Usuario usuario = new Usuario();
-				/*
-				 * se setean los atributos de usuario
-				 * usuario.setCarnet(cursor.getString(0));
-				 * */
-				 return usuario;		
+				Configuracion conf = new Configuracion();
+				Subcategoria sc = new Subcategoria();
+				Evaluacion ev = new Evaluacion();
+				
+				sc.setIdSubCategoria(cursor.getInt(0));
+				ev.setIdEval(cursor.getInt(1));
+				conf.setNumPreguntas(cursor.getInt(2));
+				conf.setEv(ev);
+				conf.setSc(sc);
+				 return conf;		
 			}else{
 			return null;
 			}
 			}
-		//consultar todos los usuarios
-		public List<Usuario> consultarTodos(){
-			List<Usuario> usuarioList = new ArrayList<Usuario>();
-			Cursor cursor = db.query("usuario", camposUsuario, null, null,null, null, null);
+		
+		public List<Configuracion> consultarConfiguraciones(){
+			List<Configuracion> confList = new ArrayList<Configuracion>();
+			Cursor cursor = db.query("configuracion", camposConfiguracion, null, null,null, null, null);
 			if(cursor.moveToFirst()){
-				//Se crea el objeto
-				do{
-					/*
-					 Llena la lista de Usuarios hasta que el cursor este vacio
-					 usuario.setCarnet(cursor.getString(0));
-					 
-					 * */
+				Configuracion conf = new Configuracion();
+				Subcategoria sc = new Subcategoria();
+				Evaluacion ev = new Evaluacion();
+				do{					
+					sc.setIdSubCategoria(cursor.getInt(0));
+					ev.setIdEval(cursor.getInt(1));
+					conf.setNumPreguntas(cursor.getInt(2));
+					conf.setEv(ev);
+					conf.setSc(sc);
+					confList.add(conf);
 				}
 				while (cursor.moveToNext());
-				 //se retorna el objeto
-				return usuarioList;	
+				return confList;	
 			}else{
 			return null;
 			}
 			}
-		//Actualizar un usuario
-		public String actualizar(Usuario usuario){
+		public String actualizar(Configuracion conf){
 			//verificar la integridad del usuario por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
-				/*
-				 * Se recupera el id en un array tipo string
-				 * String[] id = {usuario.getUsername()};
-				 * */		
-			ContentValues cv = new ContentValues();
-			/*
-			 * Se actualizan los datos excepto el id
-			 * cv.put("atributo", usuario.getAtributo());
-			 * se actualiza el registro
-			 * db.update("usuario", cv, "username = ?", id);
-			 * */
+				String [] id = {String.valueOf(conf.getSc().getIdSubCategoria()),
+						String.valueOf(conf.getEv().getIdEval())};	
+				ContentValues cv = new ContentValues();
+				cv.put("idEval", conf.getEv().getIdEval());
+				cv.put("numPreguntas", conf.getNumPreguntas());
+				db.update("configuracion", cv, "idSubCategoria = ? AND idEval = ?", id);
 			
 			return "Registro Actualizado Correctamente";
 			}
 			else{
-			return "Registro con carnet " + usuario.getUsername() + " no existe";
+			return "Registro con ID subcategoria " + conf.getSc().getIdSubCategoria()+
+					" e ID Evaluacion "+conf.getEv().getIdEval()+ " no existe";
 			}
 			}
 		
-		//Borrar un usuario
-		public String eliminar(Usuario usuario){
+		public String eliminar(Configuracion conf){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
 			if (true /*verificarIntegridad()*/) {
 			regAfectados="0";
-			//el usuario no existe
 			}
 			else
 			{
 			//borrar los registros de usuario
-			contador+=db.delete("usuario", "username='"+usuario.getUsername()+"'",
-			null);
+			contador+=db.delete("configuracion", "idSubCategoria = "+conf.getSc().getIdSubCategoria()+
+					" AND idEval ="+conf.getEv().getIdEval(),null);
 			regAfectados+=contador;
 			}
 			return regAfectados;
@@ -1331,12 +1328,13 @@ public class ControlBD {
 	 * 								Crud Inscribe								 *
 	 *---------------------------------------------------------------------------*/
 		//insertar registros de usuario
-		public String insertar(Usuario usuario){
+		public String insertar(Inscribe ins){
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
-			//us.put("atributo",valor (usuario.getAtributo())) asignacion de los datos a los campos
-			contador=db.insert("usuari", null, us);
+			us.put("numCurso", ins.getCurso().getNumCurso());
+			us.put("carnet", ins.getAlumno().getCarnet());
+			contador=db.insert("inscribe", null, us);
 			if(contador==-1 || contador==0)
 			{
 			regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
@@ -1346,43 +1344,45 @@ public class ControlBD {
 			}
 			return regInsertados;
 		}
-		//consultar un usuario por su id
-		public Usuario consultarUsuario(String username){
-			String[] id = {username};
-			Cursor cursor = db.query("usuario", camposUsuario, "username = ?", id,null, null, null);
+		public Inscribe consultarInscribe(String numCurso, String carnet){
+			String[] id = {numCurso, carnet};
+			Cursor cursor = db.query("inscribe", camposInscribe, "numCurso = ? AND carnet = ?", id,null, null, null);
 			if(cursor.moveToFirst()){
-				Usuario usuario = new Usuario();
-				/*
-				 * se setean los atributos de usuario
-				 * usuario.setCarnet(cursor.getString(0));
-				 * */
-				 return usuario;		
+				Inscribe ins = new Inscribe();
+				Curso c = new Curso();
+				Alumno a = new Alumno();
+				c.setNumCurso(cursor.getInt(0));
+				a.setCarnet(cursor.getString(1));
+				ins.setAlumno(a);
+				ins.setCurso(c);
+				 return ins;		
 			}else{
 			return null;
 			}
 			}
 		//consultar todos los usuarios
-		public List<Usuario> consultarTodos(){
-			List<Usuario> usuarioList = new ArrayList<Usuario>();
-			Cursor cursor = db.query("usuario", camposUsuario, null, null,null, null, null);
+		public List<Inscribe> consultarInscripciones(){
+			List<Inscribe> insList = new ArrayList<Inscribe>();
+			Cursor cursor = db.query("inscribe", camposInscribe, null, null,null, null, null);
 			if(cursor.moveToFirst()){
-				//Se crea el objeto
-				do{
-					/*
-					 Llena la lista de Usuarios hasta que el cursor este vacio
-					 usuario.setCarnet(cursor.getString(0));
-					 
-					 * */
+				Inscribe ins = new Inscribe();
+				do{					
+					Curso c = new Curso();
+					Alumno a = new Alumno();
+					c.setNumCurso(cursor.getInt(0));
+					a.setCarnet(cursor.getString(1));
+					ins.setAlumno(a);
+					ins.setCurso(c);
+					insList.add(ins);
 				}
 				while (cursor.moveToNext());
-				 //se retorna el objeto
-				return usuarioList;	
+				return insList;	
 			}else{
 			return null;
 			}
 			}
-		//Actualizar un usuario
-		public String actualizar(Usuario usuario){
+		//esta creo que no es necesaria porque solo claves primarias tiene la tabla
+		public String actualizar(Inscribe ins){
 			//verificar la integridad del usuario por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
 				/*
@@ -1400,23 +1400,21 @@ public class ControlBD {
 			return "Registro Actualizado Correctamente";
 			}
 			else{
-			return "Registro con carnet " + usuario.getUsername() + " no existe";
+			return "Registro con id " + ins.getCurso().getNumCurso() +","+ins.getAlumno().getCarnet()+ " no existe";
 			}
 			}
 		
-		//Borrar un usuario
-		public String eliminar(Usuario usuario){
+		public String eliminar(Inscribe ins){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
 			if (true /*verificarIntegridad()*/) {
 			regAfectados="0";
-			//el usuario no existe
 			}
 			else
 			{
 			//borrar los registros de usuario
-			contador+=db.delete("usuario", "username='"+usuario.getUsername()+"'",
-			null);
+			contador+=db.delete("inscribe", "numCurso="+ins.getCurso().getNumCurso()+
+					" AND carnet = '"+ins.getAlumno().getCarnet()+"'",null);
 			regAfectados+=contador;
 			}
 			return regAfectados;
@@ -1425,12 +1423,19 @@ public class ControlBD {
 	 * 							   Crud Cuestionario							 *
 	 *---------------------------------------------------------------------------*/
 		//insertar registros de usuario
-		public String insertar(Usuario usuario){
+		public String insertar(Cuestionario ct){
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
-			//us.put("atributo",valor (usuario.getAtributo())) asignacion de los datos a los campos
-			contador=db.insert("usuari", null, us);
+			us.put("idCUestionario", ct.getIdCuestionaro());
+			us.put("idEval", ct.getEv().getIdEval());
+			us.put("carnet", ct.getAlumno().getCarnet());
+			us.put("numPreguntas", ct.getNumPreguntas());
+			us.put("puntajeAlumno", ct.getPuntajeAlumno());
+			us.put("notaAlumno", ct.getNotaAlumno());
+			us.put("disponible", ct.getDisponible());
+			us.put("realizado", ct.getRealizado());
+			contador=db.insert("cuestionario", null, us);
 			if(contador==-1 || contador==0)
 			{
 			regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
@@ -1441,75 +1446,87 @@ public class ControlBD {
 			return regInsertados;
 		}
 		//consultar un usuario por su id
-		public Usuario consultarUsuario(String username){
-			String[] id = {username};
-			Cursor cursor = db.query("usuario", camposUsuario, "username = ?", id,null, null, null);
+		public Cuestionario consultarCuestionario(String idCuestionario){
+			String[] id = {idCuestionario};
+			Cursor cursor = db.query("cuestionario", camposCuestionario, "idCuestionario = ?", id,null, null, null);
 			if(cursor.moveToFirst()){
-				Usuario usuario = new Usuario();
-				/*
-				 * se setean los atributos de usuario
-				 * usuario.setCarnet(cursor.getString(0));
-				 * */
-				 return usuario;		
+				Cuestionario ct = new Cuestionario();
+				Evaluacion ev = new Evaluacion();
+				Alumno a = new Alumno();
+				ev.setIdEval(cursor.getInt(1));
+				a.setCarnet(cursor.getString(2));
+				
+				ct.setIdCuestionaro(cursor.getInt(0));
+				ct.setEv(ev);
+				ct.setAlumno(a);
+				ct.setNumPreguntas(cursor.getInt(3));
+				ct.setPuntajeAlumno(cursor.getInt(4));
+				ct.setNotaAlumno(cursor.getDouble(5));
+				ct.setDisponible(cursor.getInt(6));
+				ct.setRealizado(cursor.getInt(7));
+				return ct;		
 			}else{
 			return null;
 			}
 			}
 		//consultar todos los usuarios
-		public List<Usuario> consultarTodos(){
-			List<Usuario> usuarioList = new ArrayList<Usuario>();
-			Cursor cursor = db.query("usuario", camposUsuario, null, null,null, null, null);
+		public List<Cuestionario> consultarCuestionarios(){
+			List<Cuestionario> ctList = new ArrayList<Cuestionario>();
+			Cursor cursor = db.query("cuestionario", camposCuestionario, null, null,null, null, null);
 			if(cursor.moveToFirst()){
-				//Se crea el objeto
-				do{
-					/*
-					 Llena la lista de Usuarios hasta que el cursor este vacio
-					 usuario.setCarnet(cursor.getString(0));
-					 
-					 * */
+				Cuestionario ct = new Cuestionario();
+				do{					
+					Evaluacion ev = new Evaluacion();
+					Alumno a = new Alumno();
+					ev.setIdEval(cursor.getInt(1));
+					a.setCarnet(cursor.getString(2));
+					
+					ct.setIdCuestionaro(cursor.getInt(0));
+					ct.setEv(ev);
+					ct.setAlumno(a);
+					ct.setNumPreguntas(cursor.getInt(3));
+					ct.setPuntajeAlumno(cursor.getInt(4));
+					ct.setNotaAlumno(cursor.getDouble(5));
+					ct.setDisponible(cursor.getInt(6));
+					ct.setRealizado(cursor.getInt(7));
+					ctList.add(ct);
 				}
 				while (cursor.moveToNext());
-				 //se retorna el objeto
-				return usuarioList;	
+				return ctList;	
 			}else{
 			return null;
 			}
 			}
-		//Actualizar un usuario
-		public String actualizar(Usuario usuario){
+		public String actualizar(Cuestionario ct){
 			//verificar la integridad del usuario por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
-				/*
-				 * Se recupera el id en un array tipo string
-				 * String[] id = {usuario.getUsername()};
-				 * */		
-			ContentValues cv = new ContentValues();
-			/*
-			 * Se actualizan los datos excepto el id
-			 * cv.put("atributo", usuario.getAtributo());
-			 * se actualiza el registro
-			 * db.update("usuario", cv, "username = ?", id);
-			 * */
-			
-			return "Registro Actualizado Correctamente";
+				String[] id = {String.valueOf(ct.getIdCuestionaro())};
+				ContentValues cv = new ContentValues();
+				cv.put("idEval", ct.getEv().getIdEval());
+				cv.put("carnet", ct.getAlumno().getCarnet());
+				cv.put("numPreguntas", ct.getNumPreguntas());
+				cv.put("puntajeAlumno", ct.getPuntajeAlumno());
+				cv.put("notaAlumno", ct.getNotaAlumno());
+				cv.put("disponible", ct.getDisponible());
+				cv.put("realizado", ct.getRealizado());
+				db.update("cuestionario", cv, "idCuestionario = ?", id);			
+				return "Registro Actualizado Correctamente";
 			}
 			else{
-			return "Registro con carnet " + usuario.getUsername() + " no existe";
+			return "Registro con id " + ct.getIdCuestionaro() + " no existe";
 			}
 			}
 		
-		//Borrar un usuario
-		public String eliminar(Usuario usuario){
+		public String eliminar(Cuestionario ct){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
 			if (true /*verificarIntegridad()*/) {
 			regAfectados="0";
-			//el usuario no existe
 			}
 			else
 			{
 			//borrar los registros de usuario
-			contador+=db.delete("usuario", "username='"+usuario.getUsername()+"'",
+			contador+=db.delete("cuestionario", "idCuestionario='"+ct.getIdCuestionaro()+"'",
 			null);
 			regAfectados+=contador;
 			}
@@ -1519,12 +1536,13 @@ public class ControlBD {
 	 * 							   Crud As_Preguntas							 *
 	 *---------------------------------------------------------------------------*/
 		//insertar registros de usuario
-		public String insertar(Usuario usuario){
+		public String insertar(As_Preguntas ap){
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
-			//us.put("atributo",valor (usuario.getAtributo())) asignacion de los datos a los campos
-			contador=db.insert("usuari", null, us);
+			us.put("idPregunta", ap.getPregunta().getIdPregunta());
+			us.put("idCuestionario", ap.getCuestionario().getIdCuestionaro());
+			contador=db.insert("cuestionario", null, us);
 			if(contador==-1 || contador==0)
 			{
 			regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
@@ -1534,8 +1552,8 @@ public class ControlBD {
 			}
 			return regInsertados;
 		}
-		//consultar un usuario por su id
-		public Usuario consultarUsuario(String username){
+		/*Creo que esta no es necesaria
+		public As_Preguntas consultarAs(String username){
 			String[] id = {username};
 			Cursor cursor = db.query("usuario", camposUsuario, "username = ?", id,null, null, null);
 			if(cursor.moveToFirst()){
@@ -1543,68 +1561,68 @@ public class ControlBD {
 				/*
 				 * se setean los atributos de usuario
 				 * usuario.setCarnet(cursor.getString(0));
-				 * */
+				 * 
 				 return usuario;		
 			}else{
 			return null;
 			}
-			}
-		//consultar todos los usuarios
-		public List<Usuario> consultarTodos(){
-			List<Usuario> usuarioList = new ArrayList<Usuario>();
-			Cursor cursor = db.query("usuario", camposUsuario, null, null,null, null, null);
+			}*/
+		
+		//consultar todos los as de preguntas
+		public List<As_Preguntas> consultarAses(){
+			List<As_Preguntas> asList = new ArrayList<As_Preguntas>();
+			Cursor cursor = db.query("as_preguntas", camposAs_Preguntas, null, null,null, null, null);
 			if(cursor.moveToFirst()){
-				//Se crea el objeto
+				As_Preguntas as = new As_Preguntas();
 				do{
-					/*
-					 Llena la lista de Usuarios hasta que el cursor este vacio
-					 usuario.setCarnet(cursor.getString(0));
-					 
-					 * */
+					Pregunta p = new Pregunta();
+					Cuestionario c = new Cuestionario();
+					p.setIdPregunta(cursor.getInt(0));
+					c.setIdCuestionaro(cursor.getInt(1));
+					
+					as.setCuestionario(c);
+					as.setIdPregunta(p);
+					asList.add(as);
 				}
 				while (cursor.moveToNext());
-				 //se retorna el objeto
-				return usuarioList;	
+				return asList;	
 			}else{
 			return null;
 			}
 			}
-		//Actualizar un usuario
+		/* tampoco es necesaria porque solo tiene PK
 		public String actualizar(Usuario usuario){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			if(true /*verificarIntegridad()){
 				/*
 				 * Se recupera el id en un array tipo string
 				 * String[] id = {usuario.getUsername()};
-				 * */		
+				 * 		
 			ContentValues cv = new ContentValues();
 			/*
 			 * Se actualizan los datos excepto el id
 			 * cv.put("atributo", usuario.getAtributo());
 			 * se actualiza el registro
 			 * db.update("usuario", cv, "username = ?", id);
-			 * */
+			 * 
 			
 			return "Registro Actualizado Correctamente";
 			}
 			else{
 			return "Registro con carnet " + usuario.getUsername() + " no existe";
 			}
-			}
+			}*/
 		
-		//Borrar un usuario
-		public String eliminar(Usuario usuario){
+		public String eliminar(As_Preguntas as){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
 			if (true /*verificarIntegridad()*/) {
 			regAfectados="0";
-			//el usuario no existe
 			}
 			else
 			{
-			//borrar los registros de usuario
-			contador+=db.delete("usuario", "username='"+usuario.getUsername()+"'",
-			null);
+			contador+=db.delete("as_preguntas", "idPregunta="+as.getPregunta().getIdPregunta()+
+					" AND idCuestionario = "+as.getCuestionario().getIdCuestionaro(),null);
 			regAfectados+=contador;
 			}
 			return regAfectados;
@@ -1613,12 +1631,14 @@ public class ControlBD {
 	 * 								Crud Respuesta								 *
 	 *---------------------------------------------------------------------------*/
 		//insertar registros de usuario
-		public String insertar(Usuario usuario){
+		public String insertar(Respuesta res){
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
-			//us.put("atributo",valor (usuario.getAtributo())) asignacion de los datos a los campos
-			contador=db.insert("usuari", null, us);
+			us.put("idCuestionario",res.getCuestionario().getIdCuestionaro() );
+			us.put("respuestaAlumno", res.getRespuestaAlumno());
+			us.put("puntosObtenidos", res.getPuntosObtenidos());
+			contador=db.insert("respuesta", null, us);
 			if(contador==-1 || contador==0)
 			{
 			regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
@@ -1628,77 +1648,72 @@ public class ControlBD {
 			}
 			return regInsertados;
 		}
-		//consultar un usuario por su id
-		public Usuario consultarUsuario(String username){
-			String[] id = {username};
-			Cursor cursor = db.query("usuario", camposUsuario, "username = ?", id,null, null, null);
+
+		public Respuesta consultarRespuesta(String idCuestionario){
+			String[] id = {idCuestionario};
+			Cursor cursor = db.query("respuesta", camposRespuesta, "idCuestionario = ?", id,null, null, null);
 			if(cursor.moveToFirst()){
-				Usuario usuario = new Usuario();
-				/*
-				 * se setean los atributos de usuario
-				 * usuario.setCarnet(cursor.getString(0));
-				 * */
-				 return usuario;		
+				Respuesta res = new Respuesta();
+				Cuestionario c = new Cuestionario();
+				c.setIdCuestionaro(cursor.getInt(0));
+				
+				res.setCuestionario(c);
+				res.setRespuestaAlumno(cursor.getString(1));
+				res.setPuntosObtenidos(cursor.getInt(2));
+				 return res;		
 			}else{
 			return null;
 			}
 			}
-		//consultar todos los usuarios
-		public List<Usuario> consultarTodos(){
-			List<Usuario> usuarioList = new ArrayList<Usuario>();
-			Cursor cursor = db.query("usuario", camposUsuario, null, null,null, null, null);
+
+		public List<Respuesta> consultarRespuestas(){
+			List<Respuesta> resList = new ArrayList<Respuesta>();
+			Cursor cursor = db.query("respuesta", camposRespuesta, null, null,null, null, null);
 			if(cursor.moveToFirst()){
-				//Se crea el objeto
-				do{
-					/*
-					 Llena la lista de Usuarios hasta que el cursor este vacio
-					 usuario.setCarnet(cursor.getString(0));
-					 
-					 * */
+				Respuesta res = new Respuesta();
+				do{					
+					Cuestionario c = new Cuestionario();
+					c.setIdCuestionaro(cursor.getInt(0));
+					
+					res.setCuestionario(c);
+					res.setRespuestaAlumno(cursor.getString(1));
+					res.setPuntosObtenidos(cursor.getInt(2));
+					resList.add(res);
 				}
 				while (cursor.moveToNext());
 				 //se retorna el objeto
-				return usuarioList;	
+				return resList;	
 			}else{
 			return null;
 			}
 			}
 		//Actualizar un usuario
-		public String actualizar(Usuario usuario){
+		public String actualizar(Respuesta respuesta){
 			//verificar la integridad del usuario por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
-				/*
-				 * Se recupera el id en un array tipo string
-				 * String[] id = {usuario.getUsername()};
-				 * */		
-			ContentValues cv = new ContentValues();
-			/*
-			 * Se actualizan los datos excepto el id
-			 * cv.put("atributo", usuario.getAtributo());
-			 * se actualiza el registro
-			 * db.update("usuario", cv, "username = ?", id);
-			 * */
+				String[] id = {String.valueOf(respuesta.getCuestionario().getIdCuestionaro())};	
+				ContentValues cv = new ContentValues();
+				cv.put("respuestaAlumno", respuesta.getRespuestaAlumno());
+				cv.put("puntosObtenidos", respuesta.getPuntosObtenidos());
+				db.update("respuesta", cv, "idCuestionario = ?", id);
 			
 			return "Registro Actualizado Correctamente";
 			}
 			else{
-			return "Registro con carnet " + usuario.getUsername() + " no existe";
+			return "Respuesta con id " + respuesta.getCuestionario().getIdCuestionaro() + " no existe";
 			}
 			}
 		
-		//Borrar un usuario
-		public String eliminar(Usuario usuario){
+		public String eliminar(Respuesta respuesta){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
 			if (true /*verificarIntegridad()*/) {
 			regAfectados="0";
-			//el usuario no existe
 			}
 			else
 			{
-			//borrar los registros de usuario
-			contador+=db.delete("usuario", "username='"+usuario.getUsername()+"'",
-			null);
+			contador+=db.delete("respuesta", "idCuestionario='"+
+			respuesta.getCuestionario().getIdCuestionaro()+"'",	null);
 			regAfectados+=contador;
 			}
 			return regAfectados;
@@ -1740,49 +1755,7 @@ public class ControlBD {
 	 * } default: return false; } }
 	 */
 //metodo para llenar la base de datos
-	public String llenarBD(){
-			final String[] VAcarnet = {"OO12035","OF12044","GG11098","CC12021"};
-			final String[] VAnombre = {"Carlos","Pedro","Sara","Gabriela"};
-			final String[] VAapellido = {"Orantes","Ortiz","Gonzales","Coto"};
-			final String[] VAsexo = {"M","M","F","F"};
-			final String[] VMcodmateria = {"MAT115","PRN115","IEC115","TSI115"};
-			final String[] VMnommateria = {"Matematica I","Programacion I","Ingenieria " +
-					"Economica","Teoria de Sistemas"};
-			final String[] VMunidadesval = {"4","4","4","4"};
-			final String[] VNcarnet =
-				{"OO12035","OF12044","GG11098","CC12021","OO12035","GG11098","OF12044"};
-				final String[] VNcodmateria =
-				{"MAT115","PRN115","IEC115","TSI115","IC115","MAT115","PRN115"};
-				final String[] VNciclo = {"1","1","2","2","2","1","2"};
-				final float[] VNnotafinal = {7,5,8,7,6,10,7};
-				abrir();
-				db.execSQL("DELETE FROM alumno");
-				db.execSQL("DELETE FROM materia");
-				db.execSQL("DELETE FROM nota");
-				/*Alumno alumno = new Alumno();
-				for(int i=0;i<4;i++){
-				alumno.setCarnet(VAcarnet[i]);
-				alumno.setNombre(VAnombre[i]);
-				alumno.setApellido(VAapellido[i]);
-				alumno.setSexo(VAsexo[i]);
-				alumno.setMatganadas(0);
-				insertar(alumno);
-				}*/
-				/*Materia materia = new Materia();
-				for(int i=0;i<4;i++){
-				materia.setCodmateria(VMcodmateria[i]);
-				materia.setNommateria(VMnommateria[i]);
-				materia.setUnidadesval(VMunidadesval[i]);
-				insertar(materia);
-				}*/
-				/*Nota nota = new Nota();
-				for(int i=0;i<7;i++){
-				nota.setCarnet(VNcarnet[i]);
-				nota.setCodmateria(VNcodmateria[i]);
-				nota.setCiclo(VNciclo[i]);
-				nota.setNotafinal(VNnotafinal[i]);
-				insertar(nota);
-				}*/
+	public String llenarBD(){			
 				cerrar();
 				return "Guardo Correctamente";
 				}

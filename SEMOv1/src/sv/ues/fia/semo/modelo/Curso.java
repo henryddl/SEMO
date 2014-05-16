@@ -1,7 +1,7 @@
 package sv.ues.fia.semo.modelo;
 
 public class Curso {
-	private String numCurso;
+	private int numCurso;
 	private String aula;
 	private String hora;
 	private Ciclo ciclo;
@@ -12,10 +12,10 @@ public class Curso {
 	public Curso() {
 	}
 	
-	public String getNumCurso() {
+	public int getNumCurso() {
 		return numCurso;
 	}
-	public void setNumCurso(String numCurso) {
+	public void setNumCurso(int numCurso) {
 		this.numCurso = numCurso;
 	}
 	public String getAula() {

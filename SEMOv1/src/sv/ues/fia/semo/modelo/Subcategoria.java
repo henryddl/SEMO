@@ -1,14 +1,15 @@
 package sv.ues.fia.semo.modelo;
 
 public class Subcategoria {
-	private String idSubCategoria;
+	private int idSubCategoria;
 	private String nombreSubCategoria;
 	private String descripcionSubcategoria;
 	private Categoria categoria;
-	public String getIdSubCategoria() {
+	
+	public int getIdSubCategoria() {
 		return idSubCategoria;
 	}
-	public void setIdSubCategoria(String idSubCategoria) {
+	public void setIdSubCategoria(int idSubCategoria) {
 		this.idSubCategoria = idSubCategoria;
 	}
 	public String getNombreSubCategoria() {
