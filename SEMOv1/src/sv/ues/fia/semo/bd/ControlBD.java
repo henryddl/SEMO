@@ -119,6 +119,13 @@ public class ControlBD {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		}
 	}//fin clase estatica
+	
+	
+	public void datosIniciales(){
+		//Correr script de datos iniciales
+	}
+	
+	
 
 	public void abrir() throws SQLException {
 		db = DBHelper.getWritableDatabase();
