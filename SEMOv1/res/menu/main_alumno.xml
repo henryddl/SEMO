@@ -26,7 +26,7 @@
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/verNotasLabel"
-        android:icon="@drawable/paint"/>
+        android:icon="@drawable/ic_action_paste"/>
     <item
         android:id="@+id/cerrarSesionItem"
         android:orderInCategory="100"
