@@ -2,7 +2,20 @@
 <resources>
 
     <string name="app_name">SEMOv1</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="salir_string">Salir</string>
+    <string name="login_string">Inicio de Sesión</string>
+    <string name="usuario_string">Usuario</string>
+    <string name="contrasenia_string">Contraseña</string>
+
+    <string name="iniciarSesionString">Iniciar Sesión</string>
+    <string name="title_activity_main_alumno">MainAlumno</string>
+    <string name="title_activity_main_docente">MainDocente</string>
+    <string name="title_activity_main_administrador">MainAdministrador</string>
+    <string name="administrarCuentaLabel">Administrar Cuenta</string>
+    <string name="verNotasLabel">Ver Notas</string>
+    <string name="cerrarSesionLabel">Cerrar Sesión</string>
+    <string name="buscarCursoLabel">Buscar Curso</string>
+    <string name="hello_world">Hello World</string>
+    <string name="mostrarListaLabel">Lista de Cursos</string>
 
 </resources>

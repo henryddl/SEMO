@@ -22,6 +22,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.MainAlumno"
+            android:label="@string/title_activity_main_alumno" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.MainDocente"
+            android:label="@string/title_activity_main_docente" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.MainAdministrador"
+            android:label="@string/title_activity_main_administrador" >
+        </activity>
     </application>
 
 </manifest>
