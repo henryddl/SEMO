@@ -1,0 +1,36 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:yourapp="http://schemas.android.com/apk/res-auto" >
+
+    <item android:id="@+id/buscarItem" 
+        android:orderInCategory="100" 
+        android:title="@string/buscarCursoLabel" 
+        android:showAsAction="ifRoom" 
+        android:icon="@drawable/search_ic"
+        android:actionViewClass="android.widget.SearchView">
+    </item>
+    <item 
+        android:id="@+id/listaCursosItem" 
+        android:orderInCategory="100" 
+        android:title="@string/mostrarListaLabel" 
+        android:showAsAction="ifRoom" 
+        android:icon="@drawable/lista_ic">
+    </item>
+    <item 
+        android:id="@+id/administrarCuentaItem"
+        android:orderInCategory="100" 
+        android:title="@string/administrarCuentaLabel" 
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/gear"></item>
+    <item
+        android:id="@+id/verNotasItem"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/verNotasLabel"
+        android:icon="@drawable/paint"/>
+    <item
+        android:id="@+id/cerrarSesionItem"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/cerrarSesionLabel"/>
+    
+</menu>
