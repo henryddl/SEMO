@@ -36,5 +36,31 @@ public class MainAlumno extends Activity {
 	    //searchView.setQueryHint("Buscar curso...");
 		return true;
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+		Intent intent;
+	    switch (item.getItemId()) {
+	        case R.id.listaCursosItem:
+	        	intent = new Intent(this, ListarCursos.class);
+	        	startActivity(intent);
+	            return true;
+	        case R.id.verNotasItem:
+	        	intent=new Intent(this,VerNotas.class);
+	        	startActivity(intent);
+	            return true;
+	        case R.id.administrarCuentaItem:
+	        	intent=new Intent(this,AdministrarCuenta.class);
+	        	startActivity(intent);
+	        	return true;
+	        case R.id.cerrarSesionItem:
+	        	intent=new Intent(this,Login.class);
+	        	startActivity(intent);
+	        	return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 
 }

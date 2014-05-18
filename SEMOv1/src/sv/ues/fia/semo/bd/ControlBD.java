@@ -99,7 +99,8 @@ public class ControlBD {
 				//creacion de las tablas de la base de datos.				
 				while (entrada.ready()){
 					db.execSQL(entrada.readLine().toString());					
-				}			
+				}
+				db.execSQL("INSERT INTO USUARIO values ('admin',NULL,NULL,'admin',2)");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} catch (FileNotFoundException e) {
@@ -156,7 +157,7 @@ public class ControlBD {
 			Usuario usuario = new Usuario();
 			usuario.setUsername(cursor.getString(0));
 			usuario.setPassword(cursor.getString(3));
-			usuario.setTipo(cursor.getString(4));
+			usuario.setTipo(cursor.getInt(4));
 			 return usuario;		
 		}else{
 		return null;
@@ -171,7 +172,7 @@ public class ControlBD {
 			do{
 				u.setUsername(cursor.getString(0));
 				u.setPassword(cursor.getString(3));
-				u.setTipo(cursor.getString(4));
+				u.setTipo(cursor.getInt(4));
 				usuarioList.add(u);
 			}
 			while (cursor.moveToNext());

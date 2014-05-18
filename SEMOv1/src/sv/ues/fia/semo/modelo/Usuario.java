@@ -5,10 +5,9 @@ public class Usuario {
 	private String password;
 	private Docente docente;
 	private Alumno alumno;
-	private String tipo;
+	private int tipo;
 	
 	public Usuario(){
-		//HOLA MUNDO
 	}
 
 	public String getUsername() {
@@ -43,11 +42,11 @@ public class Usuario {
 		this.alumno = alumno;
 	}
 
-	public String getTipo() {
+	public int getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(int tipo) {
 		this.tipo = tipo;
 	}
 	
