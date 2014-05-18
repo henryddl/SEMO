@@ -5,7 +5,7 @@
         android:orderInCategory="100" 
         android:title="@string/buscarCursoLabel" 
         android:showAsAction="ifRoom" 
-        android:icon="@drawable/search_ic"
+        android:icon="@drawable/ic_action_search"
         android:actionViewClass="android.widget.SearchView">
     </item>
     <item 
