@@ -20,5 +20,16 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_administrar_cuenta">Administrar Cuenta</string>
     <string name="title_activity_ver_notas">Ver Notas</string>
-
+    <string name="administrarCuentaslabel">Administrar Usuarios</string>
+    <string name="crearCuentaLabel">Crear Cuenta</string>
+    <string name="title_activity_crear_cuenta">Crear Cuenta</string>
+    <string name="nombreUsuario_CrearCuentaActivity">Escribe el nombre de usuario</string>
+    <string name="contrasenia_CrearCuentaActivity">Escribe la contraseña</string>
+    <string name="repetirContrasenia_CrearCuentaActivity">Repite la contraseña</string>
+	<string name="tipoCuentaLabel">Elige el tipo de cuenta</string>
+	<string name="tipoAlumno">Alumno</string>
+	<string name="tipoDocente">Docente</string>
+	<string name="tipoAdministrador">Administrador</string>
+	<string name="eligeTipoCuenta">Elige el tipo de cuenta:</string>
+	<string name="crearBoton">Crear Usuario</string>
 </resources>

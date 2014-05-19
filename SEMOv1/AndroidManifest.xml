@@ -58,6 +58,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sv.ues.fia.semo.activity.MainAlumno" />
         </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.CrearCuenta"
+            android:label="@string/title_activity_crear_cuenta"
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAdministrador" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAdministrador" />
+        </activity>
     </application>
 
 </manifest>

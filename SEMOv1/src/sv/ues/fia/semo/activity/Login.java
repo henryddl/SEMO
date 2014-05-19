@@ -39,7 +39,6 @@ public class Login extends Activity {
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
 	        case R.id.salir:
-	            finish();
 	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
