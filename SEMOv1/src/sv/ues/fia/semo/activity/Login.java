@@ -101,8 +101,8 @@ public class Login extends Activity {
 							break;
 						case 1:
 							intent = new Intent(this, MainDocente.class);
-							intent.putExtra(EXTRA_MESSAGE1, user);
-							intent.putExtra(EXTRA_MESSAGE2, pass);
+							intent.putExtra("EXTRA_MESSAGE1", user);
+							intent.putExtra("EXTRA_MESSAGE2", pass);
 							//Desactiva barra de progreso
 							barraCarga.setVisibility(View.GONE);
 						    startActivity(intent);

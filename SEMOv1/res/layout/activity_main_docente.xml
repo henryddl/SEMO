@@ -8,4 +8,45 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainDocente" >
 
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="68dp"
+        android:drawableLeft="@drawable/ic_action_collection"
+        android:text="@string/ingresa_pregunta" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button3"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="26dp"
+        android:drawableLeft="@drawable/ic_action_go_to_today"
+        android:text="@string/info_docente" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button3"
+        android:layout_alignLeft="@+id/button3"
+        android:layout_marginBottom="21dp"
+        android:layout_marginLeft="21dp"
+        android:drawableLeft="@drawable/ic_action_new"
+        android:text="@string/hacer_test" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button4"
+        android:layout_alignRight="@+id/button1"
+        android:layout_marginBottom="48dp"
+        android:drawableLeft="@drawable/ic_action_cc_bcc"
+        android:text="@string/ver_alumnos" />
+
 </RelativeLayout>

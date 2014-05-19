@@ -66,6 +66,34 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sv.ues.fia.semo.activity.MainAdministrador" />
         </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.InfoDocente"
+            android:label="@string/title_activity_info_docente" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.InfoAlumno"
+            android:label="@string/title_activity_info_alumno" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.IngresaPregunta"
+            android:label="@string/title_activity_ingresa_pregunta" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.PreguntaMultipleSimple"
+            android:label="@string/title_activity_pregunta_multiple_simple" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.SeleccionMultipleVariable"
+            android:label="@string/title_activity_seleccion_multiple_variable" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.PreguntaRespuestaCorta"
+            android:label="@string/title_activity_pregunta_respuesta_corta" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.PreguntaFalsoVerdadero"
+            android:label="@string/title_activity_pregunta_falso_verdadero" >
+        </activity>
     </application>
 
 </manifest>
