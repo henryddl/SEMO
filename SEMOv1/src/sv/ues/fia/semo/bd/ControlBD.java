@@ -95,15 +95,15 @@ public class ControlBD {
 		public void onCreate(SQLiteDatabase db) {
 			try {
 				//creacion de las tablas y triggers de la base de datos.
-	           /* FileInputStream fstream = new FileInputStream("crearBD.txt");
+	            FileInputStream fstream = new FileInputStream("crearBD.txt");
 	            DataInputStream entrada = new DataInputStream(fstream);
 	            BufferedReader buffer = new BufferedReader(new InputStreamReader(entrada));
 	            String strLinea;
 	            while ((strLinea = buffer.readLine()) != null)   {
 	                db.execSQL(strLinea);
 	            }
-	            entrada.close();*/
-				db.execSQL("create table USUARIO(" +
+	            entrada.close();
+				/*db.execSQL("create table USUARIO(" +
 						"USERNAME VARCHAR2(10) not null," +
 						"CODDOCENTE VARCHAR2(10)," +
 						"CARNET VARCHAR2(10)," +
@@ -287,7 +287,7 @@ public class ControlBD {
 						"PUNTOSOBTENIDOS INTEGER," +
 						"constraint PK_RESPUESTA primary key (IDRESPUESTA) " +
 						"constraint FK_RESPUESTA_PREGUNTA FOREIGN KEY (IDCUESTIONARIO,IDPREGUNTA) REFERENCES AS_PREGUNTA(IDCUESTIONARIO,IDPREGUNTA) ON DELETE RESTRICT);"
-						);	
+						);	*/
 				db.beginTransaction();
 				try{
 					ContentValues us =new ContentValues();
@@ -305,13 +305,13 @@ public class ControlBD {
 
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} /*catch (FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 		}//FIN metodo onCreate
 
 		@Override
@@ -368,8 +368,14 @@ public class ControlBD {
 		if(cursor.moveToFirst()){
 			Usuario usuario = new Usuario();
 			usuario.setUsername(cursor.getString(0));
+			Alumno a=new Alumno();
+			Docente d=new Docente();
+			a.setCarnet(cursor.getString(2));
+			d.setCoddocente(cursor.getString(1));
+			usuario.setAlumno(a);
+			usuario.setDocente(d);
 			usuario.setPassword(cursor.getString(3));
-			usuario.setTipo(cursor.getInt(4));
+			usuario.setTipo(cursor.getInt(4));	
 			 return usuario;		
 		}else{
 		return null;
@@ -383,6 +389,10 @@ public class ControlBD {
 			Usuario u = new Usuario();
 			do{
 				u.setUsername(cursor.getString(0));
+				Alumno a=new Alumno();
+				Docente d=new Docente();
+				a.setCarnet(cursor.getString(2));
+				d.setCoddocente(cursor.getString(1));
 				u.setPassword(cursor.getString(3));
 				u.setTipo(cursor.getInt(4));
 				usuarioList.add(u);
