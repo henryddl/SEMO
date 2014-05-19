@@ -72,19 +72,18 @@ public class Login extends Activity {
 			   Para el ejemplo se usará un if para manejar la situación de datos incorrectos o correctos*/
 			
 			//2. abre la base de datos
-			//helper.abrir();
+			helper.abrir();
 			
 			//3. Realiza Consulta con usuario
-			Usuario usuario=new Usuario();
-			usuario.setTipo(0);
-			usuario.setPassword("1234");
-			//Usuario usuario=helper.consultarUsuario(user);
+            Usuario usuario=helper.consultarUsuario(user);
 			
-			//4. Comprueba que la clave sea correcta.
+			//4. Comprueba que el usuario exista.
 			if(usuario==null){ //no se encontró coincidencia de usuario, muestra error y no hace nada más
 				Toast.makeText(this, "Usuario no encontrado.", Toast.LENGTH_SHORT).show();
+				barraCarga.setVisibility(View.GONE);
 			}
 			else{
+				//Si el usuario existe comprueba que la contraseña sea correcta
 				if(usuario.getPassword().equals(pass)){
 					/**En este punto se decidirá si enviar al main del alumno,docente o administrador basandose en
 					   el tipo de cuenta retornado*/ 
@@ -100,7 +99,6 @@ public class Login extends Activity {
 							//Desactiva barra de progreso
 							barraCarga.setVisibility(View.GONE);
 						    startActivity(intent);
-							Toast.makeText(this, "Tipo Alumno.", Toast.LENGTH_SHORT).show();
 							break;
 						case 1:
 							intent = new Intent(this, MainDocente.class);
@@ -109,7 +107,6 @@ public class Login extends Activity {
 							//Desactiva barra de progreso
 							barraCarga.setVisibility(View.GONE);
 						    startActivity(intent);
-							Toast.makeText(this, "Tipo Docente.", Toast.LENGTH_SHORT).show();
 							break;
 						case 2:
 							intent = new Intent(this, MainAdministrador.class);
@@ -118,13 +115,14 @@ public class Login extends Activity {
 							//Desactiva barra de progreso
 							barraCarga.setVisibility(View.GONE);
 						    startActivity(intent);
-							Toast.makeText(this, "Tipo Administrador.", Toast.LENGTH_SHORT).show();
 							break;
 						
 					}//fin del switch
 				}
-				else
+				else{
 					Toast.makeText(this, "Contraseña incorrecta.", Toast.LENGTH_SHORT).show();
+					barraCarga.setVisibility(View.GONE);
+				}
 			}
 		}
 	}//Fin de onClick
