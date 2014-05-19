@@ -66,6 +66,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sv.ues.fia.semo.activity.MainAdministrador" />
         </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.ActualizarCuenta"
+            android:label="@string/title_activity_actualizar_cuenta"
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAdministrador" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAdministrador" />
+        </activity>
     </application>
 
 </manifest>

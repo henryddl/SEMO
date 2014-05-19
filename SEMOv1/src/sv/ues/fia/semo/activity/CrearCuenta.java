@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 
 public class CrearCuenta extends Activity {
@@ -52,6 +53,7 @@ public class CrearCuenta extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			// This ID represents the Home or Up button. In the case of this
@@ -63,6 +65,18 @@ public class CrearCuenta extends Activity {
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+        case R.id.crear_cuenta:
+        	intent = new Intent(this, CrearCuenta.class);
+        	startActivity(intent);
+            return true;
+        case R.id.cerrar_sesion:
+        	intent=new Intent(this,Login.class);
+        	startActivity(intent);
+            return true;
+        case R.id.actualizar_cuenta:
+        	intent=new Intent(this,ActualizarCuenta.class);
+        	startActivity(intent);
+            return true; 
 		}
 		return super.onOptionsItemSelected(item);
 	}

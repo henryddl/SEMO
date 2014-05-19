@@ -26,10 +26,13 @@
     <string name="nombreUsuario_CrearCuentaActivity">Escribe el nombre de usuario</string>
     <string name="contrasenia_CrearCuentaActivity">Escribe la contraseña</string>
     <string name="repetirContrasenia_CrearCuentaActivity">Repite la contraseña</string>
-	<string name="tipoCuentaLabel">Elige el tipo de cuenta</string>
-	<string name="tipoAlumno">Alumno</string>
-	<string name="tipoDocente">Docente</string>
-	<string name="tipoAdministrador">Administrador</string>
-	<string name="eligeTipoCuenta">Elige el tipo de cuenta:</string>
-	<string name="crearBoton">Crear Usuario</string>
+    <string name="tipoCuentaLabel">Elige el tipo de cuenta</string>
+    <string name="tipoAlumno">Alumno</string>
+    <string name="tipoDocente">Docente</string>
+    <string name="tipoAdministrador">Administrador</string>
+    <string name="eligeTipoCuenta">Elige el tipo de cuenta:</string>
+    <string name="crearBoton">Crear Usuario</string>
+    <string name="actualizarCuenta">Actualizar Cuenta</string>
+    <string name="title_activity_actualizar_cuenta">Actualizar Cuenta</string>
+
 </resources>

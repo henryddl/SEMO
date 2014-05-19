@@ -11,6 +11,8 @@
             <item android:id="@+id/crear_cuenta"
                   android:showAsAction="never"
                   android:title="@string/crearCuentaLabel"/>
+            <item android:id="@+id/actualizar_cuenta"
+                  android:title="@string/actualizarCuenta"/>
         </menu>
     </item>
     <item android:id="@+id/cerrar_sesion" 

@@ -35,6 +35,10 @@ public class MainAdministrador extends Activity {
 	        	intent=new Intent(this,Login.class);
 	        	startActivity(intent);
 	            return true;
+	        case R.id.actualizar_cuenta:
+	        	intent=new Intent(this,ActualizarCuenta.class);
+	        	startActivity(intent);
+	            return true;    
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
