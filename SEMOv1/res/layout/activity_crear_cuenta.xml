@@ -1,0 +1,94 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="446dp" >
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/editText1"
+            android:layout_below="@+id/editText1"
+            android:layout_marginTop="22dp"
+            android:ems="10"
+            android:hint="@string/contrasenia_CrearCuentaActivity"
+            android:inputType="textPassword"
+            android:drawableLeft="@drawable/pass_ic" />
+
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/editText2"
+            android:layout_below="@+id/editText2"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="@string/repetirContrasenia_CrearCuentaActivity"
+            android:inputType="textPassword"
+            android:drawableLeft="@drawable/pass_ic" />
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="33dp"
+            android:ems="10"
+            android:hint="@string/nombreUsuario_CrearCuentaActivity"
+            android:drawableLeft="@drawable/user_ic" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/editText3"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/eligeTipoCuenta" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView1"
+            android:layout_centerHorizontal="true" >
+
+            <RadioButton
+                android:id="@+id/radio0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/tipoAlumno" />
+
+            <RadioButton
+                android:id="@+id/radio1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tipoDocente" />
+
+            <RadioButton
+                android:id="@+id/radio2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tipoAdministrador" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/radioGroup1"
+            android:layout_alignParentBottom="true"
+            android:text="@string/crearBoton"
+            android:onClick="crearUsuario" />
+
+    </RelativeLayout>
+
+</ScrollView>

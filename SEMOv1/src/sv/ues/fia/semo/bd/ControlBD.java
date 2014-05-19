@@ -10,7 +10,6 @@ import java.util.List;
 
 import sv.ues.fia.semo.modelo.*;
 
-import android.R.id;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -25,48 +24,48 @@ public class ControlBD {
 	 * */
 	private static final String[] camposUsuario = new String[]{"USERNAME",
 		"CODDOCENTE","CARNET","PASSWORD","TIPO"};
-	
+
 	private static final String[] camposAlumno = new String[]{"CARNET",
 		"USERNAME","NOMBRE_ALUMNO","APELLIDO_ALUMNO"};
-	
+
 	private static final String[] camposDocente = new String[]{"CODDOCENTE",
 		"USERNAME","NOMBRE_DOCENTE","APELLIDO_DOCENTE"};
-	
+
 	private static final String[] camposCiclo = new String[]{"ANIO","CICLO","ESTADO"};
-	
+
 	private static final String[] camposMateria = new String[]{"CODMATERIA","NOMBRE","CICLO_PENSUM"};
-	
+
 	private static final String[] camposCurso = new String[]{"ANIO",
 		"CICLO","CODMATERIA","NUMCURSO","CODDOCENTE","AULA","HORA"};
-	
+
 	private static final String[] camposCategoria = new String[]{"ANIO",
 		"CICLO","CODMATERIA","NUMCURSO","IDCATEGORIA","NOMBRE_CATEGORIA","DESCRIPCION_CATEGORIA"};
-	
+
 	private static final String[] camposSubcategoria = new String[]{"IDSUBCATEGORIA",
 		"IDCATEGORIA","NOMBRESUB_CATEGORIA","DESCRIPCION_SUBCATEGORIA"};
-	
+
 	private static final String[] camposTipo = new String[]{"CODTIPO","TIPOPREGUNTA","NUMRESPUESTA"};
-	
+
 	private static final String[] camposPregunta = new String[]{"IDPREGUNTA",
 		"IDSUBCATEGORIA","CODTIPO","PREGUNTA","PUNTAJE_PREGUNTA"};
-	
+
 	private static final String[] camposItem_Respuesta = new String[]{"IDITEM",
 		"IDPREGUNTA","RESPUESTA","PUNTOS_RESPUESTA"};
-	
+
 	private static final String[] camposEvaluacion = new String[]{"ANIO",
 		"CICLO","CODMATERIA","NUMCURSO","IDEVAL","NOMBREEVAL","PORCENTAJE_EVAL"};
-	
+
 	private static final String[] camposConfiguracion = new String[]{"IDSUBCATEGORIA",
 		"IDEVAL","NUMPREGUNTAS"};
-	
+
 	private static final String[] camposInscribe = new String[]{"NUMCURSO",
 		"ANIO","CICLO","CODMATERIA","CARNET"};
-	
+
 	private static final String[] camposCuestionario = new String[]{"IDCUESTIONARIO",
 		"IDEVAL","CARNET","NUMPREGUNTAS","PUNTAJEALUMNO","NOTAALUMNO","DISPONIBLE","REALIZADO"};
-	
+
 	private static final String[] camposAs_Preguntas = new String[]{"IDPREGUNTA","IDCUESTIONARIO"};
-	
+
 	private static final String[] camposRespuesta = new String[]{"IDCUESTIONARIO",
 		"IDPREGUNTA","IDRESPUESTA","RESPUESTA","PUNTOSOBTENIDOS"};
 
@@ -91,27 +90,210 @@ public class ControlBD {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			//abrir archivo que contiene las sentencias de creacion de bd
-			File f = new File("crearBD.txt");
-			BufferedReader entrada = null;
 			try {
-				entrada = new BufferedReader(new FileReader(f));
-				//creacion de las tablas de la base de datos.				
-				while (entrada.ready()){
-					db.execSQL(entrada.readLine().toString());					
-				}			
+				//creacion de las tablas de la base de datos.
+				db.execSQL("create table USUARIO(" +
+						"USERNAME VARCHAR2(10) not null," +
+						"CODDOCENTE VARCHAR2(10)," +
+						"CARNET VARCHAR2(10)," +
+						"PASSWORD VARCHAR2(32) not null," +
+						"TIPO INTEGER not null," +
+						"constraint PK_USUARIO primary key (USERNAME)" +
+						"constraint FK_USUARIO_ALUMNO FOREIGN KEY (CARNET) " +
+						"REFERENCES ALUMNO(CARNET) ON DELETE RESTRICT," +
+						"constraint FK_USUARIO_DOCENTE FOREIGN KEY (CODDOCENTE) " +
+						"REFERENCES DOCENTE(CODDOCENTE) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table ALUMNO(" +
+						"CARNET VARCHAR2(10) not null," +
+						"USERNAME VARCHAR2(10)," +
+						"NOMBRE_ALUMNO VARCHAR2(100) not null," +
+						"APELLIDO_ALUMNO VARCHAR2(100) not null," +
+						"constraint PK_ALUMNO primary key (CARNET)" +
+						"constraint FK_ALUMNO_LOGIN FOREIGN KEY (USERNAME) " +
+						"REFERENCES USUARIO(USERNAME) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table DOCENTE(" +
+						"CODDOCENTE VARCHAR2(10) not null," +
+						"USERNAME VARCHAR2(10)," +
+						"NOMBRE_DOCENTE VARCHAR2(100) not null," +
+						"APELLIDO_DOCENTE VARCHAR2(100) not null," +
+						"constraint PK_DOCENTE primary key (CODDOCENTE)" +
+						"constraint FK_DOCENTE_LOGIN FOREIGN KEY (USERNAME) " +
+						"REFERENCES USUARIO(USERNAME) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table CICLO(" +
+						"ANIO INTEGER not null," +
+						"CICLO INTEGER not null," +
+						"ESTADO VARCHAR2(10) not null," +
+						"constraint PK_CICLO primary key (ANIO, CICLO)" +
+						");");
+				
+				db.execSQL("create table MATERIA(" +
+						"CODMATERIA VARCHAR2(10) not null," +
+						"NOMBRE VARCHAR2(50) not null," +
+						"CICLO_PENSUM INTEGER," +
+						"constraint PK_MATERIA primary key (CODMATERIA)" +
+						");");
+				
+				db.execSQL("create table CURSO(" +
+						"ANIO INTEGER not null," +
+						"CICLO INTEGER not null," +
+						"CODMATERIA VARCHAR2(10) not null," +
+						"NUMCURSO INTEGER not null," +
+						"CODDOCENTE VARCHAR2(10)," +
+						"AULA VARCHAR2(10)," +
+						"HORA VARCHAR2(5)," +
+						"constraint PK_CURSO primary key (CODMATERIA, ANIO, CICLO, NUMCURSO)" +
+						"constraint FK_CURSO_CICLO FOREIGN KEY (ANIO,CICLO) " +
+						"REFERENCES CICLO(ANIO,CICLO) ON DELETE RESTRICT," +
+						"constraint FK_CURSO_CICLO FOREIGN KEY (CODMATERIA) " +
+						"REFERENCES MATERIA(CODMATERIA) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table CATERGORIA(" +
+						"ANIO INTEGER," +
+						"CICLO INTEGER," +
+						"CODMATERIA VARCHAR2(10)," +
+						"NUMCURSO INTEGER not null," +
+						"IDCATEGORIA INTEGER not null," +
+						"NOMBRE_CATEGORIA VARCHAR2(50) not null," +
+						"DESCRIPCION_CATEGORIA TEXT," +
+						"constraint PK_CATERGORIA primary key (IDCATEGORIA)" +
+						"constraint FK_CATEGORIA_CURSO FOREIGN KEY (ANIO,CICLO,CODMATERIA,NUMCURSO) " +
+						"REFERENCES CURSO(ANIO,CICLO,CODMATERIA,NUMCURSO) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table SUBCATEGORIA(" +
+						"IDSUBCATEGORIA INTEGER not null," +
+						"IDCATEGORIA INTEGER," +
+						"NOMBRESUB_CATEGORIA VARCHAR2(50) not null," +
+						"DESCRIPCION_SUBCATEGORIA TEXT," +
+						"constraint PK_SUBCATEGORIA primary key (IDSUBCATEGORIA)" +
+						"constraint FK_SUCATEGORIA_CATEGORIA FOREIGN KEY (IDCATEGORIA) " +
+						"REFERENCES CATEGORIA(IDCATEGORIA) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table TIPO(" +
+						"CODTIPO VARCHAR2(10) not null," +
+						"TIPOPREGUNTA VARCHAR2(50) not null," +
+						"NUMRESPUESTA INTEGER," +
+						"constraint PK_TIPO primary key (CODTIPO)" +
+						");");
+				
+				db.execSQL("create table PREGUNTA(" +
+						"IDPREGUNTA INTEGER not null," +
+						"IDSUBCATEGORIA INTEGER," +
+						"CODTIPO VARCHAR2(10)," +
+						"PREGUNTA TEXT not null," +
+						"PUNTAJE_PREGUNTA INTEGER not null," +
+						"constraint PK_PREGUNTA primary key (IDPREGUNTA)" +
+						"constraint FK_PREGUNTA_TIPO FOREIGN KEY (CODTIPO) " +
+						"REFERENCES TIPO(CODTIPO) ON DELETE RESTRICT," +
+						"constraint FK_PREGUNTA_SUBCATEGORIA FOREIGN KEY (IDSUBCATEGORIA) " +
+						"REFERENCES SUBCATEGORIA(IDSUBCATEGORIA) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table ITEM_RESPUESTA(" +
+						"IDITEM INTEGER not null," +
+						"IDPREGUNTA INTEGER," +
+						"RESPUESTA TEXT not null," +
+						"PUNTOS_RESPUESTA INTEGER not null," +
+						"constraint PK_ITEM_RESPUESTA primary key (IDITEM)" +
+						"constraint FK_ITEM_RESPUESTA_PREGUNTA FOREIGN KEY (IDPREGUNTA) " +
+						"REFERENCES PREGUNTA(IDPREGUNTA) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table EVALUACION(" +
+						"ANIO INTEGER," +
+						"CICLO INTEGER," +
+						"CODMATERIA VARCHAR2(10)," +
+						"NUMCURSO INTEGER," +
+						"IDEVAL INTEGER not null," +
+						"NOMBREEVAL VARCHAR2(20) not null," +
+						"PORCENTAJE_EVAL FLOAT not null," +
+						"constraint PK_EVALUACION primary key (IDEVAL)" +
+						"constraint FK_EVALUACION_CURSO FOREIGN KEY (ANIO,CICLO,CODMATERIA,NUMCURSO) " +
+						"REFERENCES CURSO(ANIO,CICLO,CODMATERIA,NUMCURSO) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table CONFIGURACION(" +
+						"IDSUBCATEGORIA INTEGER not null," +
+						"IDEVAL INTEGER not null," +
+						"NUMPREGUNTAS INTEGER," +
+						"constraint PK_CONFIGURACION primary key (IDSUBCATEGORIA, IDEVAL)" +
+						"constraint FK_CONFIGURACON_EVALUACION FOREIGN KEY (IDEVAL) " +
+						"REFERENCES EVALUACION(IDEVAL) ON DELETE RESTRICT," +
+						"constraint FK_CONFIGURACON_SUBCATERORIA FOREIGN KEY (IDSUBCATEGORIA) " +
+						"REFERENCES SUBCATEGORIA(IDSUBCATEGORIA) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table INSCRIBE(" +
+						"NUMCURSO INTEGER not null," +
+						"ANIO INTEGER not null," +
+						"CICLO INTEGER not null," +
+						"CODMATERIA VARCHAR2(10) not null," +
+						"CARNET VARCHAR2(10) not null," +
+						"constraint PK_INSCRIBE primary key (NUMCURSO, ANIO, CICLO, CODMATERIA, CARNET)" +
+						"constraint FK_INCRIPCION_ALUMNO FOREIGN KEY (CARNET) " +
+						"REFERENCES ALUMNO(CARNET) ON DELETE RESTRICT," +
+						"constraint FK_INCRIPCION_CURSO FOREIGN KEY (ANIO,CICLO,CODMATERIA,CARNET) " +
+						"REFERENCES CICLO(ANIO,CICLO,CODMATERIA,CARNET) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table CUESTIONARIO(" +
+						"IDCUESTIONARIO INTEGER not null," +
+						"IDEVAL INTEGER," +
+						"CARNET VARCHAR2(10)," +
+						"NUMPREGUNTAS INTEGER not null," +
+						"PUNTAJEALUMNO INTEGER," +
+						"NOTAALUMNO FLOAT," +
+						"DISPONIBLE SMALLINT(1) not null," +
+						"REALIZADO SMALLINT(1) not null," +
+						"constraint PK_CUESTIONARIO primary key (IDCUESTIONARIO)" +
+						"constraint FK_CUESTIONARIO_EVALUACION FOREIGN KEY (IDEVAL) " +
+						"REFERENCES EVALUACION(IDEVAL) ON DELETE RESTRICT," +
+						"constraint FK_CUESTIONARIO_ALUMNO FOREIGN KEY (CARNET) " +
+						"REFERENCES ALUMNO(CARNET) ON DELETE RESTRICT" +
+						");");
+				
+				db.execSQL("create table AS_PREGUNTAS(" +
+						"IDPREGUNTA INTEGER not null," +
+						"IDCUESTIONARIO INTEGER not null," +
+						"constraint PK_AS_PREGUNTAS primary key (IDPREGUNTA, IDCUESTIONARIO) " +
+						"constraint FK_AS_PREGUNTA_IDCUESTIONARIO FOREIGN KEY (IDCUESTIONARIO) REFERENCES CUESTIONARIO(IDCUESTIONARIO) ON DELETE RESTRICT," +
+						"constraint FK_AS_PREGUNTA_PREGUNTA FOREIGN KEY (IDPREGUNTA) REFERENCES PREGUNTA(IDPREGUNTA) ON DELETE RESTRICT);"
+						);
+				
+				db.execSQL("create table RESPUESTA(" +
+						"IDCUESTIONARIO INTEGER not null," +
+						"IDPREGUNTA INTEGER not null," +
+						"IDRESPUESTA INTEGER not null," +
+						"RESPUESTA TEXT," +
+						"PUNTOSOBTENIDOS INTEGER," +
+						"constraint PK_RESPUESTA primary key (IDRESPUESTA) " +
+						"constraint FK_RESPUESTA_PREGUNTA FOREIGN KEY (IDCUESTIONARIO,IDPREGUNTA) REFERENCES AS_PREGUNTA(IDCUESTIONARIO,IDPREGUNTA) ON DELETE RESTRICT);"
+						);	
+				db.beginTransaction();
+				try{
+					ContentValues us =new ContentValues();
+					us.put("username", "admin");
+					us.putNull("codDocente");
+					us.putNull("carnet");			
+					us.put("password", "admin");
+					us.put("tipo", 2);
+					db.insert("usuario", null, us);
+					db.setTransactionSuccessful();
+				}
+				finally {
+			        db.endTransaction();
+			    }
+
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}finally{
-				try {
-					entrada.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		}//FIN metodo onCreate
 
@@ -156,7 +338,7 @@ public class ControlBD {
 			Usuario usuario = new Usuario();
 			usuario.setUsername(cursor.getString(0));
 			usuario.setPassword(cursor.getString(3));
-			usuario.setTipo(cursor.getString(4));
+			usuario.setTipo(cursor.getInt(4));
 			 return usuario;		
 		}else{
 		return null;
@@ -171,7 +353,7 @@ public class ControlBD {
 			do{
 				u.setUsername(cursor.getString(0));
 				u.setPassword(cursor.getString(3));
-				u.setTipo(cursor.getString(4));
+				u.setTipo(cursor.getInt(4));
 				usuarioList.add(u);
 			}
 			while (cursor.moveToNext());
@@ -195,7 +377,7 @@ public class ControlBD {
 			return "Registro con nombre de usuario " + usuario.getUsername() + " no existe";
 		}
 		}
-	
+
 	public String eliminar(Usuario usuario){
 		String regAfectados="filas afectadas= ";
 		int contador=0;
@@ -210,7 +392,7 @@ public class ControlBD {
 		}
 		return regAfectados;
 		}
-	
+
 	/*---------------------------------------------------------------------------*
 	 * 								 Crud Alumno								 *
 	 *---------------------------------------------------------------------------*/
@@ -287,7 +469,7 @@ public class ControlBD {
 			return "Registro con carnet " + alumno.getCarnet() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Alumno alumno){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -377,7 +559,7 @@ public class ControlBD {
 			return "Registro con Codigo " + docente.getCoddocente() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Docente docente){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -453,14 +635,14 @@ public class ControlBD {
 			ContentValues cv = new ContentValues();
 			cv.put("estado", ciclo.getEstado());
 			db.update("ciclo", cv, "anio = ? AND ciclo = ", id);
-			
+
 			return "Registro Actualizado Correctamente";
 			}
 			else{
 			return "Registro con Año " + ciclo.getAnio() + " y ciclo "+ciclo.getCiclo()+" no existe";
 			}
 			}
-		
+
 		public String eliminar(Ciclo ciclo){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -535,14 +717,14 @@ public class ControlBD {
 				cv.put("nombreMateria", materia.getNombreMateria());
 				cv.put("cicloPensum", materia.getCicloPensum());
 				db.update("materia",cv,"codigo = ",id);
-			
+
 			return "Registro Actualizado Correctamente";
 			}
 			else{
 			return "Registro con codigo " + materia.getCodigo() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Materia materia){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -573,7 +755,7 @@ public class ControlBD {
 			us.put("codDocente", curso.getDocente().getCoddocente());
 			us.put("aula", curso.getAula());
 			us.put("hora", curso.getHora());
-			
+
 			contador=db.insert("curso", null, us);
 			if(contador==-1 || contador==0)
 			{
@@ -593,19 +775,19 @@ public class ControlBD {
 				Ciclo ciclo = new Ciclo();
 				Materia materia = new Materia();
 				Docente docente = new Docente();
-				
+
 				ciclo.setAnio(cursor.getInt(1));
 				ciclo.setCiclo(cursor.getInt(2));
 				materia.setCodigo(cursor.getString(3));
 				docente.setCoddocente(cursor.getString(4));
-				
+
 				curso.setNumCurso(cursor.getInt(0));
 				curso.setCiclo(ciclo);
 				curso.setMateria(materia);
 				curso.setDocente(docente);
 				curso.setAula(cursor.getString(5));
 				curso.setHora(cursor.getString(6));
-				
+
 				return curso;		
 			}else{
 			return null;
@@ -621,12 +803,12 @@ public class ControlBD {
 					Ciclo ciclo = new Ciclo();
 					Materia materia = new Materia();
 					Docente docente = new Docente();
-					
+
 					ciclo.setAnio(cursor.getInt(1));
 					ciclo.setCiclo(cursor.getInt(2));
 					materia.setCodigo(cursor.getString(3));
 					docente.setCoddocente(cursor.getString(4));
-					
+
 					curso.setNumCurso(cursor.getInt(0));
 					curso.setCiclo(ciclo);
 					curso.setMateria(materia);
@@ -642,7 +824,7 @@ public class ControlBD {
 			return null;
 			}
 			}
-	
+
 		public String actualizar(Curso curso){
 			//verificar la integridad del usuario por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
@@ -661,7 +843,7 @@ public class ControlBD {
 			return "Registro con numero " + curso.getNumCurso() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Curso curso){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -703,13 +885,13 @@ public class ControlBD {
 			if(cursor.moveToFirst()){
 				Categoria categoria = new Categoria();
 				Curso curso = new Curso();
-				
+
 				categoria.setIdCategoria(cursor.getInt(0));
 				curso.setNumCurso(cursor.getInt(1));
 				categoria.setCurso(curso);
 				categoria.setNombreCategoria(cursor.getString(2));
 				categoria.setDescripcionCategoria(cursor.getString(3));
-	
+
 				 return categoria;		
 			}else{
 			return null;
@@ -746,14 +928,14 @@ public class ControlBD {
 				cv.put("nombreCategoria", categoria.getNombreCategoria());
 				cv.put("descripcionCategoria", categoria.getDescripcionCategoria());
 				db.update("categoria", cv, "idCategoria = ?", id);	
-				
+
 				return "Registro Actualizado Correctamente";
 			}
 			else{
 				return "Registro con ID " + categoria.getIdCategoria() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Categoria categoria){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -802,7 +984,7 @@ public class ControlBD {
 				sc.setCategoria(categoria);
 				sc.setNombreSubCategoria(cursor.getString(2));
 				sc.setDescripcionSubcategoria(cursor.getString(3));
-				
+
 				 return sc;		
 			}else{
 			return null;
@@ -839,14 +1021,14 @@ public class ControlBD {
 				cv.put("nombreSubCategoria", sc.getNombreSubCategoria());
 				cv.put("descripcionSubCategoria", sc.getDescripcionSubcategoria());
 				db.update("subcategoria", cv, "idSubCategoria = ?", id);
-			
+
 				return "Registro Actualizado Correctamente";
 			}
 			else{
 				return "Registro con id " + sc.getIdSubCategoria() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Subcategoria sc){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -923,14 +1105,14 @@ public class ControlBD {
 				cv.put("tipoPregunta", tipo.getTipoPregunta());
 				cv.put("numRespuesta",tipo.getNumRespuesta());
 				db.update("tipo", cv, "codTipo = ?", id);
-			
+
 			return "Registro Actualizado Correctamente";
 			}
 			else{
 			return "Registro con Codigo " + tipo.getCodTipo() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Tipo tipo){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -977,7 +1159,7 @@ public class ControlBD {
 				Tipo tipo = new Tipo();
 				sc.setIdSubCategoria(cursor.getInt(1));
 				tipo.setCodTipo(cursor.getString(2));
-				
+
 				pregunta.setIdPregunta(cursor.getInt(0));
 				pregunta.setSc(sc);
 				pregunta.setTipo(tipo);
@@ -999,7 +1181,7 @@ public class ControlBD {
 					Tipo tipo = new Tipo();
 					sc.setIdSubCategoria(cursor.getInt(1));
 					tipo.setCodTipo(cursor.getString(2));
-					
+
 					pregunta.setIdPregunta(cursor.getInt(0));
 					pregunta.setSc(sc);
 					pregunta.setTipo(tipo);
@@ -1030,7 +1212,7 @@ public class ControlBD {
 			return "Registro con id " + pregunta.getIdPregunta() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Pregunta pregunta){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -1076,7 +1258,7 @@ public class ControlBD {
 				ItemRespuesta ir = new ItemRespuesta();
 				Pregunta pregunta = new Pregunta();
 				pregunta.setIdPregunta(cursor.getInt(1));
-				
+
 				ir.setIdItem(cursor.getInt(0));
 				ir.setPregunta(pregunta);
 				ir.setRespuesta(cursor.getString(2));
@@ -1095,7 +1277,7 @@ public class ControlBD {
 				do{					
 					Pregunta pregunta = new Pregunta();
 					pregunta.setIdPregunta(cursor.getInt(1));
-					
+
 					ir.setIdItem(cursor.getInt(0));
 					ir.setPregunta(pregunta);
 					ir.setRespuesta(cursor.getString(2));
@@ -1118,14 +1300,14 @@ public class ControlBD {
 				cv.put("respuesta", ir.getRespuesta());
 				cv.put("puntosRespuesta", ir.getPuntosRespuesta());
 				db.update("item_respuesta", cv, "idItem = ?", id);
-			
+
 			return "Registro Actualizado Correctamente";
 			}
 			else{
 			return "Registro con id " + ir.getIdItem() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(ItemRespuesta ir){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -1168,7 +1350,7 @@ public class ControlBD {
 			if(cursor.moveToFirst()){
 				Evaluacion ev = new Evaluacion();
 				Curso c = new Curso();
-				
+
 				ev.setIdEval(cursor.getInt(0));
 				c.setNumCurso(cursor.getInt(1));
 				ev.setCurso(c);
@@ -1216,7 +1398,7 @@ public class ControlBD {
 			return "Registro con ID " + ev.getIdEval() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Evaluacion ev){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -1258,7 +1440,7 @@ public class ControlBD {
 				Configuracion conf = new Configuracion();
 				Subcategoria sc = new Subcategoria();
 				Evaluacion ev = new Evaluacion();
-				
+
 				sc.setIdSubCategoria(cursor.getInt(0));
 				ev.setIdEval(cursor.getInt(1));
 				conf.setNumPreguntas(cursor.getInt(2));
@@ -1269,7 +1451,7 @@ public class ControlBD {
 			return null;
 			}
 			}
-		
+
 		public List<Configuracion> consultarConfiguraciones(){
 			List<Configuracion> confList = new ArrayList<Configuracion>();
 			Cursor cursor = db.query("configuracion", camposConfiguracion, null, null,null, null, null);
@@ -1300,7 +1482,7 @@ public class ControlBD {
 				cv.put("idEval", conf.getEv().getIdEval());
 				cv.put("numPreguntas", conf.getNumPreguntas());
 				db.update("configuracion", cv, "idSubCategoria = ? AND idEval = ?", id);
-			
+
 			return "Registro Actualizado Correctamente";
 			}
 			else{
@@ -1308,7 +1490,7 @@ public class ControlBD {
 					" e ID Evaluacion "+conf.getEv().getIdEval()+ " no existe";
 			}
 			}
-		
+
 		public String eliminar(Configuracion conf){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -1396,14 +1578,14 @@ public class ControlBD {
 			 * se actualiza el registro
 			 * db.update("usuario", cv, "username = ?", id);
 			 * */
-			
+
 			return "Registro Actualizado Correctamente";
 			}
 			else{
 			return "Registro con id " + ins.getCurso().getNumCurso() +","+ins.getAlumno().getCarnet()+ " no existe";
 			}
 			}
-		
+
 		public String eliminar(Inscribe ins){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -1455,7 +1637,7 @@ public class ControlBD {
 				Alumno a = new Alumno();
 				ev.setIdEval(cursor.getInt(1));
 				a.setCarnet(cursor.getString(2));
-				
+
 				ct.setIdCuestionaro(cursor.getInt(0));
 				ct.setEv(ev);
 				ct.setAlumno(a);
@@ -1480,7 +1662,7 @@ public class ControlBD {
 					Alumno a = new Alumno();
 					ev.setIdEval(cursor.getInt(1));
 					a.setCarnet(cursor.getString(2));
-					
+
 					ct.setIdCuestionaro(cursor.getInt(0));
 					ct.setEv(ev);
 					ct.setAlumno(a);
@@ -1516,7 +1698,7 @@ public class ControlBD {
 			return "Registro con id " + ct.getIdCuestionaro() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Cuestionario ct){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -1567,7 +1749,7 @@ public class ControlBD {
 			return null;
 			}
 			}*/
-		
+
 		//consultar todos los as de preguntas
 		public List<As_Preguntas> consultarAses(){
 			List<As_Preguntas> asList = new ArrayList<As_Preguntas>();
@@ -1579,7 +1761,7 @@ public class ControlBD {
 					Cuestionario c = new Cuestionario();
 					p.setIdPregunta(cursor.getInt(0));
 					c.setIdCuestionaro(cursor.getInt(1));
-					
+
 					as.setCuestionario(c);
 					as.setIdPregunta(p);
 					asList.add(as);
@@ -1612,7 +1794,7 @@ public class ControlBD {
 			return "Registro con carnet " + usuario.getUsername() + " no existe";
 			}
 			}*/
-		
+
 		public String eliminar(As_Preguntas as){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -1656,7 +1838,7 @@ public class ControlBD {
 				Respuesta res = new Respuesta();
 				Cuestionario c = new Cuestionario();
 				c.setIdCuestionaro(cursor.getInt(0));
-				
+
 				res.setCuestionario(c);
 				res.setRespuestaAlumno(cursor.getString(1));
 				res.setPuntosObtenidos(cursor.getInt(2));
@@ -1674,7 +1856,7 @@ public class ControlBD {
 				do{					
 					Cuestionario c = new Cuestionario();
 					c.setIdCuestionaro(cursor.getInt(0));
-					
+
 					res.setCuestionario(c);
 					res.setRespuestaAlumno(cursor.getString(1));
 					res.setPuntosObtenidos(cursor.getInt(2));
@@ -1696,14 +1878,14 @@ public class ControlBD {
 				cv.put("respuestaAlumno", respuesta.getRespuestaAlumno());
 				cv.put("puntosObtenidos", respuesta.getPuntosObtenidos());
 				db.update("respuesta", cv, "idCuestionario = ?", id);
-			
+
 			return "Registro Actualizado Correctamente";
 			}
 			else{
 			return "Respuesta con id " + respuesta.getCuestionario().getIdCuestionaro() + " no existe";
 			}
 			}
-		
+
 		public String eliminar(Respuesta respuesta){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
@@ -1718,7 +1900,7 @@ public class ControlBD {
 			}
 			return regAfectados;
 			}
-	
+
 	/*
 	 * metodo para verificar la integridad de los datos a ingresar; no es necesario puede hacerse con triggers
 	 * 
@@ -1756,7 +1938,7 @@ public class ControlBD {
 	 */
 //metodo para llenar la base de datos
 	public String llenarBD(){			
-				cerrar();
+		
 				return "Guardo Correctamente";
 				}
 }

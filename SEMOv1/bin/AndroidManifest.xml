@@ -22,6 +22,58 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.MainAlumno"
+            android:label="@string/title_activity_main_alumno" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.MainDocente"
+            android:label="@string/title_activity_main_docente" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.MainAdministrador"
+            android:label="@string/title_activity_main_administrador" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.ListarCursos"
+            android:label="@string/title_activity_listar_cursos"
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAlumno" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAlumno" />
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.AdministrarCuenta"
+            android:label="@string/title_activity_administrar_cuenta"
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAlumno" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAlumno" />
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.VerNotas"
+            android:label="@string/title_activity_ver_notas"
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAlumno" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAlumno" />
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.CrearCuenta"
+            android:label="@string/title_activity_crear_cuenta"
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAdministrador" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAdministrador" />
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.ActualizarCuenta"
+            android:label="@string/title_activity_actualizar_cuenta"
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAdministrador" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAdministrador" />
+        </activity>
     </application>
 
 </manifest>
