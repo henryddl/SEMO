@@ -75,7 +75,7 @@ public class Login extends Activity {
 			
 			//3. Realiza Consulta con usuario
             Usuario usuario=helper.consultarUsuario(user);
-			
+            helper.cerrar(); 
 			//4. Comprueba que el usuario exista.
 			if(usuario==null){ //no se encontró coincidencia de usuario, muestra error y no hace nada más
 				Toast.makeText(this, "Usuario no encontrado.", Toast.LENGTH_SHORT).show();
