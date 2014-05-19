@@ -1,10 +1,13 @@
 package sv.ues.fia.semo.bd;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +94,15 @@ public class ControlBD {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			try {
-				//creacion de las tablas de la base de datos.
+				//creacion de las tablas y triggers de la base de datos.
+	           /* FileInputStream fstream = new FileInputStream("crearBD.txt");
+	            DataInputStream entrada = new DataInputStream(fstream);
+	            BufferedReader buffer = new BufferedReader(new InputStreamReader(entrada));
+	            String strLinea;
+	            while ((strLinea = buffer.readLine()) != null)   {
+	                db.execSQL(strLinea);
+	            }
+	            entrada.close();*/
 				db.execSQL("create table USUARIO(" +
 						"USERNAME VARCHAR2(10) not null," +
 						"CODDOCENTE VARCHAR2(10)," +
@@ -294,7 +305,13 @@ public class ControlBD {
 
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
+			} /*catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 		}//FIN metodo onCreate
 
 		@Override
@@ -320,6 +337,20 @@ public class ControlBD {
 		us.put("username", usuario.getUsername());
 		us.put("password", usuario.getPassword());
 		us.put("tipo", usuario.getTipo());
+		switch (usuario.getTipo()){
+		case 0:
+			us.putNull("codDocente");
+			us.put("carnet", usuario.getAlumno().getCarnet());
+			break;
+		case 1:
+			us.putNull("carnet");
+			us.put("codDocente", usuario.getDocente().getCoddocente());
+			break;
+		case 2:
+			us.putNull("carnet");
+			us.putNull("codDocente");
+			break;		
+		}
 		contador=db.insert("usuario", null, us);
 		if(contador==-1 || contador==0)
 		{
