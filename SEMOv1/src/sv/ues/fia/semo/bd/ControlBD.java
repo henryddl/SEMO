@@ -104,7 +104,7 @@ public class ControlBD {
 						"constraint FK_USUARIO_DOCENTE FOREIGN KEY (CODDOCENTE) " +
 						"REFERENCES DOCENTE(CODDOCENTE) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table ALUMNO(" +
 						"CARNET VARCHAR2(10) not null," +
 						"USERNAME VARCHAR2(10)," +
@@ -114,7 +114,7 @@ public class ControlBD {
 						"constraint FK_ALUMNO_LOGIN FOREIGN KEY (USERNAME) " +
 						"REFERENCES USUARIO(USERNAME) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table DOCENTE(" +
 						"CODDOCENTE VARCHAR2(10) not null," +
 						"USERNAME VARCHAR2(10)," +
@@ -124,21 +124,21 @@ public class ControlBD {
 						"constraint FK_DOCENTE_LOGIN FOREIGN KEY (USERNAME) " +
 						"REFERENCES USUARIO(USERNAME) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table CICLO(" +
 						"ANIO INTEGER not null," +
 						"CICLO INTEGER not null," +
 						"ESTADO VARCHAR2(10) not null," +
 						"constraint PK_CICLO primary key (ANIO, CICLO)" +
 						");");
-				
+
 				db.execSQL("create table MATERIA(" +
 						"CODMATERIA VARCHAR2(10) not null," +
 						"NOMBRE VARCHAR2(50) not null," +
 						"CICLO_PENSUM INTEGER," +
 						"constraint PK_MATERIA primary key (CODMATERIA)" +
 						");");
-				
+
 				db.execSQL("create table CURSO(" +
 						"ANIO INTEGER not null," +
 						"CICLO INTEGER not null," +
@@ -153,7 +153,7 @@ public class ControlBD {
 						"constraint FK_CURSO_CICLO FOREIGN KEY (CODMATERIA) " +
 						"REFERENCES MATERIA(CODMATERIA) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table CATERGORIA(" +
 						"ANIO INTEGER," +
 						"CICLO INTEGER," +
@@ -166,7 +166,7 @@ public class ControlBD {
 						"constraint FK_CATEGORIA_CURSO FOREIGN KEY (ANIO,CICLO,CODMATERIA,NUMCURSO) " +
 						"REFERENCES CURSO(ANIO,CICLO,CODMATERIA,NUMCURSO) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table SUBCATEGORIA(" +
 						"IDSUBCATEGORIA INTEGER not null," +
 						"IDCATEGORIA INTEGER," +
@@ -176,14 +176,14 @@ public class ControlBD {
 						"constraint FK_SUCATEGORIA_CATEGORIA FOREIGN KEY (IDCATEGORIA) " +
 						"REFERENCES CATEGORIA(IDCATEGORIA) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table TIPO(" +
 						"CODTIPO VARCHAR2(10) not null," +
 						"TIPOPREGUNTA VARCHAR2(50) not null," +
 						"NUMRESPUESTA INTEGER," +
 						"constraint PK_TIPO primary key (CODTIPO)" +
 						");");
-				
+
 				db.execSQL("create table PREGUNTA(" +
 						"IDPREGUNTA INTEGER not null," +
 						"IDSUBCATEGORIA INTEGER," +
@@ -196,7 +196,7 @@ public class ControlBD {
 						"constraint FK_PREGUNTA_SUBCATEGORIA FOREIGN KEY (IDSUBCATEGORIA) " +
 						"REFERENCES SUBCATEGORIA(IDSUBCATEGORIA) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table ITEM_RESPUESTA(" +
 						"IDITEM INTEGER not null," +
 						"IDPREGUNTA INTEGER," +
@@ -206,7 +206,7 @@ public class ControlBD {
 						"constraint FK_ITEM_RESPUESTA_PREGUNTA FOREIGN KEY (IDPREGUNTA) " +
 						"REFERENCES PREGUNTA(IDPREGUNTA) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table EVALUACION(" +
 						"ANIO INTEGER," +
 						"CICLO INTEGER," +
@@ -219,7 +219,7 @@ public class ControlBD {
 						"constraint FK_EVALUACION_CURSO FOREIGN KEY (ANIO,CICLO,CODMATERIA,NUMCURSO) " +
 						"REFERENCES CURSO(ANIO,CICLO,CODMATERIA,NUMCURSO) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table CONFIGURACION(" +
 						"IDSUBCATEGORIA INTEGER not null," +
 						"IDEVAL INTEGER not null," +
@@ -230,7 +230,7 @@ public class ControlBD {
 						"constraint FK_CONFIGURACON_SUBCATERORIA FOREIGN KEY (IDSUBCATEGORIA) " +
 						"REFERENCES SUBCATEGORIA(IDSUBCATEGORIA) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table INSCRIBE(" +
 						"NUMCURSO INTEGER not null," +
 						"ANIO INTEGER not null," +
@@ -243,7 +243,7 @@ public class ControlBD {
 						"constraint FK_INCRIPCION_CURSO FOREIGN KEY (ANIO,CICLO,CODMATERIA,CARNET) " +
 						"REFERENCES CICLO(ANIO,CICLO,CODMATERIA,CARNET) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table CUESTIONARIO(" +
 						"IDCUESTIONARIO INTEGER not null," +
 						"IDEVAL INTEGER," +
@@ -259,7 +259,7 @@ public class ControlBD {
 						"constraint FK_CUESTIONARIO_ALUMNO FOREIGN KEY (CARNET) " +
 						"REFERENCES ALUMNO(CARNET) ON DELETE RESTRICT" +
 						");");
-				
+
 				db.execSQL("create table AS_PREGUNTAS(" +
 						"IDPREGUNTA INTEGER not null," +
 						"IDCUESTIONARIO INTEGER not null," +
@@ -267,7 +267,7 @@ public class ControlBD {
 						"constraint FK_AS_PREGUNTA_IDCUESTIONARIO FOREIGN KEY (IDCUESTIONARIO) REFERENCES CUESTIONARIO(IDCUESTIONARIO) ON DELETE RESTRICT," +
 						"constraint FK_AS_PREGUNTA_PREGUNTA FOREIGN KEY (IDPREGUNTA) REFERENCES PREGUNTA(IDPREGUNTA) ON DELETE RESTRICT);"
 						);
-				
+
 				db.execSQL("create table RESPUESTA(" +
 						"IDCUESTIONARIO INTEGER not null," +
 						"IDPREGUNTA INTEGER not null," +
@@ -337,13 +337,20 @@ public class ControlBD {
 		if(cursor.moveToFirst()){
 			Usuario usuario = new Usuario();
 			usuario.setUsername(cursor.getString(0));
+			Alumno a=new Alumno();
+			Docente d=new Docente();
+			a.setCarnet(cursor.getString(2));
+			d.setCoddocente(cursor.getString(1));
+			usuario.setAlumno(a);
+			usuario.setDocente(d);
 			usuario.setPassword(cursor.getString(3));
-			usuario.setTipo(cursor.getInt(4));
+			usuario.setTipo(cursor.getInt(4));	
 			 return usuario;		
 		}else{
 		return null;
 		}
 		}
+	
 	//consultar todos los usuarios
 	public List<Usuario> consultarUsuarios(){
 		List<Usuario> usuarioList = new ArrayList<Usuario>();
@@ -1938,7 +1945,7 @@ public class ControlBD {
 	 */
 //metodo para llenar la base de datos
 	public String llenarBD(){			
-		
+
 				return "Guardo Correctamente";
 				}
 }

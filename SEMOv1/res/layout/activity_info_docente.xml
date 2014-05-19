@@ -9,24 +9,10 @@
     tools:context=".InfoDocente" >
 
     <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp"
-        android:ems="10"
-        android:hint="@string/ing_cod_docente" >
-
-        <requestFocus />
-    </EditText>
-
-    <EditText
         android:id="@+id/editText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
-        android:layout_below="@+id/editText1"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
         android:ems="10"
         android:hint="@string/usuario" />

@@ -8,6 +8,7 @@ import ues.semo.R.layout;
 import ues.semo.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -25,7 +26,6 @@ public class InfoDocente extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_info_docente);
 		helper = new ControlBD(this);				
-		editCodigo = (EditText) findViewById(R.id.editText1);
 		editUsuario = (EditText) findViewById(R.id.editText2);
 		editNombre = (EditText) findViewById(R.id.editText3);
 		editApellido = (EditText) findViewById(R.id.editText4);
@@ -33,15 +33,12 @@ public class InfoDocente extends Activity {
 	
 	public void consultarDocente(View v) {
 		//recuperar el nombre de usuario pasado desde el activity anterior
-		String usuario=getIntent().getStringExtra("EXTRA_MESSAGE1");
+		String parametro=getIntent().getStringExtra("EXTRA_MESSAGE1");
 		//String para guardar coddocente de usuario
 		String coddocente="";
 		helper.abrir();
-		//Obtener coddocente de usuario
-		Usuario user = helper.consultarUsuario(usuario);
-		if(user!=null){
-			coddocente=user.getDocente().getCoddocente();
-		}
+		Usuario user=helper.consultarUsuario(parametro);
+		coddocente=user.getDocente().getCoddocente();		
 		Docente docente = helper.consultarDocente(coddocente);		
 		helper.cerrar();
 		if(docente == null)
@@ -51,6 +48,7 @@ public class InfoDocente extends Activity {
 		editApellido.setText(docente.getApellido());
 		editUsuario.setText(docente.getUsuario().getUsername());
 		}
+		
 		}
 	
 		public void limpiarTexto(View v){
