@@ -34,5 +34,9 @@
     <string name="crearBoton">Crear Usuario</string>
     <string name="actualizarCuenta">Actualizar Cuenta</string>
     <string name="title_activity_actualizar_cuenta">Actualizar Cuenta</string>
+    <string name="administrarDocentesLabel">Administrar Docentes</string>
+    <string name="administrarCiclosLabel">Administrar Ciclo</string>
+    <string name="title_activity_administrar_docentes">AdministrarDocentesActivity</string>
+    <string name="title_activity_administrar_ciclo">AdministrarCiclo</string>
 
 </resources>

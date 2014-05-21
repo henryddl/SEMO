@@ -15,6 +15,17 @@
                   android:title="@string/actualizarCuenta"/>
         </menu>
     </item>
+    
+    <item android:id="@+id/administrar_planilla" 
+          android:orderInCategory="100" 
+          android:showAsAction="never" 
+          android:title="@string/administrarDocentesLabel" />
+    
+    <item android:id="@+id/administrar_ciclo" 
+          android:orderInCategory="100" 
+          android:showAsAction="never" 
+          android:title="@string/administrarCiclosLabel" />
+    
     <item android:id="@+id/cerrar_sesion" 
           android:orderInCategory="100" 
           android:showAsAction="never" 

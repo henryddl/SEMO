@@ -74,6 +74,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sv.ues.fia.semo.activity.MainAdministrador" />
         </activity>
+        <activity
+            android:name="ues.semo.AdministrarDocentesActivity"
+            android:label="@string/title_activity_administrar_docentes" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.AdministrarDocentes"
+            android:label="@string/title_activity_administrar_docentes" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.AdministrarCiclo"
+            android:label="@string/title_activity_administrar_ciclo" >
+        </activity>
     </application>
 
 </manifest>

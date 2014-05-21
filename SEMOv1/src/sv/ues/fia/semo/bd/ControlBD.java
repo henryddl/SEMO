@@ -94,16 +94,109 @@ public class ControlBD {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			try {
-				//creacion de las tablas y triggers de la base de datos.
-	            FileInputStream fstream = new FileInputStream("crearBD.txt");
-	            DataInputStream entrada = new DataInputStream(fstream);
-	            BufferedReader buffer = new BufferedReader(new InputStreamReader(entrada));
-	            String strLinea;
-	            while ((strLinea = buffer.readLine()) != null)   {
-	                db.execSQL(strLinea);
-	            }
-	            entrada.close();
-				/*db.execSQL("create table USUARIO(" +
+
+	           /* for (int i=0;i<querys.length;i++)   {
+	                db.execSQL(querys[i]);
+	            }*/
+				/*db.execSQL("create table USUARIO(USERNAME VARCHAR2(10) not null,CODDOCENTE VARCHAR2(10),CARNET VARCHAR2(10),PASSWORD VARCHAR2(32) not null,TIPO INTEGER not null,constraint PK_USUARIO primary key (USERNAME) constraint FK_USUARIO_ALUMNO FOREIGN KEY (CARNET) REFERENCES ALUMNO(CARNET) ON DELETE RESTRICT,constraint FK_USUARIO_DOCENTE FOREIGN KEY (CODDOCENTE) REFERENCES DOCENTE(CODDOCENTE) ON DELETE RESTRICT);");
+				db.execSQL("create table ALUMNO(CARNET VARCHAR2(10) not null,USERNAME VARCHAR2(10),NOMBRE_ALUMNO VARCHAR2(100) not null,APELLIDO_ALUMNO VARCHAR2(100) not null,constraint PK_ALUMNO primary key (CARNET) constraint FK_ALUMNO_LOGIN FOREIGN KEY (USERNAME) REFERENCES USUARIO(USERNAME) ON DELETE RESTRICT);");
+				db.execSQL("create table DOCENTE(CODDOCENTE VARCHAR2(10) not null,USERNAME VARCHAR2(10),NOMBRE_DOCENTE VARCHAR2(100) not null,APELLIDO_DOCENTE VARCHAR2(100) not null,constraint PK_DOCENTE primary key (CODDOCENTE) constraint FK_DOCENTE_LOGIN FOREIGN KEY (USERNAME) REFERENCES USUARIO(USERNAME) ON DELETE RESTRICT);");
+				db.execSQL("create table CICLO(ANIO INTEGER not null,CICLO INTEGER not null,ESTADO VARCHAR2(10) not null,constraint PK_CICLO primary key (ANIO, CICLO));");
+				db.execSQL("create table MATERIA(CODMATERIA VARCHAR2(10) not null,NOMBRE VARCHAR2(50) not null,CICLO_PENSUM INTEGER,constraint PK_MATERIA primary key (CODMATERIA));");
+				db.execSQL("create table CURSO(ANIO INTEGER not null,CICLO INTEGER not null,CODMATERIA VARCHAR2(10) not null,NUMCURSO INTEGER not null,CODDOCENTE VARCHAR2(10),AULA VARCHAR2(10),HORA VARCHAR2(5),constraint PK_CURSO primary key (CODMATERIA, ANIO, CICLO, NUMCURSO) constraint FK_CURSO_CICLO FOREIGN KEY (ANIO,CICLO) REFERENCES CICLO(ANIO,CICLO) ON DELETE RESTRICT,constraint FK_CURSO_CICLO FOREIGN KEY (CODMATERIA) REFERENCES MATERIA(CODMATERIA) ON DELETE RESTRICT);");
+				db.execSQL("create table CATERGORIA(ANIO INTEGER,CICLO INTEGER,CODMATERIA VARCHAR2(10),NUMCURSO INTEGER not null,IDCATEGORIA INTEGER not null,NOMBRE_CATEGORIA VARCHAR2(50) not null,DESCRIPCION_CATEGORIA TEXT,constraint PK_CATERGORIA primary key (IDCATEGORIA) constraint FK_CATEGORIA_CURSO FOREIGN KEY (ANIO,CICLO,CODMATERIA,NUMCURSO) REFERENCES CURSO(ANIO,CICLO,CODMATERIA,NUMCURSO) ON DELETE RESTRICT);");
+				db.execSQL("create table SUBCATEGORIA(IDSUBCATEGORIA INTEGER not null,IDCATEGORIA INTEGER,NOMBRESUB_CATEGORIA VARCHAR2(50) not null,DESCRIPCION_SUBCATEGORIA TEXT,constraint PK_SUBCATEGORIA primary key (IDSUBCATEGORIA) constraint FK_SUCATEGORIA_CATEGORIA FOREIGN KEY (IDCATEGORIA) REFERENCES CATEGORIA(IDCATEGORIA) ON DELETE RESTRICT);");
+				db.execSQL("create table TIPO(CODTIPO VARCHAR2(10) not null,TIPOPREGUNTA VARCHAR2(50) not null,NUMRESPUESTA INTEGER,constraint PK_TIPO primary key (CODTIPO));");
+				db.execSQL("create table PREGUNTA(IDPREGUNTA INTEGER not null,IDSUBCATEGORIA INTEGER,CODTIPO VARCHAR2(10),PREGUNTA TEXT not null,PUNTAJE_PREGUNTA INTEGER not null,constraint PK_PREGUNTA primary key (IDPREGUNTA) constraint FK_PREGUNTA_TIPO FOREIGN KEY (CODTIPO) REFERENCES TIPO(CODTIPO) ON DELETE RESTRICT,constraint FK_PREGUNTA_SUBCATEGORIA FOREIGN KEY (IDSUBCATEGORIA) REFERENCES SUBCATEGORIA(IDSUBCATEGORIA) ON DELETE RESTRICT);");
+				db.execSQL("create table ITEM_RESPUESTA(IDITEM INTEGER not null,IDPREGUNTA INTEGER,RESPUESTA TEXT not null,PUNTOS_RESPUESTA INTEGER not null,constraint PK_ITEM_RESPUESTA primary key (IDITEM) constraint FK_ITEM_RESPUESTA_PREGUNTA FOREIGN KEY (IDPREGUNTA) REFERENCES PREGUNTA(IDPREGUNTA) ON DELETE RESTRICT);");
+				db.execSQL("create table EVALUACION(ANIO INTEGER,CICLO INTEGER,CODMATERIA VARCHAR2(10),NUMCURSO INTEGER,IDEVAL INTEGER not null,NOMBREEVAL VARCHAR2(20) not null,PORCENTAJE_EVAL FLOAT not null,constraint PK_EVALUACION primary key (IDEVAL) constraint FK_EVALUACION_CURSO FOREIGN KEY (ANIO,CICLO,CODMATERIA,NUMCURSO) REFERENCES CURSO(ANIO,CICLO,CODMATERIA,NUMCURSO) ON DELETE RESTRICT);");
+				db.execSQL("create table CONFIGURACION(IDSUBCATEGORIA INTEGER not null,IDEVAL INTEGER not null,NUMPREGUNTAS INTEGER,constraint PK_CONFIGURACION primary key (IDSUBCATEGORIA, IDEVAL) constraint FK_CONFIGURACON_EVALUACION FOREIGN KEY (IDEVAL) REFERENCES EVALUACION(IDEVAL) ON DELETE RESTRICT,constraint FK_CONFIGURACON_SUBCATERORIA FOREIGN KEY (IDSUBCATEGORIA) REFERENCES SUBCATEGORIA(IDSUBCATEGORIA) ON DELETE RESTRICT);");
+				db.execSQL("create table INSCRIBE(NUMCURSO INTEGER not null,ANIO INTEGER not null,CICLO INTEGER not null,CODMATERIA VARCHAR2(10) not null,CARNET VARCHAR2(10) not null,constraint PK_INSCRIBE primary key (NUMCURSO, ANIO, CICLO, CODMATERIA, CARNET) constraint FK_INCRIPCION_ALUMNO FOREIGN KEY (CARNET) REFERENCES ALUMNO(CARNET) ON DELETE RESTRICT,constraint FK_INCRIPCION_CURSO FOREIGN KEY (ANIO,CICLO,CODMATERIA,CARNET) REFERENCES CICLO(ANIO,CICLO,CODMATERIA,CARNET) ON DELETE RESTRICT);");
+				db.execSQL("create table CUESTIONARIO(IDCUESTIONARIO INTEGER not null,IDEVAL INTEGER,CARNET VARCHAR2(10),NUMPREGUNTAS INTEGER not null,PUNTAJEALUMNO INTEGER,NOTAALUMNO FLOAT,DISPONIBLE SMALLINT(1) not null,REALIZADO SMALLINT(1) not null,constraint PK_CUESTIONARIO primary key (IDCUESTIONARIO) constraint FK_CUESTIONARIO_EVALUACION FOREIGN KEY (IDEVAL) REFERENCES EVALUACION(IDEVAL) ON DELETE RESTRICT,constraint FK_CUESTIONARIO_ALUMNO FOREIGN KEY (CARNET) REFERENCES ALUMNO(CARNET) ON DELETE RESTRICT);");
+				db.execSQL("create table AS_PREGUNTAS(IDPREGUNTA INTEGER not null,IDCUESTIONARIO INTEGER not null,constraint PK_AS_PREGUNTAS primary key (IDPREGUNTA, IDCUESTIONARIO) constraint FK_AS_PREGUNTA_IDCUESTIONARIO FOREIGN KEY (IDCUESTIONARIO) REFERENCES CUESTIONARIO(IDCUESTIONARIO) ON DELETE RESTRICT,constraint FK_AS_PREGUNTA_PREGUNTA FOREIGN KEY (IDPREGUNTA) REFERENCES PREGUNTA(IDPREGUNTA) ON DELETE RESTRICT);");
+				db.execSQL("create table RESPUESTA(IDCUESTIONARIO INTEGER not null,IDPREGUNTA INTEGER not null,IDRESPUESTA INTEGER not null,RESPUESTA TEXT,PUNTOSOBTENIDOS INTEGER,constraint PK_RESPUESTA primary key (IDRESPUESTA) constraint FK_RESPUESTA_PREGUNTA FOREIGN KEY (IDCUESTIONARIO,IDPREGUNTA) REFERENCES AS_PREGUNTA(IDCUESTIONARIO,IDPREGUNTA) ON DELETE RESTRICT);");
+				/*db.execSQL("CREATE TRIGGER [update_fk_alumno] BEFORE UPDATE OF [USERNAME] ON [ALUMNO] FOR EACH ROW WHEN NEW.USERNAME IS NOT NULL BEGIN SELECT CASE WHEN ((SELECT username FROM usuario WHERE username = NEW.username) IS NULL) THEN RAISE(ABORT, 'No existe USUARIO') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_alumno] BEFORE INSERT ON [ALUMNO] FOR EACH ROW WHEN NEW.USERNAME IS NOT NULL BEGIN SELECT CASE WHEN ((SELECT username FROM usuario WHERE username = NEW.username) IS NULL) THEN RAISE(ABORT, 'No existe USUARIO') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_alumno] BEFORE INSERT ON [ALUMNO] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT carnet FROM alumno WHERE carnet = NEW.carnet) IS NOT NULL) THEN RAISE(ABORT, 'CARNET ALUMNO YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_alumno] AFTER UPDATE OF carnet ON [ALUMNO] FOR EACH ROW BEGIN UPDATE usuario SET carnet=NEW.carnet WHERE carnet=OLD.carnet; UPDATE inscribe SET carnet=NEW.carnet WHERE carnet=OLD.carnet; UPDATE cuestionario SET carnet=NEW.carnet WHERE carnet=OLD.carnet; END;");
+				db.execSQL("CREATE TRIGGER [delete_alumno] BEFORE DELETE ON [ALUMNO] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM inscribe WHERE carnet = OLD.carnet) > 0) THEN RAISE(ABORT, 'ALUMNO TIENE CURSOS INSCRITOS') WHEN ((SELECT COUNT(*) FROM cuestionario WHERE carnet = OLD.carnet) > 0) THEN RAISE(ABORT, 'ALUMNO TIENE CUESTIONARIOS') END; END;");
+				db.execSQL("CREATE TRIGGER [delete_usuario_alumno] AFTER DELETE ON [ALUMNO] FOR EACH ROW WHEN OLD.username IS NOT NULL BEGIN DELETE FROM usuario WHERE username=OLD.username; END;");
+				db.execSQL("CREATE TRIGGER [fk_as_preguntas] BEFORE INSERT ON [AS_PREGUNTAS] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idpregunta FROM pregunta WHERE idpregunta=NEW.idpregunta) IS NULL) THEN RAISE(ABORT, 'PREGUNTA NO EXISTE') WHEN ((SELECT idcuestionario FROM cuestionario WHERE idcuestionario=NEW.idcuestionario) IS NULL) THEN RAISE(ABORT, 'CUESTIONARIO NO CREADO') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_as_preguntas] BEFORE UPDATE OF idpregunta,idcuestionario ON [AS_PREGUNTAS] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idpregunta FROM pregunta WHERE idpregunta=NEW.idpregunta) IS NULL) THEN RAISE(ABORT, 'PREGUNTA NO EXISTE') WHEN ((SELECT idcuestionario FROM cuestionario WHERE idcuestionario=NEW.idcuestionario) IS NULL) THEN RAISE(ABORT, 'CUESTIONARIO NO CREADO') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_as_preguntas] BEFORE INSERT ON [AS_PREGUNTAS] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT COUNT(*) FROM as_preguntas WHERE idpregunta = NEW.idpregunta AND idcuestionario=NEW.idcuestionario) > 0) THEN RAISE(ABORT, 'PREGUNTA YA ESTA LISTADA EN EL CUESTIONARIO') END; END;");
+				db.execSQL("CREATE TRIGGER [delete_as_preguntas] AFTER DELETE ON [AS_PREGUNTAS] FOR EACH ROW BEGIN DELETE FROM respuesta WHERE idcuestionario = OLD.idcuestionario AND idpregunta=OLD.idpregunta; END;");
+				db.execSQL("CREATE TRIGGER [fk_categoria] BEFORE INSERT ON [CATEGORIA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE anio = NEW.anio AND ciclo = NEW.ciclo AND codmateria=NEW.codmateria AND numcurso=NEW.numcurso) == 0) THEN RAISE(ABORT, 'CURSO NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_categoria] BEFORE UPDATE OF [ANIO] ,[CICLO] ,[CODMATERIA] ,[NUMCURSO] ON [CATEGORIA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE anio = NEW.anio AND ciclo = NEW.ciclo AND codmateria=NEW.codmateria AND numcurso=NEW.numcurso) == 0) THEN RAISE(ABORT, 'CURSO NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_categoria] BEFORE INSERT ON [CATEGORIA] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT idcategoria FROM categoria WHERE  idcategoria=NEW.idcategoria  )IS NOT NULL) THEN RAISE(ABORT, 'ID CATEGORIA YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [delete_categoria] AFTER DELETE ON [CATEGORIA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM subcategoria WHERE idcategoria = OLD.idcategoria) > 0) THEN RAISE(ABORT, 'CATEGORIA TIENE SUBCATEGORIAS VINCULADAS') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_ciclo] BEFORE INSERT ON [CICLO] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT COUNT(*) FROM ciclo WHERE anio = NEW.anio AND ciclo=NEW.ciclo) > 0) THEN RAISE(ABORT, 'CICLO YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_ciclo] AFTER UPDATE OF anio,ciclo ON [CICLO] FOR EACH ROW BEGIN UPDATE curso SET anio=NEW.anio,ciclo=NEW.ciclo WHERE anio=OLD.anio AND ciclo=OLD.ciclo; END;");
+				db.execSQL("CREATE TRIGGER [delete_ciclo] BEFORE DELETE ON [CICLO] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE anio = OLD.anio AND ciclo = OLD.ciclo) > 0) THEN RAISE(ABORT, 'CICLO TIENE CURSOS VINCULADOS') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_configuracion] BEFORE INSERT ON [CONFIGURACION] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idsubcategoria FROM subcategoria WHERE idsubcategoria=NEW.idsubcategoria) IS NULL) THEN RAISE(ABORT, 'SUBCATEGORIA NO EXISTE') WHEN ((SELECT ideval FROM evaluacion WHERE ideval=NEW.ideval) IS NULL) THEN RAISE(ABORT, 'EVALUACION NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_configuracion] BEFORE UPDATE OF idsubcategoria,ideval ON [CONFIGURACION] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idsubcategoria FROM subcategoria WHERE idsubcategoria=NEW.idsubcategoria) IS NULL) THEN RAISE(ABORT, 'SUBCATEGORIA NO EXISTE') WHEN ((SELECT ideval FROM evaluacion WHERE ideval=NEW.ideval) IS NULL) THEN RAISE(ABORT, 'EVALUACION NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_configuracion] BEFORE INSERT ON [CONFIGURACION] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT COUNT(*) FROM configuracion WHERE  idsubcategoria=NEW.idsubcategoria AND ideval=NEW.ideval ) > 0) THEN RAISE(ABORT, 'CONFIGURACION YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_cuestionario] BEFORE INSERT ON [CUESTIONARIO] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT ideval FROM evaluacion WHERE ideval=NEW.edeval) IS NULL) THEN RAISE(ABORT, 'EVALUACION NO EXISTE') WHEN ((SELECT carnet FROM alumno WHERE carnet=NEW.carnet) IS NULL) THEN RAISE(ABORT, 'ALUMNO NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_cuestionario] BEFORE UPDATE OF ideval,carnet ON [CUESTIONARIO] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT ideval FROM evaluacion WHERE ideval=NEW.edeval) IS NULL) THEN RAISE(ABORT, 'EVALUACION NO EXISTE') WHEN ((SELECT carnet FROM alumno WHERE carnet=NEW.carnet) IS NULL) THEN RAISE(ABORT, 'ALUMNO NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_cuestionario] BEFORE INSERT ON [CUESTIONARIO] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT idcuestionario FROM cuestionario WHERE idcuestionario = NEW.idcuestionario) IS NOT NULL) THEN RAISE(ABORT, 'ID CUESTIONARIO YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_cuestionario] AFTER UPDATE OF idcuestionario ON [CUESTIONARIO] FOR EACH ROW BEGIN UPDATE as_preguntas SET idcuestionario=NEW.idcuestionario WHERE idcuestionario=OLD.idcuestionario; END;");
+				db.execSQL("CREATE TRIGGER [delete_cuestionario] AFTER DELETE ON [CUESTIONARIO] FOR EACH ROW BEGIN DELETE FROM as_preguntas WHERE idcuestionario = OLD.idcuestionario; END;");
+				db.execSQL("CREATE TRIGGER [fk_curso] BEFORE INSERT ON [CURSO] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM ciclo WHERE anio = NEW.anio AND ciclo = NEW.ciclo) == 0) THEN RAISE(ABORT, 'CICLO NO CREADO') WHEN ((SELECT coddocente FROM docente WHERE coddocente = NEW.coddocente) IS NULL) THEN RAISE(ABORT, 'DOCENTE NO EXISTE') WHEN ((SELECT codmateria FROM materia WHERE codmateria = NEW.codmateria) IS NULL) THEN RAISE(ABORT, 'MATERIA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_curso] BEFORE UPDATE OF anio,ciclo,codmateria,coddocente ON [CURSO] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM ciclo WHERE anio = NEW.anio AND ciclo = NEW.ciclo) == 0) THEN RAISE(ABORT, 'CICLO NO CREADO') WHEN ((SELECT coddocente FROM docente WHERE coddocente = NEW.coddocente) IS NULL) THEN RAISE(ABORT, 'DOCENTE NO EXISTE') WHEN ((SELECT codmateria FROM materia WHERE codmateria = NEW.codmateria) IS NULL) THEN RAISE(ABORT, 'MATERIA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_curso] BEFORE INSERT ON [CURSO] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT COUNT(*) FROM curso WHERE anio = NEW.anio AND ciclo=NEW.ciclo AND codmateria=NEW.codmateria AND numcurso=NEW.numcurso  ) > 0) THEN RAISE(ABORT, 'CURSO YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_curso] AFTER UPDATE OF anio,ciclo,codmateria,numcurso ON [CURSO] FOR EACH ROW BEGIN UPDATE inscribe SET anio=NEW.anio,ciclo=NEW.ciclo,codmateria=NEW.codmateria,numcurso=NEW.numcurso WHERE anio=OLD.anio AND ciclo=OLD.ciclo AND codmateria=OLD.codmateria AND numcurso=OLD.numcurso; UPDATE evaluacion SET anio=NEW.anio,ciclo=NEW.ciclo,codmateria=NEW.codmateria,numcurso=NEW.numcurso WHERE anio=OLD.anio AND ciclo=OLD.ciclo AND codmateria=OLD.codmateria AND numcurso=OLD.numcurso; UPDATE categoria SET anio=NEW.anio,ciclo=NEW.ciclo,codmateria=NEW.codmateria,numcurso=NEW.numcurso WHERE anio=OLD.anio AND ciclo=OLD.ciclo AND codmateria=OLD.codmateria AND numcurso=OLD.numcurso; END;");
+				db.execSQL("CREATE TRIGGER [delete_curso] BEFORE DELETE ON [CURSO] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM categoria WHERE anio = OLD.anio AND ciclo=OLD.ciclo AND codmateria=OLD.codmateria AND numcurso=OLD.numcurso) > 0) THEN RAISE(ABORT, 'CURSO CONTIENE CATEGORIA') WHEN ((SELECT COUNT(*) FROM evaluacion WHERE anio = OLD.anio AND ciclo=OLD.ciclo AND codmateria=OLD.codmateria AND numcurso=OLD.numcurso) > 0) THEN RAISE(ABORT, 'CURSO TIENE EVALUACIONES ASOCIADAS') WHEN ((SELECT COUNT(*) FROM inscribe WHERE anio = OLD.anio AND ciclo=OLD.ciclo AND codmateria=OLD.codmateria AND numcurso=OLD.numcurso) > 0) THEN RAISE(ABORT, 'CURSO TIENE ALUMNO INSCRITOS') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_docente] BEFORE UPDATE OF [USERNAME] ON [DOCENTE] FOR EACH ROW WHEN NEW.USERNAME IS NOT NULL BEGIN SELECT CASE WHEN ((SELECT username FROM usuario WHERE username = NEW.username) IS NULL) THEN RAISE(ABORT, 'No existe USUARIO') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_docente] BEFORE INSERT ON [DOCENTE] FOR EACH ROW WHEN NEW.USERNAME IS NOT NULL BEGIN SELECT CASE WHEN ((SELECT username FROM usuario WHERE username = NEW.username) IS NULL) THEN RAISE(ABORT, 'No existe USUARIO') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_docente] BEFORE INSERT ON [DOCENTE] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT coddocente FROM docente WHERE coddocente = NEW.coddocente) IS NOT NULL) THEN RAISE(ABORT, 'CODIGO DOCENTE YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_docente] AFTER UPDATE OF coddocente ON [DOCENTE] FOR EACH ROW BEGIN UPDATE usuario SET coddocente=NEW.coddocente WHERE coddocente=OLD.coddocente; UPDATE curso SET coddocente=NEW.coddocente WHERE coddocente=OLD.coddocente; END;");
+				db.execSQL("CREATE TRIGGER [delete_docente] BEFORE DELETE ON [DOCENTE] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE coddocente = OLD.coddocente) > 0) THEN RAISE(ABORT, 'DOCENTE NO SE PUEDE ELIMINAR PORQUE TIENE CURSOS A CARGO') END; END;");
+				db.execSQL("CREATE TRIGGER [delete_usuario_docente] AFTER DELETE ON [DOCENTE] FOR EACH ROW WHEN OLD.username IS NOT NULL BEGIN DELETE FROM usuario WHERE username=OLD.username; END;");
+				db.execSQL("CREATE TRIGGER [fk_evaluacion] BEFORE INSERT ON [EVALUACION] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE anio = NEW.anio AND ciclo = NEW.ciclo AND codmateria=NEW.codmateria AND numcurso=NEW.numcurso) == 0) THEN RAISE(ABORT, 'CURSO NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_evaluacion] BEFORE UPDATE OF anio,ciclo,codmateria,numcurso ON [EVALUACION] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE anio = NEW.anio AND ciclo = NEW.ciclo AND codmateria=NEW.codmateria AND numcurso=NEW.numcurso) == 0) THEN RAISE(ABORT, 'CURSO NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_evaluacion] BEFORE INSERT ON [EVALUACION] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT ideval FROM evaluacion WHERE ideval = NEW.ideval) IS NOT NULL) THEN RAISE(ABORT, 'ID EVALUACION YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_evaluacion] AFTER UPDATE OF ideval ON [EVALUACION] FOR EACH ROW BEGIN UPDATE cuestionario SET ideval=NEW.ideval WHERE ideval=OLD.ideval; UPDATE configuracion SET ideval=NEW.ideval WHERE ideval=OLD.ideval; END;");
+				db.execSQL("CREATE TRIGGER [delete_evaluacion] BEFORE DELETE ON [EVALUACION] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM cuestionario WHERE ideval = OLD.ideval) > 0) THEN RAISE(ABORT, 'EVALUACION TIENE CUESTIONARIOS VINCULADOS') WHEN ((SELECT COUNT(*) FROM configuracion WHERE ideval = OLD.ideval) > 0) THEN RAISE(ABORT, 'EVALUACION TIENE CONFIGURACIONES VINCULADAS') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_inscribe] BEFORE INSERT ON [INSCRIBE] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT COUNT(*) FROM inscribe WHERE anio = NEW.anio AND ciclo=NEW.ciclo AND codmateria=NEW.codmateria AND numcurso=NEW.numcurso AND carnet=NEW.carnet  ) > 0) THEN RAISE(ABORT, 'ALUMNO YA ESTA INSCRITO EN EL CURSO') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_inscripcion] BEFORE INSERT ON [INSCRIBE] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE anio = NEW.anio AND ciclo = NEW.ciclo AND codmateria=NEW.codmateria AND numcurso=NEW.numcurso) == 0) THEN RAISE(ABORT, 'CURSO NO EXISTE') WHEN ((SELECT carnet FROM alumno WHERE carnet = NEW.carnet) IS NULL) THEN RAISE(ABORT, 'ALUMNO NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_inscripcion] BEFORE UPDATE OF anio,ciclo,codmateria,numcurso,carnet ON [INSCRIBE] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE anio = NEW.anio AND ciclo = NEW.ciclo AND codmateria=NEW.codmateria AND numcurso=NEW.numcurso) == 0) THEN RAISE(ABORT, 'CURSO NO EXISTE') WHEN ((SELECT carnet FROM alumno WHERE carnet = NEW.carnet) IS NULL) THEN RAISE(ABORT, 'ALUMNO NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_item_respuesta] BEFORE INSERT ON [ITEM_RESPUESTA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idpregunta FROM pregunta WHERE idspregunta=NEW.idpregunta) IS NULL) THEN RAISE(ABORT, 'PREGUNTA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_item_respuesta] BEFORE UPDATE OF idpregunta ON [ITEM_RESPUESTA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idpregunta FROM pregunta WHERE idspregunta=NEW.idpregunta) IS NULL) THEN RAISE(ABORT, 'PREGUNTA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_item_respuesta] BEFORE INSERT ON [ITEM_RESPUESTA] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT iditem FROM item_respuesta WHERE iditem = NEW.iditem) IS NOT NULL) THEN RAISE(ABORT, 'ID ITEM RESPUESTA YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_materia] BEFORE INSERT ON [MATERIA] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT codmateria FROM materia WHERE codmateria = NEW.codmateria) IS NOT NULL) THEN RAISE(ABORT, 'CODIGO MATERIA YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_materia] AFTER UPDATE OF codmateria ON [MATERIA] FOR EACH ROW BEGIN UPDATE curso SET codmateria=NEW.codmateria WHERE codmateria=OLD.codmateria; END;");
+				db.execSQL("CREATE TRIGGER [delete_materia] BEFORE DELETE ON [MATERIA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE codmateria = OLD.codmateria) > 0) THEN RAISE(ABORT, 'MATERIA TIENE CURSOS VINCULADOS') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_pregunta] BEFORE INSERT ON [PREGUNTA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idsubcategoria FROM subcategoria WHERE idsubcategoria=NEW.idsubcategoria) IS NULL) THEN RAISE(ABORT, 'SUBCATEGORIA NO EXISTE') WHEN ((SELECT codtipo FROM tipo WHERE codtipo=NEW.codtipo) IS NULL) THEN RAISE(ABORT, 'TIPO DE PREGUNTA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_pregunta] BEFORE UPDATE OF idsubcategoria,codtipo ON [PREGUNTA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idsubcategoria FROM subcategoria WHERE idsubcategoria=NEW.idsubcategoria) IS NULL) THEN RAISE(ABORT, 'SUBCATEGORIA NO EXISTE') WHEN ((SELECT codtipo FROM tipo WHERE codtipo=NEW.codtipo) IS NULL) THEN RAISE(ABORT, 'TIPO DE PREGUNTA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_pregunta] BEFORE INSERT ON [PREGUNTA] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT idpregunta FROM pregunta WHERE idpregunta = NEW.idpregunta) IS NOT NULL) THEN RAISE(ABORT, 'ID PREGUNTA YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_pregunta] AFTER UPDATE OF idpregunta ON [PREGUNTA] FOR EACH ROW BEGIN UPDATE item_respuesta SET idpregunta=NEW.idpregunta WHERE idpregunta=OLD.idpregunta; UPDATE as_preguntas SET idpregunta=NEW.idpregunta WHERE idpregunta=OLD.idpregunta; END;");
+				db.execSQL("CREATE TRIGGER [delete_pregunta] AFTER DELETE ON [PREGUNTA] FOR EACH ROW WHEN ((SELECT COUNT(*) FROM AS_PREGUNTAS WHERE IDPREGUNTA=OLD.IDPREGUNTA) == 0) BEGIN DELETE FROM item_respuesta WHERE idpregunta=OLD.idpregunta; END;");
+				db.execSQL("CREATE TRIGGER [delete_pregunta_as] AFTER DELETE ON [PREGUNTA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM curso WHERE coddocente = OLD.coddocente) > 0) THEN RAISE(ABORT, 'PREGUNTA ESTA INCLUIDA EN ALGUNOS CUESTIONARIOS') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_respuesta] BEFORE INSERT ON [RESPUESTA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM as_preguntas WHERE idcuestionario=NEW.idcuestionario AND idpregunta=NEW.idpregunta) == 0) THEN RAISE(ABORT, 'PREGUNTA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_respuesta] BEFORE UPDATE OF [IDCUESTIONARIO] ,[IDPREGUNTA] ON [RESPUESTA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM as_preguntas WHERE idcuestionario=NEW.idcuestionario AND idpregunta=NEW.idpregunta) == 0) THEN RAISE(ABORT, 'PREGUNTA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_respuesta] BEFORE INSERT ON [RESPUESTA] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT idrespuesta FROM respuesta WHERE  idrespuesta=NEW.idrespuesta  )IS NOT NULL) THEN RAISE(ABORT, 'ID RESPUESTA YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_subcategoria] BEFORE INSERT ON [SUBCATEGORIA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idcategoria FROM categoria WHERE idcategoria=NEW.idcategoria) IS NULL) THEN RAISE(ABORT, 'CATEGORIA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_subcategoria] BEFORE UPDATE OF idcategoria ON [SUBCATEGORIA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT idcategoria FROM categoria WHERE idcategoria=NEW.idcategoria) IS NULL) THEN RAISE(ABORT, 'CATEGORIA NO EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_subcategoria] BEFORE INSERT ON [SUBCATEGORIA] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT idsubcategoria FROM subcategoria WHERE  idsubcategoria=NEW.idsubcategoria  )IS NOT NULL) THEN RAISE(ABORT, 'ID SUB-CATEGORIA YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [delete_subcategoria] AFTER DELETE ON [SUBCATEGORIA] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM pregunta WHERE idsubcategoria = OLD.idsubcategoria) > 0) THEN RAISE(ABORT, 'SUBCATEGORIAS TIENE PREGUNTAS VINCULADAS') WHEN ((SELECT COUNT(*) FROM configuracion WHERE idsubcategoria = OLD.idsubcategoria) > 0) THEN RAISE(ABORT, 'SUBCATEGORIAS TIENE CONFIGURACIONES VINCULADAS') END; END;");
+				db.execSQL("CREATE TRIGGER [pk_tipo] BEFORE INSERT ON [TIPO] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT codtipo FROM tipo WHERE codtipo = NEW.codtipo) IS NOT NULL) THEN RAISE(ABORT, 'TIPO DE PREGUNTA YA EXISTE') END; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_tipo] AFTER UPDATE OF codtipo ON [TIPO] FOR EACH ROW BEGIN UPDATE pregunta SET codtipo=NEW.codtipo WHERE codtipo=OLD.codtipo; END;");
+				db.execSQL("CREATE TRIGGER [delete_tipo] BEFORE DELETE ON [TIPO] FOR EACH ROW BEGIN SELECT  CASE WHEN ((SELECT COUNT(*) FROM pregunta WHERE codtipo = OLD.codtipo) > 0) THEN RAISE(ABORT, 'HAY PREGUNTAS VINCULADAS CON ESTE TIPO') END; END;");
+				db.execSQL("CREATE TRIGGER [fk_usuarios] BEFORE INSERT ON [USUARIO] FOR EACH ROW BEGIN SELECT CASE WHEN (NEW.coddocente IS NULL AND NEW.carnet IS NULL) THEN RAISE(ABORT, 'DEBE ESPECIFICAR EL ALUMNO O DOCENTE PROPIETARIO DEL USUARIO') WHEN (NEW.coddocente IS NOT NULL AND NEW.carnet IS NOT NULL) THEN RAISE(ABORT, 'USUARIO NO PUEDE TENER 2 PROPIETARIOS') WHEN (NEW.coddocente IS NULL AND NEW.carnet IS NOT NULL) THEN CASE WHEN ((SELECT carnet FROM alumno WHERE carnet = NEW.carnet) IS NULL) THEN RAISE(ABORT, 'ALUMNO NO EXISTE') END WHEN  (NEW.carnet IS NULL AND NEW.coddocente IS NOT NULL) THEN CASE WHEN ((SELECT coddocente FROM docente  WHERE coddocente = NEW.coddocente) IS NULL) THEN RAISE(ABORT, 'DOCENTE NO EXISTE') END END END; END;");
+				db.execSQL("CREATE TRIGGER [update_fk_usuarios] BEFORE UPDATE OF [CODDOCENTE] ,[CARNET] ON [USUARIO] FOR EACH ROW BEGIN SELECT CASE WHEN (NEW.coddocente IS NULL AND NEW.carnet IS NULL) THEN RAISE(ABORT, 'DEBE ESPECIFICAR EL ALUMNO O DOCENTE PROPIETARIO DEL USUARIO') WHEN (NEW.coddocente IS NOT NULL AND NEW.carnet IS NOT NULL) THEN RAISE(ABORT, 'USUARIO NO PUEDE TENER 2 PROPIETARIOS') WHEN (NEW.coddocente IS NULL AND NEW.carnet IS NOT NULL) THEN CASE WHEN ((SELECT carnet FROM alumno WHERE carnet = NEW.carnet) IS NULL) THEN RAISE(ABORT, 'ALUMNO NO EXISTE') END WHEN  (NEW.carnet IS NULL AND NEW.coddocente IS NOT NULL) THEN CASE WHEN ((SELECT coddocente FROM docente  WHERE coddocente = NEW.coddocente) IS NULL) THEN RAISE(ABORT, 'DOCENTE NO EXISTE') END END END; END;");
+				db.execSQL("CREATE TRIGGER [pk_usuario] BEFORE INSERT ON [USUARIO] FOR EACH ROW BEGIN SELECT CASE WHEN ((SELECT username FROM usuario WHERE username = NEW.username) IS NOT NULL) THEN RAISE(ABORT, 'USERNAME NO DISPONIBLE') WHEN (NEW.coddocente IS NULL AND NEW.carnet IS NOT NULL) THEN CASE WHEN ((SELECT COUNT(*)  FROM usuario WHERE carnet = NEW.carnet) > 0) THEN RAISE(ABORT, 'ALUMNO YA TIENE ASIGNADO UN USUARIO') END WHEN  (NEW.carnet IS NULL AND NEW.coddocente IS NOT NULL) THEN CASE WHEN ((SELECT COUNT(*)  FROM usuario WHERE coddocente = NEW.coddocente) > 0) THEN RAISE(ABORT, 'DOCENTE YA TIENE ASIGNADO UN USUARIO') END END; END;");
+				db.execSQL("CREATE TRIGGER [asignar_username_docente] AFTER INSERT ON [USUARIO] FOR EACH ROW WHEN NEW.coddocente IS NOT NULL BEGIN UPDATE docente SET username = NEW.username WHERE coddocente = NEW.coddocente; END;");
+				db.execSQL("CREATE TRIGGER [asignar_username_alumno] AFTER INSERT ON [USUARIO] FOR EACH ROW WHEN NEW.carnet IS NOT NULL BEGIN UPDATE alumno SET username = NEW.username WHERE carnet = NEW.carnet; END;");
+				db.execSQL("CREATE TRIGGER [actualizar_username_alumno] AFTER UPDATE OF carnet ON [USUARIO] FOR EACH ROW WHEN NEW.carnet IS NOT NULL BEGIN UPDATE alumno SET username = NEW.username WHERE carnet = NEW.carnet; END;");
+				db.execSQL("CREATE TRIGGER [actualizar_username_docente] AFTER UPDATE OF coddocente ON [USUARIO] FOR EACH ROW WHEN NEW.coddocente IS NOT NULL BEGIN UPDATE docente SET username = NEW.username WHERE coddocente = NEW.coddocente; END;");
+				db.execSQL("CREATE TRIGGER [cascade_update_pk_usuario] AFTER UPDATE OF username ON [USUARIO] FOR EACH ROW BEGIN UPDATE docente SET username=NEW.username WHERE username=OLD.username; UPDATE alumno SET username=NEW.username WHERE username=OLD.username; END;");
+				db.execSQL("CREATE TRIGGER [delete_username_alumno] AFTER DELETE ON [USUARIO] FOR EACH ROW WHEN OLD.carnet IS NOT NULL BEGIN UPDATE alumno SET username = NULL WHERE carnet=OLD.carnet; END; CREATE TRIGGER [delete_username_docente] AFTER DELETE ON [USUARIO] FOR EACH ROW WHEN OLD.CODDOCENTE IS NOT NULL BEGIN UPDATE docente SET username = NULL WHERE coddocente=OLD.coddocente; END;");
+				db.execSQL("CREATE UNIQUE INDEX [IDX_ALUMNO_USERNAME] ON [ALUMNO]([USERNAME]  DESC);");
+				db.execSQL("CREATE UNIQUE INDEX [IDX_DOCENTE_USERNAME] ON [DOCENTE]([USERNAME]  DESC);");
+				db.execSQL("CREATE UNIQUE INDEX [IDX_USUARIO_CODDOCENTE] ON [USUARIO]([CODDOCENTE]  DESC);");
+				db.execSQL("CREATE UNIQUE INDEX [IDX_USUARIO_CARNET] ON [USUARIO]([CARNET]  DESC);");
+				*/
+
+				db.execSQL("create table USUARIO(" +
 						"USERNAME VARCHAR2(10) not null," +
 						"CODDOCENTE VARCHAR2(10)," +
 						"CARNET VARCHAR2(10)," +
@@ -287,7 +380,7 @@ public class ControlBD {
 						"PUNTOSOBTENIDOS INTEGER," +
 						"constraint PK_RESPUESTA primary key (IDRESPUESTA) " +
 						"constraint FK_RESPUESTA_PREGUNTA FOREIGN KEY (IDCUESTIONARIO,IDPREGUNTA) REFERENCES AS_PREGUNTA(IDCUESTIONARIO,IDPREGUNTA) ON DELETE RESTRICT);"
-						);	*/
+						);
 				db.beginTransaction();
 				try{
 					ContentValues us =new ContentValues();
@@ -305,13 +398,7 @@ public class ControlBD {
 
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} 
 		}//FIN metodo onCreate
 
 		@Override
@@ -443,8 +530,8 @@ public class ControlBD {
 			ContentValues us =new ContentValues();
 			us.put("carnet", alumno.getCarnet());
 			us.put("username", alumno.getUsuario().getUsername());
-			us.put("nombre", alumno.getNombre());
-			us.put("apellido", alumno.getApellido());
+			us.put("nombre_alumno", alumno.getNombre());
+			us.put("apellido_alumno", alumno.getApellido());
 			contador=db.insert("alumno", null, us);
 			if(contador==-1 || contador==0)
 			{
@@ -534,8 +621,8 @@ public class ControlBD {
 			ContentValues us =new ContentValues();
 			us.put("codDocente",docente.getCoddocente());
 			us.put("username",docente.getUsuario().getUsername());
-			us.put("nombreDocente",docente.getNombre());
-			us.put("apellidoDocente",docente.getApellido());
+			us.put("nombre_Docente",docente.getNombre());
+			us.put("apellido_Docente",docente.getApellido());
 			contador=db.insert("docente", null, us);
 			if(contador==-1 || contador==0)
 			{
@@ -705,10 +792,10 @@ public class ControlBD {
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
-			us.put("codigo", materia.getCodigo());
-			us.put("nombreMateria", materia.getNombreMateria());
-			us.put("cicloPensum", materia.getCicloPensum());
-			contador=db.insert("materia", null, us);
+			us.put("CODMATERIA", materia.getCodigo());
+			us.put("NOMBRE", materia.getNombreMateria());
+			us.put("CICLO_PENSUM", materia.getCicloPensum());
+			contador=db.insert("MATERIA", null, us);
 			if(contador==-1 || contador==0)
 			{
 			regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
@@ -755,7 +842,7 @@ public class ControlBD {
 			if(true /*verificarIntegridad()*/){
 				String[] id ={materia.getCodigo()};
 				ContentValues cv = new ContentValues();
-				cv.put("nombreMateria", materia.getNombreMateria());
+				cv.put("nombre", materia.getNombreMateria());
 				cv.put("cicloPensum", materia.getCicloPensum());
 				db.update("materia",cv,"codigo = ",id);
 
@@ -792,7 +879,7 @@ public class ControlBD {
 			us.put("numCurso", curso.getNumCurso());
 			us.put("anio", curso.getCiclo().getAnio());
 			us.put("ciclo", curso.getCiclo().getCiclo());
-			us.put("codigo", curso.getMateria().getCodigo());
+			us.put("codMateria", curso.getMateria().getCodigo());
 			us.put("codDocente", curso.getDocente().getCoddocente());
 			us.put("aula", curso.getAula());
 			us.put("hora", curso.getHora());
@@ -1368,13 +1455,16 @@ public class ControlBD {
 		//insertar registros de usuario
 		public String insertar(Evaluacion evaluacion){
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
-			long contador=0;
+			long contador=0;			
 			ContentValues us =new ContentValues();
+			us.put("anio", evaluacion.getCurso().getCiclo().getAnio());
+			us.put("ciclo", evaluacion.getCurso().getCiclo().getCiclo());
+			us.put("codmateria",evaluacion.getCurso().getMateria().getCodigo());
 			us.put("idEval", evaluacion.getIdEval());
 			us.put("numCurso", evaluacion.getCurso().getNumCurso());
 			us.put("nombreEval", evaluacion.getNombreEval());
-			us.put("porcentajeEval", evaluacion.getPorcentajeEval());
-			contador=db.insert("evaluacion", null, us);
+			us.put("porcentaje_Eval", evaluacion.getPorcentajeEval());
+			contador=db.insert("Evaluacion", null, us);
 			if(contador==-1 || contador==0)
 			{
 			regInsertados= "Error al Insertar el registro, Registro Duplicado. Verificar inserción";
@@ -1555,7 +1645,11 @@ public class ControlBD {
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
+			//anio,ciclo,codmateria
 			us.put("numCurso", ins.getCurso().getNumCurso());
+			us.put("anio", ins.getCurso().getCiclo().getAnio());
+			us.put("ciclo", ins.getCurso().getCiclo().getCiclo());
+			us.put("codmateria", ins.getCurso().getMateria().toString());
 			us.put("carnet", ins.getAlumno().getCarnet());
 			contador=db.insert("inscribe", null, us);
 			if(contador==-1 || contador==0)
@@ -1978,9 +2072,7 @@ public class ControlBD {
 	 * } default: return false; } }
 	 */
 //metodo para llenar la base de datos
-	public String llenarBD(){				
-		
-		
+	public String llenarBD(){			
 		//Objetos para las tablas
 		Ciclo ci=new Ciclo();
 		Materia ma = new Materia();
@@ -1998,7 +2090,7 @@ public class ControlBD {
 		int[] ciclo={1,2,1,2,1,2,1,2,1,2,1,2,1,2};
 		String[] estado={"inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo",};
 		
-		for (int i=0;i<14;i++){
+		for (int i=0;i<anio.length;i++){
 			ci.setAnio(anio[i]);
 			ci.setCiclo(ciclo[i]);
 			ci.setEstado(estado[i]);
@@ -2010,7 +2102,7 @@ public class ControlBD {
 				"FIR215","MAT315","PRN215","PYE115","ESD115","FIR315","MAT415","MEP115","PRN315","ANS115","HDP115","MOP115"
 				,"SDU115","SYP115","ARC115","IEC115","SIC115","TSI115","AGR115"};
 		String[] nombreMateria={"INTRODUCCION A LA INFORMATICA","MATEMATICA I","METODOS EXPERIMENTALES","PSICOLOGIA SOCIAL",
-				"FISICA I","HISTORIA SOCIAL Y ECONOMICA DE EL SALVADOR Y CENTROAMERICA","MATEMATICA II","MANEJO DE SOFTWARE PARA MICROCOMPUTADORAS",
+				"FISICA I","HISTORIA SOCIAL Y ECONOMICA","MATEMATICA II","MANEJO DE SOFTWARE PARA MICROCOMPUTADORAS",
 				"PROGRAMACION I","FUNDAMENTOS DE ECONOMIA","FISICA II","MATEMATICA III","PROGRAMACION II","PROBABILIDAD Y ESTADISTICA","ESTRUCTURA DE DATOS",
 				"FISICA III","MATEMATICA IV","METODOS PROBABILISTICOS","PROGRAMACION III","	ANALISIS NUMERICO","HERRAMIENTAS DE PRODUCTIVIDAD",
 				"METODOS DE OPTIMIZACION","SISTEMAS DIGITALES I","SISTEMAS Y PROCEDIMIENTOS","ARQUITECTURA DE COMPUTADORAS","INGENIERIA ECONOMICA","SISTEMAS CONTABLES","TEORIA DE SISTEMAS","ALGORITMOS GRAFICOS"};
@@ -2028,7 +2120,7 @@ public class ControlBD {
 		 String[] tipoPregunta={"seleccion multiple simple","pregunta abierta","seleccion multiple variable",
 				"falso-verdadero"};
 		 int[] numRespuesta={3,1,4,2};
-		for (int i=0;i<4;i++){
+		for (int i=0;i<codTipo.length;i++){
 			ti.setCodTipo(codTipo[i]);
 			ti.setNumRespuesta(numRespuesta[i]);
 			ti.setTipoPregunta(tipoPregunta[i]);
@@ -2075,7 +2167,7 @@ public class ControlBD {
 		String[] aula={"B-11","C-11","D-11","B-21","B-22","C-21","C-22","B-31","B-32","BIB-301"};
 		String[] hora={"6:20","8:05","9:50","11:35","1:20","3:00","4:50","6:35","8:05","11:35"};
 
-		for (int i=0;i<10;i++){
+		for (int i=0;i<numCurso.length;i++){
 			cur.setAula(aula[i]);
 			ci.setCiclo(ciclo[i]);
 			ci.setAnio(anio[i]);
@@ -2093,8 +2185,13 @@ public class ControlBD {
 			//tabla inscribe
 		int j=1;
 		for (int i=0;i<carnet.length;i++){
+			ci.setAnio(anio[i]);
+			ci.setCiclo(ciclo[i]);
 			alu.setCarnet(carnet[i]);
 			cur.setNumCurso(j);
+			cur.setCiclo(ci);
+			ma.setCodigo(codMateria[i]);
+			cur.setMateria(ma);
 			ins.setAlumno(alu);
 			ins.setCurso(cur);
 			insertar(ins);
@@ -2109,7 +2206,13 @@ public class ControlBD {
 		String[] nombreEval={"parcial I","Corto I","parcial I","Corto I","parcial I","Corto I","Parcial II","Corto II","Parcial II","Corto II","Parcial II","Corto II","Parcial III","Corto III","Sufi"};
 		Double[] porcEval={0.2,0.1,0.2,0.1,0.2,0.15,0.2,0.15,0.2,0.15,0.2,0.15,0.15,0.2,0.15};
 		//usa numCurso
-		for (int i=0;i<15;i++){
+		for (int i=0;i<idEval.length;i++){
+			//anio,ciclo,codmateria
+			ci.setAnio(anio[j]);
+			ci.setCiclo(ciclo[j]);
+			cur.setCiclo(ci);
+			ma.setCodigo(codMateria[i]);
+			cur.setMateria(ma);
 			cur.setNumCurso(j);
 			eva.setCurso(cur);
 			eva.setIdEval(idEval[i]);

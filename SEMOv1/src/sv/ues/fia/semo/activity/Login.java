@@ -72,6 +72,7 @@ public class Login extends Activity {
 			
 			//2. abre la base de datos
 			helper.abrir();
+			//helper.llenarBD();
 			
 			//3. Realiza Consulta con usuario
             Usuario usuario=helper.consultarUsuario(user);
