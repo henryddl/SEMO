@@ -19,7 +19,7 @@ public class MainDocente extends ListActivity {
 	//menu que se usara como principal
 		String[] menu={"Informacion docente","Ver alumnos","Hacer test","Ingresar preguntas"};
 		//El activity de cada tabla
-		String[] activities={"InfoDocente","InfoAlumno","HacerTest","IngresaPregunta"};
+		String[] activities={"InfoDocente","InfoAlumno","HacerTest","ListaMateriasActivity"};
 		sv.ues.fia.semo.bd.ControlBD BDhelper;	
 		public final static String EXTRA_MESSAGE1 = "sv.ues.fia.semo.activity.userMESSAGE";
 		

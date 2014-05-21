@@ -94,6 +94,10 @@
             android:name="sv.ues.fia.semo.activity.PreguntaFalsoVerdadero"
             android:label="@string/title_activity_pregunta_falso_verdadero" >
         </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.ListaMateriasActivity"
+            android:label="@string/title_activity_lista_materias" >
+        </activity>
     </application>
 
 </manifest>

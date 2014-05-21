@@ -16,6 +16,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 public class ControlBD {
 	/*
@@ -684,10 +686,10 @@ public class ControlBD {
 			}
 			return regInsertados;
 		}
-		//consultar una materia por su id
+		//consultar una materia por su id 
 		public Materia consultarMateria(String codigo){
 			String[] id = {codigo};
-			Cursor cursor = db.query("materia", camposMateria, "codigo = ?", id,null, null, null);
+			Cursor cursor = db.query("materia", camposMateria, "codmateria = ?", id,null, null, null);
 			if(cursor.moveToFirst()){
 				Materia materia = new Materia();
 				materia.setCodigo(cursor.getString(0));
@@ -698,6 +700,8 @@ public class ControlBD {
 			return null;
 			}
 			}
+		
+		
 		//consultar todas las materias
 		public List<Materia> consultarMaterias(){
 			List<Materia> materiaList = new ArrayList<Materia>();
@@ -800,6 +804,23 @@ public class ControlBD {
 			return null;
 			}
 			}
+		
+		//consultar un curso por coddocente
+				public String[] consultarCurso(String coddocente,String extra){					
+					String codmaterias[]={"","","","","",""};
+					int i=0;
+					Cursor cursor = db.rawQuery("select codmateria from curso where coddocente='"+coddocente+"'", null);
+					if(cursor.moveToFirst()){						
+						do{
+							codmaterias[i]=cursor.getString(0);
+							Log.i("msg", cursor.getString(0));
+							i++;
+						}while(cursor.moveToNext());
+						return codmaterias;
+						}
+					return null;					
+					}
+		
 		//consultar todos los usuarios
 		public List<Curso> consultarCursos(){
 			List<Curso> cursoList = new ArrayList<Curso>();

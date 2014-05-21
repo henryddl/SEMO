@@ -1,18 +1,27 @@
 package sv.ues.fia.semo.activity;
 
+import sv.ues.fia.semo.bd.ControlBD;
+import sv.ues.fia.semo.modelo.Curso;
+import sv.ues.fia.semo.modelo.Docente;
+import sv.ues.fia.semo.modelo.Materia;
+import sv.ues.fia.semo.modelo.Usuario;
 import ues.semo.R;
 import ues.semo.R.layout;
 import ues.semo.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +34,9 @@ public class IngresaPregunta extends Activity {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ingresa_pregunta);
-		
+		final String codmateria="";
 		//Crear el spinner con los tipos de preguntas
+		adapter.add("");
 		adapter.add("Selección multiple simple");   //tipo1
 		adapter.add("respuesta corta");				//tipo2
 		adapter.add("Selección multiple variable"); //tipo3
@@ -35,21 +45,17 @@ public class IngresaPregunta extends Activity {
 		s.setAdapter(adapter);
 		
 		//Crear lista desplegable para que el docente seleccione la materia a la que se le ingresaran preguntas
-		final String [] items=new String []{"Item 1","Item 2","Item 3","Item 4"};
-		AlertDialog.Builder builder=new AlertDialog.Builder(this);
-		builder.setTitle("Items alert");
-		builder.setItems(items, new OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
-		// TODO Auto-generated method stub
-		//TextView txt=(TextView)findViewById(R.id.txt);
-		//txt.setText(items[which]);
-			Toast.makeText(getBaseContext(), String.valueOf(which), Toast.LENGTH_LONG).show();
-		}
-		});
-		builder.show();
+		ControlBD helper =new ControlBD(this);
+		helper.abrir();
+		String codmaterias[]=new String[0];
+		//recibir como parametro el usuario del docente que ingreso
+		String usuario=getIntent().getStringExtra("EXTRA_MESSAGE1");
+		Usuario user=helper.consultarUsuario(usuario);
+		//obtener el codigo de docente
+		String coddocente=user.getDocente().getCoddocente();	
+		codmaterias=helper.consultarCurso(coddocente, "");
 		
 		
-		//s.getSelectedItemPosition();
 		s.setOnItemSelectedListener(
 		        new AdapterView.OnItemSelectedListener() {
 		        	String h="";
@@ -58,18 +64,20 @@ public class IngresaPregunta extends Activity {
 		            {
 		            	switch(position){
 		            	case 0:
+		            		break;
+		            	case 1:
 			            	intent = new Intent(getBaseContext(), PreguntaMultipleSimple.class);
 						    startActivity(intent);
 						    break;
-		            	case 1:
+		            	case 2:
 			            	intent = new Intent(getBaseContext(), PreguntaRespuestaCorta.class);
 						    startActivity(intent);
 						    break;
-		            	case 2:
+		            	case 3:
 			            	intent = new Intent(getBaseContext(), SeleccionMultipleVariable.class);
 						    startActivity(intent);
 						    break;
-		            	case 3:
+		            	case 4:
 			            	intent = new Intent(getBaseContext(), PreguntaFalsoVerdadero.class);
 						    startActivity(intent);
 						    break;
@@ -91,5 +99,8 @@ public class IngresaPregunta extends Activity {
 		getMenuInflater().inflate(R.menu.ingresa_pregunta, menu);
 		return true;
 	}
+	
+	//mostrar input dialog
+	
 
 }
