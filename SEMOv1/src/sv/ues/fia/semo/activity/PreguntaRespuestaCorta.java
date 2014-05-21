@@ -13,6 +13,8 @@ public class PreguntaRespuestaCorta extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pregunta_respuesta_corta);
+		String codmateria=getIntent().getStringExtra("CODMATERIA");
+		String coddocente=getIntent().getStringExtra("CODDOCENTE");
 	}
 
 	@Override

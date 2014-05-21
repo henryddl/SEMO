@@ -13,6 +13,8 @@ public class PreguntaFalsoVerdadero extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pregunta_falso_verdadero);
+		String codmateria=getIntent().getStringExtra("CODMATERIA");
+		String coddocente=getIntent().getStringExtra("CODDOCENTE");
 	}
 
 	@Override

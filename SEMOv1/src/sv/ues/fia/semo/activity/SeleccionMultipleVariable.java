@@ -13,6 +13,8 @@ public class SeleccionMultipleVariable extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_seleccion_multiple_variable);
+		String codmateria=getIntent().getStringExtra("CODMATERIA");
+		String coddocente=getIntent().getStringExtra("CODDOCENTE");
 	}
 
 	@Override

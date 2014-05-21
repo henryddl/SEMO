@@ -13,6 +13,8 @@ public class PreguntaMultipleSimple extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pregunta_multiple_simple);
+		String codmateria=getIntent().getStringExtra("CODMATERIA");
+		String coddocente=getIntent().getStringExtra("CODDOCENTE");
 	}
 
 	@Override

@@ -30,11 +30,12 @@ public class IngresaPregunta extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		ArrayAdapter <CharSequence> adapter = new ArrayAdapter <CharSequence> (this, android.R.layout.simple_spinner_item );
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ingresa_pregunta);
-		final String codmateria="";
+		
+		
+		ArrayAdapter <CharSequence> adapter = new ArrayAdapter <CharSequence> (this, android.R.layout.simple_spinner_item );
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);	
 		//Crear el spinner con los tipos de preguntas
 		adapter.add("");
 		adapter.add("Selección multiple simple");   //tipo1
@@ -48,17 +49,16 @@ public class IngresaPregunta extends Activity {
 		ControlBD helper =new ControlBD(this);
 		helper.abrir();
 		String codmaterias[]=new String[0];
-		//recibir como parametro el usuario del docente que ingreso
-		String usuario=getIntent().getStringExtra("EXTRA_MESSAGE1");
-		Usuario user=helper.consultarUsuario(usuario);
-		//obtener el codigo de docente
-		String coddocente=user.getDocente().getCoddocente();	
+		//recibir como parametro el usuario del docente que ingreso y el codigo de materia
+		final String codmateria=getIntent().getStringExtra("CODMATERIA");
+		final String coddocente=getIntent().getStringExtra("CODDOCENTE");	
+		Toast.makeText(this, "codmateria "+codmateria, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "coddocente "+coddocente, Toast.LENGTH_LONG).show();
 		codmaterias=helper.consultarCurso(coddocente, "");
 		
 		
 		s.setOnItemSelectedListener(
 		        new AdapterView.OnItemSelectedListener() {
-		        	String h="";
 		        	Intent intent;
 		            public void onItemSelected(AdapterView<?> parent,android.view.View v, int position, long id) 
 		            {
@@ -67,30 +67,36 @@ public class IngresaPregunta extends Activity {
 		            		break;
 		            	case 1:
 			            	intent = new Intent(getBaseContext(), PreguntaMultipleSimple.class);
+			            	intent.putExtra("CODMATERIA", codmateria);
+			            	intent.putExtra("CODDOCENTE", coddocente);
 						    startActivity(intent);
 						    break;
 		            	case 2:
 			            	intent = new Intent(getBaseContext(), PreguntaRespuestaCorta.class);
+			            	intent.putExtra("CODMATERIA", codmateria);
+			            	intent.putExtra("CODDOCENTE", coddocente);
 						    startActivity(intent);
 						    break;
 		            	case 3:
 			            	intent = new Intent(getBaseContext(), SeleccionMultipleVariable.class);
-						    startActivity(intent);
+			            	intent.putExtra("CODMATERIA", codmateria);
+			            	intent.putExtra("CODDOCENTE", coddocente);
+			            	startActivity(intent);
 						    break;
 		            	case 4:
 			            	intent = new Intent(getBaseContext(), PreguntaFalsoVerdadero.class);
-						    startActivity(intent);
+			            	intent.putExtra("CODMATERIA", codmateria);
+			            	intent.putExtra("CODDOCENTE", coddocente);
+			            	startActivity(intent);
 						    break;
 		            	}
 		            	
-		            	//h=String.valueOf(position);
-		            	//Toast.makeText(getBaseContext(), h, Toast.LENGTH_LONG).show();
 		            }
 		     
 		            public void onNothingSelected(AdapterView<?> parent) {
 		               // lblMensaje.setText("");
 		            }
-		    });
+		    });  
 	}
 
 	@Override
