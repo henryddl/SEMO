@@ -936,8 +936,8 @@ public class ControlBD {
 					categoria.setIdCategoria(cursor.getInt(0));
 					curso.setNumCurso(cursor.getInt(1));
 					categoria.setCurso(curso);
-					categoria.setNombreCategoria(cursor.getString(2));
-					categoria.setDescripcionCategoria(cursor.getString(3));
+					categoria.setNombreCategoria(cursor.getString(5));
+					categoria.setDescripcionCategoria(cursor.getString(6));
 					categoriaList.add(categoria);
 				}
 				while (cursor.moveToNext());
@@ -1039,6 +1039,8 @@ public class ControlBD {
 			return null;
 			}
 			}
+		
+		
 
 		public String actualizar(Subcategoria sc){
 			//verificar la integridad por codigo o por trigger
@@ -1198,6 +1200,8 @@ public class ControlBD {
 			return null;
 			}
 			}
+		
+		
 		//consultar todas las preguntas
 		public List<Pregunta> consultarPreguntas(){
 			List<Pregunta> preguntaList = new ArrayList<Pregunta>();

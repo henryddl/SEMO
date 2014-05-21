@@ -48,6 +48,8 @@
         android:layout_below="@+id/editText2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:text="@string/ingresa_pregunta" />
+        android:text="@string/ingresa_pregunta"
+        android:onClick="IngresarPregunta"
+         />
 
 </RelativeLayout>

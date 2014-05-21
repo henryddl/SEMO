@@ -1,5 +1,6 @@
 package sv.ues.fia.semo.activity;
 
+import sv.ues.fia.semo.bd.ControlBD;
 import ues.semo.R;
 import ues.semo.R.layout;
 import ues.semo.R.menu;
@@ -8,7 +9,7 @@ import android.app.Activity;
 import android.view.Menu;
 
 public class PreguntaFalsoVerdadero extends Activity {
-
+	ControlBD helper;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
