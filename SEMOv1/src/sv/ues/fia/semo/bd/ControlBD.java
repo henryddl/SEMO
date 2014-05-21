@@ -1978,8 +1978,148 @@ public class ControlBD {
 	 * } default: return false; } }
 	 */
 //metodo para llenar la base de datos
-	public String llenarBD(){			
+	public String llenarBD(){				
 		
-				return "Guardo Correctamente";
+		
+		//Objetos para las tablas
+		Ciclo ci=new Ciclo();
+		Materia ma = new Materia();
+		Tipo ti = new Tipo();
+		Usuario usu = new Usuario();
+		Docente doc = new Docente();
+		Alumno alu = new Alumno();
+		Curso cur = new Curso();
+		Inscribe ins = new Inscribe();
+		Evaluacion eva = new Evaluacion();
+		
+		// metodos para insertar
+		//tabla ciclo	
+		int[] anio={2008,2008,2009,2009,2010,2010,2011,2011,2012,2012,2013,2013,2014,2014};
+		int[] ciclo={1,2,1,2,1,2,1,2,1,2,1,2,1,2};
+		String[] estado={"inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo","inactivo",};
+		
+		for (int i=0;i<14;i++){
+			ci.setAnio(anio[i]);
+			ci.setCiclo(ciclo[i]);
+			ci.setEstado(estado[i]);
+			insertar(ci);		
+		}
+			
+		//tabla materia
+		String[] codMateria={"IAI115","MAT115","MTE115","PSI115","FIR115","HSE115","MAT215","MSM115","PRN115","FDE115",
+				"FIR215","MAT315","PRN215","PYE115","ESD115","FIR315","MAT415","MEP115","PRN315","ANS115","HDP115","MOP115"
+				,"SDU115","SYP115","ARC115","IEC115","SIC115","TSI115","AGR115"};
+		String[] nombreMateria={"INTRODUCCION A LA INFORMATICA","MATEMATICA I","METODOS EXPERIMENTALES","PSICOLOGIA SOCIAL",
+				"FISICA I","HISTORIA SOCIAL Y ECONOMICA DE EL SALVADOR Y CENTROAMERICA","MATEMATICA II","MANEJO DE SOFTWARE PARA MICROCOMPUTADORAS",
+				"PROGRAMACION I","FUNDAMENTOS DE ECONOMIA","FISICA II","MATEMATICA III","PROGRAMACION II","PROBABILIDAD Y ESTADISTICA","ESTRUCTURA DE DATOS",
+				"FISICA III","MATEMATICA IV","METODOS PROBABILISTICOS","PROGRAMACION III","	ANALISIS NUMERICO","HERRAMIENTAS DE PRODUCTIVIDAD",
+				"METODOS DE OPTIMIZACION","SISTEMAS DIGITALES I","SISTEMAS Y PROCEDIMIENTOS","ARQUITECTURA DE COMPUTADORAS","INGENIERIA ECONOMICA","SISTEMAS CONTABLES","TEORIA DE SISTEMAS","ALGORITMOS GRAFICOS"};
+		int[] cicloAnio={1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,5,5,5,5,5,6,6,6,6,6};
+		
+		for (int i=0; i<codMateria.length;i++){
+			ma.setCodigo(codMateria[i]);
+			ma.setNombreMateria(nombreMateria[i]);
+			ma.setCicloPensum(cicloAnio[i]);
+			insertar(ma);
+		}
+		
+			//tabla tipo
+		String[] codTipo={"1","2","3","4"};
+		 String[] tipoPregunta={"seleccion multiple simple","pregunta abierta","seleccion multiple variable",
+				"falso-verdadero"};
+		 int[] numRespuesta={3,1,4,2};
+		for (int i=0;i<4;i++){
+			ti.setCodTipo(codTipo[i]);
+			ti.setNumRespuesta(numRespuesta[i]);
+			ti.setTipoPregunta(tipoPregunta[i]);
+			insertar(ti);
+		}
+		
+		//tabla docente
+		 String[] codDocente={"CGonzalez","RVasquez","MOrtiz","ARivas","ODiaz","RFlores","LBarrera","ECastellanos","MCastillo","YVigil"};
+		 String[] nombreDocente={"Cesar","Rodrigo","Marvin","Arnoldo","Oscar","Rigoberto","Luis","Edgar","Milagro","Yessenia"};
+		 String[] apellidoDocente={"Gonzalez","Vasquez","Ortiz","Rivas","Diaz","Flores","Barrera","Castellanos","Castillo","Vigil"};
+				
+		for (int i=0;i<codDocente.length;i++){
+			doc.setApellido(apellidoDocente[i]);
+			doc.setCoddocente(codDocente[i]);
+			doc.setNombre(nombreDocente[i]);
+			usu.setUsername(codDocente[i]);
+			doc.setUsuario(usu);
+			insertar(doc);			
+		}
+			
+			//tabla alumnos	
+		//tabla alumnos
+		 String[] carnet={"MV02001","CL03022","LA10006","BC07017","ZV10001","PT11007","CM11005","CZ11004","HC09025","LR94001","FM10005",
+				"LG09020","SM05083","GS10023","MV09055","LP10005","CM11028","LR10005","ZR10002","EM06004","MA10016","RC10014","CM10023","SC10010",
+				"ML10007","AG09086","BM09027","CG09104","GV09016","SC10008","HC08020","MD08005","RR07052","BA07008","MQ06013"};
+		 String[] nombreAlum={"Aroldo","Armando","Enrique","Josefina","Miguel","Raúl","Ernesto","Alexander","Antonio","Enrique","Alberto",
+				 "Alexis","Rolando","Antonio","Aparicio","Yovany","alejandro","María","Miguel","Obed","Enrique","Fidel","Santiago","Antonio",
+				 "Ernesto","Elizabeth","Antonio","Elena","Vicente","Hansel","Eduardo","Alberto","Alberto","Manfredi","Alejandro"};
+		 String[] apellidoAlum={"Magaña","","Crespo","Lara","Burgos","Zelaya","Pleitez","Cosme","Campos","Hidalgo","Lopez","Fuentes","Landaverde","Segura","Guardado",
+				"Martinez","Leiva","Campos","Lozano","Zelaya","Estrada","Morales","Ramírez","Colato","Sánchez","Mejía","Aguilar","Bolaños","Campos","Grimaldi","Soto","Herrera",
+				"Mozo","Rodriguez","Bonilla","Mejia"};
+
+		for (int i=0;i<carnet.length;i++){
+			alu.setCarnet(carnet[i]);
+			alu.setNombre(nombreAlum[i]);
+			alu.setApellido(apellidoAlum[i]);
+			usu.setUsername(carnet[i]);
+			alu.setUsuario(usu);
+			insertar(alu);
+		}	
+		
+		//tabla curso
+		int[] numCurso={1,2,3,4,5,6,7,8,9,10};
+		String[] aula={"B-11","C-11","D-11","B-21","B-22","C-21","C-22","B-31","B-32","BIB-301"};
+		String[] hora={"6:20","8:05","9:50","11:35","1:20","3:00","4:50","6:35","8:05","11:35"};
+
+		for (int i=0;i<10;i++){
+			cur.setAula(aula[i]);
+			ci.setCiclo(ciclo[i]);
+			ci.setAnio(anio[i]);
+			cur.setCiclo(ci);
+			doc.setCoddocente(codDocente[i]);
+			cur.setDocente(doc);
+			cur.setHora(hora[i]);
+			ma.setCodigo(codMateria[i]);
+			cur.setMateria(ma);
+			cur.setNumCurso(numCurso[i]);
+			insertar(cur);
+			
+		}
+			
+			//tabla inscribe
+		int j=1;
+		for (int i=0;i<carnet.length;i++){
+			alu.setCarnet(carnet[i]);
+			cur.setNumCurso(j);
+			ins.setAlumno(alu);
+			ins.setCurso(cur);
+			insertar(ins);
+			j++;
+			if (j==10)
+				j=1;
+		}
+		j=1;
+	
+		//tabla evaluacion
+		int[] idEval={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+		String[] nombreEval={"parcial I","Corto I","parcial I","Corto I","parcial I","Corto I","Parcial II","Corto II","Parcial II","Corto II","Parcial II","Corto II","Parcial III","Corto III","Sufi"};
+		Double[] porcEval={0.2,0.1,0.2,0.1,0.2,0.15,0.2,0.15,0.2,0.15,0.2,0.15,0.15,0.2,0.15};
+		//usa numCurso
+		for (int i=0;i<15;i++){
+			cur.setNumCurso(j);
+			eva.setCurso(cur);
+			eva.setIdEval(idEval[i]);
+			eva.setNombreEval(nombreEval[i]);
+			eva.setPorcentajeEval(porcEval[i]);
+			insertar(eva);
+			j++;
+			if (j==10)
+				j=1;
+		}
+		return "Guardo Correctamente";
 				}
 }
