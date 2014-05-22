@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import sv.ues.fia.semo.modelo.*;
 
@@ -946,7 +947,24 @@ public class ControlBD {
 			return null;
 			}
 			}
+		
+		
+		//consultar todas las categorias e idcategoria por codmateria
+				public Cursor consultarCategorias(String codmateria){
+					Cursor cursor = db.rawQuery("SELECT IDCATEGORIA, NOMBRE_CATEGORIA FROM CATEGORIA WHERE CODMATERIA='"+codmateria+"'", null);
+					return cursor;
+					}
 
+		//Consultar categorias y devolver id_categoria a partir del nombre
+				public int consultarCodigoCategorias(String nombre){
+					int codcategoria = 0;
+					Cursor cursor = db.rawQuery("SELECT IDCATEGORIA FROM CATEGORIA WHERE NOMBRE_CATEGORIA='"+nombre+"'", null);
+					if(cursor.moveToFirst())
+						codcategoria=cursor.getInt(0);
+					return codcategoria;
+					}	
+							
+				
 		public String actualizar(Categoria categoria){
 			//verificar la integridad del usuario por codigo o por trigger
 			if(true /*verificarIntegridad()*/){
@@ -1040,6 +1058,21 @@ public class ControlBD {
 			}
 			}
 		
+		//consultar subcategorias y obtener codsubcategoria por categoria
+		public Cursor consultarSubcategorias(int codcategoria){
+			Cursor cursor = db.rawQuery("SELECT IDSUBCATEGORIA, NOMBRESUB_CATEGORIA FROM SUBCATEGORIA WHERE IDCATEGORIA='"+codcategoria+"'", null);
+			return cursor;
+			}
+		
+		
+		//Consultar subcategorias y devolver id_subcategoria a partir del codcategoria
+		public int consultarCodigoSubCategorias(String nombre){
+			int codcategoria = 0;
+			Cursor cursor = db.rawQuery("SELECT IDSUBCATEGORIA FROM SUBCATEGORIA WHERE NOMBRESUB_CATEGORIA='"+nombre+"'", null);
+			if(cursor.moveToFirst())
+				codcategoria=cursor.getInt(0);
+			return codcategoria;
+			}	
 		
 
 		public String actualizar(Subcategoria sc){

@@ -124,6 +124,7 @@ public final class R {
     }
     public static final class string {
         public static final int Limpiar=0x7f05002b;
+        public static final int RespCortaTutilo=0x7f05003a;
         public static final int action_search=0x7f05002d;
         public static final int action_settings=0x7f050010;
         public static final int administrarCuentaLabel=0x7f050009;

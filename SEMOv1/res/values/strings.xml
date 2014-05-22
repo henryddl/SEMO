@@ -59,5 +59,7 @@
     <string name="ing_respuesta">Ingrese la respuesta</string>
     <string name="title_activity_pregunta_falso_verdadero">PreguntaFalsoVerdadero</string>
     <string name="title_activity_lista_materias">ListaMateriasActivity</string>
-
+	<string name="RespCortaTutilo">IPregunta de respuesta corta</string>
+    
+    
 </resources>

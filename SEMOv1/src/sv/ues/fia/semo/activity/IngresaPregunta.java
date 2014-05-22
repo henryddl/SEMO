@@ -20,6 +20,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -39,6 +40,7 @@ public class IngresaPregunta extends Activity {
 	String valsubcat;
 	int idcategoria;
 	int idsubcategoria;
+	int i=0, listmax=0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +50,28 @@ public class IngresaPregunta extends Activity {
 		
 		
 		//Crear el spinner con los tipos de preguntas
-		ArrayAdapter <CharSequence> adapter = new ArrayAdapter <CharSequence> (this, android.R.layout.simple_spinner_item );
+		final ArrayAdapter <CharSequence> adapter = new ArrayAdapter <CharSequence> (this, android.R.layout.simple_spinner_item );
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);	
 		
 		
 		//Adaptador para spinner2 con subcategorias
-		ArrayAdapter <CharSequence> adapter2 = new ArrayAdapter <CharSequence> (this, android.R.layout.simple_spinner_item );
+		final ArrayAdapter <CharSequence> adapter2 = new ArrayAdapter <CharSequence> (this, android.R.layout.simple_spinner_item );
 		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
 		
 		//Adaptador para spinner3 con categorias
-		ArrayAdapter <CharSequence> adapter3 = new ArrayAdapter <CharSequence> (this, android.R.layout.simple_spinner_item );
+		final ArrayAdapter <CharSequence> adapter3 = new ArrayAdapter <CharSequence> (this, android.R.layout.simple_spinner_item );
 		adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+		
+		final ControlBD helper =new ControlBD(this);
+		helper.abrir();
+		String codmaterias[]=new String[0];
+		//recibir como parametro el usuario del docente que ingreso y el codigo de materia
+		final String codmateria=getIntent().getStringExtra("CODMATERIA");
+		final String coddocente=getIntent().getStringExtra("CODDOCENTE");	
+		codmaterias=helper.consultarCurso(coddocente, "");
+		//helper.cerrar();
 		
 		final Spinner s = (Spinner) findViewById(R.id.spinner1);
 		final Spinner s2=(Spinner)findViewById(R.id.spinner2);
@@ -79,60 +90,35 @@ public class IngresaPregunta extends Activity {
 		s.setGravity(Gravity.CENTER);
 		
 		
-		
-		//añadir a spinner2 con subcategorias
-		helper.abrir();
-		final List<Subcategoria> subcat=helper.consultarSubcategorias();		
-		helper.cerrar();
-		Log.i("CONSULTA SATISFACTORIA ","OSTIA!!!");
-		int i=0, listmax=0;
-		listmax=subcat.size();
-		adapter2.add("");
-		for(i=0;i<listmax;i++){
-			adapter2.add(subcat.get(i).getNombreSubCategoria());
-			Log.i("SUBCATS: ",subcat.get(i).getNombreSubCategoria());
-		}		
-		s2.setAdapter(adapter2);
-		s2.setGravity(Gravity.CENTER);
-		
-		//añadir a spinner2 con subcategorias
-		helper.abrir();
-		final List<Categoria> cat=helper.consultarCategorias();		
-		helper.cerrar();
-		Log.i("CONSULTA SATISFACTORIA ","OSTIA!!!");
-		i=0;
-		listmax=0;
-		listmax=cat.size();
+		//añadir a spinner3 con categorias
+		Cursor cat=helper.consultarCategorias(codmateria);		
 		adapter3.add("");
-		for(i=0;i<listmax;i++){
-			adapter3.add(cat.get(i).getNombreCategoria());
-			Log.i("CATS: ",cat.get(i).getNombreCategoria());
+		for(cat.moveToFirst(); !cat.isAfterLast(); cat.moveToNext()){
+			adapter3.add(cat.getString(1));
 		}
 		s3.setAdapter(adapter3);
 		s3.setGravity(Gravity.CENTER);
 		
-		//añadir spinner 3 con categorias
-		ControlBD helper =new ControlBD(this);
-		helper.abrir();
-		String codmaterias[]=new String[0];
-		//recibir como parametro el usuario del docente que ingreso y el codigo de materia
-		final String codmateria=getIntent().getStringExtra("CODMATERIA");
-		final String coddocente=getIntent().getStringExtra("CODDOCENTE");	
-		Toast.makeText(this, "codmateria "+codmateria, Toast.LENGTH_LONG).show();
-		Toast.makeText(this, "coddocente "+coddocente, Toast.LENGTH_LONG).show();
-		codmaterias=helper.consultarCurso(coddocente, "");
-		
 		
 		//Onclick de spinner3 - categoria
 				s3.setOnItemSelectedListener(
-				        new AdapterView.OnItemSelectedListener() {		        	 
+				        new AdapterView.OnItemSelectedListener() {	
+				        	
 				            public void onItemSelected(AdapterView<?> parent,android.view.View v, int position, long id) 
-				            {
-				            	 valcat=s3.getSelectedItem().toString();		            	 
+				            {	 
+				            	 valcat=s3.getSelectedItem().toString();	
 				            	 if(s3.getSelectedItem().toString().isEmpty()==false){
-				            	   idcategoria=cat.get(position-1).getIdCategoria();
-				            	   Toast.makeText(getBaseContext(), "IDCATEGORIA: "+idcategoria, Toast.LENGTH_LONG).show();
-				            	   s2.setEnabled(true);}
+				            		 idcategoria=helper.consultarCodigoCategorias(valcat);
+				            		 Toast.makeText(getBaseContext(), "codigo de CAT "+idcategoria, Toast.LENGTH_LONG).show();
+				            		 s2.setEnabled(true);
+				            		 //añadir elementos a subcategoria
+				            		Cursor nombresubcat=helper.consultarSubcategorias(idcategoria);
+				     				for(nombresubcat.moveToFirst(); !nombresubcat.isAfterLast(); nombresubcat.moveToNext()){
+				     					adapter2.add(nombresubcat.getString(1));
+				     				}
+				            	 }else{
+				            		 s2.setEnabled(false);}
+				            	 
 				            }
 				     
 				            public void onNothingSelected(AdapterView<?> parent) {
@@ -140,18 +126,38 @@ public class IngresaPregunta extends Activity {
 				            }
 				    });
 		
+				final List<Subcategoria> subcat=helper.consultarSubcategorias();
+				listmax=subcat.size();
+				/*
+				//añadir a spinner2 con subcategorias
+					
+				Cursor nombresubcat=helper.consultarSubcategorias(idcategoria);
+				Log.i("IDCATEGORIA SELECCIONADO",String.valueOf(idcategoria));
+				
+				
+				for(nombresubcat.moveToFirst(); !nombresubcat.isAfterLast(); nombresubcat.moveToNext()){
+					adapter2.add(nombresubcat.getString(1));
+				}*/
+				adapter2.add("");
+				s2.setAdapter(adapter2);
+				s2.setGravity(Gravity.CENTER);		
+				
+				
 		
 		//Onclick de spinner2 - subcategoria
 				s2.setOnItemSelectedListener(
 				        new AdapterView.OnItemSelectedListener() {		        	 
 				            public void onItemSelected(AdapterView<?> parent,android.view.View v, int position, long id) 
 				            {
-				            	 
-				            	 valcat=s2.getSelectedItem().toString();
-				            	 
+				            	 valsubcat=s2.getSelectedItem().toString();
 				            	 if(s2.getSelectedItem().toString().isEmpty()==false){
-				            		 idsubcategoria=subcat.get(position-1).getIdSubCategoria();
-					            	   s.setEnabled(true);}
+				            		 idsubcategoria=helper.consultarCodigoSubCategorias(valsubcat);
+				            		 Log.i("codigo final subcategoria ", String.valueOf(idsubcategoria));
+				            		// idsubcategoria=subcat.get(position-1).getIdSubCategoria();
+				            		// Toast.makeText(getBaseContext(), "IDCATEGORIA: "+idsubcategoria, Toast.LENGTH_LONG).show();
+					            	          	   s.setEnabled(true);}
+				            	 else{
+				            		 s.setEnabled(false);}
 				            }
 				     
 				            public void onNothingSelected(AdapterView<?> parent) {
@@ -160,36 +166,55 @@ public class IngresaPregunta extends Activity {
 				    });
 		
 		s.setOnItemSelectedListener(
-		        new AdapterView.OnItemSelectedListener() {
+		        new AdapterView.OnItemSelectedListener() {		        	
 		        	Intent intent;
 		        	
 		            public void onItemSelected(AdapterView<?> parent,android.view.View v, int position, long id) 
 		            {
+		            	
+		            	//obtener codcategoria y codsubcategoria
+	            		valcat=s3.getSelectedItem().toString();	
+		            	 if(s3.getSelectedItem().toString().isEmpty()==false){
+		            		 idcategoria=helper.consultarCodigoCategorias(valcat);}
+		            	 valsubcat=s2.getSelectedItem().toString();
+		            	 if(s2.getSelectedItem().toString().isEmpty()==false){
+		            		 idsubcategoria=helper.consultarCodigoSubCategorias(valsubcat);}
+		            	Log.i("codcategoria FINAL", String.valueOf(idcategoria));
+		            	Log.i("codsubcategoria FINAL",String.valueOf(idsubcategoria));
+		            	
 		            	switch(position){
 		            	case 0:
 		            		break;
-		            	case 1:
+		            	case 1:      
 			            	intent = new Intent(getBaseContext(), PreguntaMultipleSimple.class);
-			            	intent.putExtra("CODMATERIA", codmateria);
-			            	intent.putExtra("CODDOCENTE", coddocente);
+			            	/*	Bundle extras = new Bundle();			            	
+			            	extras.putString("CODMATERIA", codmateria);
+			            	extras.putString("CODDOCENTE", coddocente);
+			            	extras.putInt("CODCATEGORIA", idcategoria);
+			            	extras.putInt("CODSUBCATEGORIA", idsubcategoria);
+			            	intent.putExtras(extras);*/
 						    startActivity(intent);
 						    break;
 		            	case 2:
 			            	intent = new Intent(getBaseContext(), PreguntaRespuestaCorta.class);
-			            	intent.putExtra("CODMATERIA", codmateria);
-			            	intent.putExtra("CODDOCENTE", coddocente);
-						    startActivity(intent);
+			            	String[] parametros={codmateria,coddocente,String.valueOf(idcategoria),String.valueOf(idsubcategoria)};
+						    intent.putExtra("valores", parametros);
+			            	startActivity(intent);
 						    break;
 		            	case 3:
 			            	intent = new Intent(getBaseContext(), SeleccionMultipleVariable.class);
 			            	intent.putExtra("CODMATERIA", codmateria);
 			            	intent.putExtra("CODDOCENTE", coddocente);
+			            	intent.putExtra("CODCATEGORIA", idcategoria);
+			            	intent.putExtra("CODSUBCATEGORIA", idsubcategoria);
 			            	startActivity(intent);
 						    break;
 		            	case 4:
 			            	intent = new Intent(getBaseContext(), PreguntaFalsoVerdadero.class);
 			            	intent.putExtra("CODMATERIA", codmateria);
 			            	intent.putExtra("CODDOCENTE", coddocente);
+			            	intent.putExtra("CODCATEGORIA", idcategoria);
+			            	intent.putExtra("CODSUBCATEGORIA", idsubcategoria);
 			            	startActivity(intent);
 						    break;
 		            	}
@@ -201,12 +226,12 @@ public class IngresaPregunta extends Activity {
 		            }
 		    });  
 		
-		
-		
-		
 //final de oncreate		
 	}
 
+	
+
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

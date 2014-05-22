@@ -3,13 +3,17 @@ package sv.ues.fia.semo.activity;
 import java.util.List;
 
 import sv.ues.fia.semo.bd.ControlBD;
+import sv.ues.fia.semo.modelo.Categoria;
+import sv.ues.fia.semo.modelo.ItemRespuesta;
 import sv.ues.fia.semo.modelo.Pregunta;
 import sv.ues.fia.semo.modelo.Subcategoria;
+import sv.ues.fia.semo.modelo.Tipo;
 import ues.semo.R;
 import ues.semo.R.layout;
 import ues.semo.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -20,15 +24,17 @@ public class PreguntaRespuestaCorta extends Activity {
 	EditText editpregunta ;
 	EditText editrespuesta ;
 	ControlBD helper;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pregunta_respuesta_corta);
-		helper = new ControlBD(this);
-		String codmateria=getIntent().getStringExtra("CODMATERIA");
-		String coddocente=getIntent().getStringExtra("CODDOCENTE");
+		helper = new ControlBD(this);		
 		editpregunta = (EditText) findViewById(R.id.editText1);
 		editrespuesta = (EditText) findViewById(R.id.editText2);
+
 	}
 
 	@Override
@@ -39,25 +45,56 @@ public class PreguntaRespuestaCorta extends Activity {
 	}
 	
 	public void IngresarPregunta(View view){
+		
+		Intent intent = getIntent();
+		//codmateria, coddocente, idcategoria, idsubcategoria
+		String [] parametros=intent.getStringArrayExtra("valores");
+		String codsubcategoria=parametros[3];
+		String codcategoria=parametros[2];
 		String preg=editpregunta.toString();
 		String resp=editrespuesta.toString();
-		helper.abrir();
-		//contendra el id de la preguna actual
-		int actual=0;
-		List<Pregunta> preguntalista=helper.consultarPreguntas();
-		helper.cerrar();
+		//Crear objetos para ingresar a pregunta
+		ItemRespuesta respuesta=new ItemRespuesta();
 		Pregunta pregunta=new Pregunta();
 		Subcategoria subcat=new Subcategoria();
-		if(preguntalista==null){
-			//subcat.getCategoria().
-			//pregunta.setIdPregunta(actual);
-			//pregunta.setPregunta(preg);
-		//	pregunta.s
-		}else{
-			int max=preguntalista.size();
-			actual=max+1;
-			
-		}
+		Categoria categ=new Categoria();
+		Tipo tipo=new Tipo();		
+		helper.abrir();		
+		List<Pregunta> listpregunta=helper.consultarPreguntas();
+		List<ItemRespuesta> listrespuesta=helper.consultarItems();
+		
+	 
+		int maxpreg=listpregunta.size();
+		int maxresp=listrespuesta.size();
+		tipo.setCodTipo("2");
+		tipo.setNumRespuesta(1);
+		tipo.setTipoPregunta("Pregunta abierta");
+		//tipo=helper.consultarTipo("2");
+		maxpreg=maxpreg+1;
+		maxresp=maxresp+1;
+		try{
+		pregunta.setIdPregunta(maxpreg);
+		pregunta.setPregunta(preg);
+		Log.i("AQUI LLEGA OSTIA ", "AOSIDASJDK");
+		pregunta.setSc(subcat);
+		pregunta.setTipo(tipo);
+		
+		helper.insertar(pregunta);
+		
+		respuesta.setIdItem(maxresp);
+		respuesta.setPregunta(pregunta);
+		respuesta.setPuntosRespuesta(1);
+		respuesta.setRespuesta(resp);
+		helper.insertar(respuesta);
+		Toast.makeText(this, "Pregunta y respuestas ingresadas con exito", Toast.LENGTH_LONG).show();}
+		   catch(Exception e){
+			   Log.i("ERROR DE INSERCION ", e.toString());
+		   }
+		
+		
+		
+		helper.cerrar();
+		
 		
 	}
 

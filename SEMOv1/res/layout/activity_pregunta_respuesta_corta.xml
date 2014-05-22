@@ -15,7 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
-        android:text="Pregunta de respuesta corta"
+        android:text="@string/RespCortaTutilo"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
