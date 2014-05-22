@@ -86,6 +86,18 @@
             android:name="sv.ues.fia.semo.activity.AdministrarCiclo"
             android:label="@string/title_activity_administrar_ciclo" >
         </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.AgregarCiclo"
+            android:label="@string/title_activity_agregar_ciclo" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.ListarCiclos"
+            android:label="@string/title_activity_listar_ciclos" >
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.BorrarCiclos"
+            android:label="@string/title_activity_borrar_ciclos" >
+        </activity>
     </application>
 
 </manifest>

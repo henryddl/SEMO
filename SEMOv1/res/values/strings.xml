@@ -37,6 +37,23 @@
     <string name="administrarDocentesLabel">Administrar Docentes</string>
     <string name="administrarCiclosLabel">Administrar Ciclo</string>
     <string name="title_activity_administrar_docentes">AdministrarDocentesActivity</string>
-    <string name="title_activity_administrar_ciclo">AdministrarCiclo</string>
+    <string name="buscarDocenteLabel">Buscar Docente</string>
+    <string name="agregarDocenteLabel">Agregar Docente</string>
+    <string name="modificarDocenteLabel">Actualizar Docente</string>
+    <string name="verDocentesLabel">Ver Lista Docentes</string>
+    <string name="borrarDocentesLabel">Eliminar Docente</string>
+    <string name="title_activity_administrar_ciclo">Administar Ciclos</string>
+    <string name="buscarCicloLabel">Buscar Ciclo</string>
+    <string name="agregarCicloLabel">Agregar Ciclo</string>
+    <string name="modificarCicloLabel">Abrir/Cerrar Ciclo</string>
+    <string name="verCicloLabel">Ver Lista Ciclo</string>
+    <string name="borrarCicloLabel">Eliminar Ciclo</string>
+    <string name="title_activity_agregar_ciclo">AgregarCicloActivity</string>
+    <string name="anio_ciclo">Año</string>
+    <string name="ciclo_1o2">Ciclo(1 o 2)</string>
+    <string name="boton_add_ciclo">Agregar</string>
+    <string name="title_activity_listar_ciclos">ListarCiclos</string>
+    <string name="title_activity_borrar_ciclos">BorrarCiclos</string>
+    <string name="llenarBaseLabel">Llenar Base de Datos</string>
 
 </resources>

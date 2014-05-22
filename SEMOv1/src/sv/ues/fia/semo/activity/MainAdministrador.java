@@ -1,5 +1,6 @@
 package sv.ues.fia.semo.activity;
 
+import sv.ues.fia.semo.bd.ControlBD;
 import ues.semo.R;
 import android.os.Bundle;
 import android.app.Activity;
@@ -11,6 +12,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 public class MainAdministrador extends Activity {
+	ControlBD helper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,15 +25,14 @@ public class MainAdministrador extends Activity {
 			    Toast.makeText(this, "user:"+user, Toast.LENGTH_SHORT).show();
 				String pass = intent.getStringExtra(Login.EXTRA_MESSAGE2);
 				Toast.makeText(this, "pass:"+pass, Toast.LENGTH_SHORT).show();
+				 helper = new ControlBD(this);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_administrador, menu);
-		MenuItem searchItem = menu.findItem(R.id.buscarItem);
-	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-	    // Configure the search info and add any event listeners
+		// Configure the search info and add any event listeners
 	    //searchView.setQueryHint("Buscar curso...");
 		return true;
 	}
@@ -61,6 +62,15 @@ public class MainAdministrador extends Activity {
 	        	intent=new Intent(this,AdministrarCiclo.class);
 	        	startActivity(intent);
 	            return true; 
+	        case R.id.llenarBase:
+	        	try{
+	        	helper.abrir();
+	        	helper.llenarBD();
+	        	helper.cerrar();
+	        	}finally{
+	        		Toast.makeText(this, "Hubo un error en las insersiones.", Toast.LENGTH_SHORT).show();
+	        	}
+	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }
