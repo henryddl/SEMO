@@ -1,76 +1,74 @@
 package sv.ues.fia.semo.activity;
 
-import java.util.List;
-
 import sv.ues.fia.semo.bd.ControlBD;
 import sv.ues.fia.semo.modelo.Ciclo;
 import ues.semo.R;
 import android.os.Build;
 import android.os.Bundle;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class ListarCiclos extends Activity {
 	ControlBD helper;
-	List<Ciclo> listaCiclos;
 	String ciclos[];
+	int posicion;
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_listar_ciclos);
-		Log.i("antes de abrir helper", "antes de abrir helper");
 		helper = new ControlBD(this);
 		helper.abrir();
-		listaCiclos=helper.consultarCiclos();
-		for (int i=0; i<listaCiclos.size();i++){
-			Log.i("Datos en onCreate", "Año: "+listaCiclos.get(i).getAnio());
+		Cursor cursor=helper.consultar("Select * from ciclo");
+		if (cursor.getCount()>0){
+			cursor.moveToFirst();
+			ciclos=new String[cursor.getCount()];
+			int i=0;
+			do{				
+			ciclos[i]="Ciclo:"+cursor.getString(1)+" "+cursor.getString(0)+"\nEstado "+cursor.getString(2);
+			i++;
+			}while(cursor.moveToNext());
+			}
+		else{
+			ciclos=new String[1];
+			ciclos[1]="no hay registros que mostrar";
 		}
 		final ListView lv;
-		Log.i("llenar tlist", "llenar list");
 		lv=(ListView)findViewById(R.id.listaCiclos);
-		Log.i(" ", "recuperar listview id");
-		String[] arreglo=llenarArray();
-		Log.i("Array",arreglo[0]);
 		lv.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, arreglo));
-		Log.i(" ", "setear adapter");
+				android.R.layout.simple_list_item_1, ciclos));
+		registerForContextMenu(lv);
 		setupActionBar();
-		Log.i(" ", "despues del actionbar");
+		ponerSubtitulos();		
 	}
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void ponerSubtitulos(){
+		  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		    ActionBar ab = getActionBar();
+		    ab.setSubtitle("Ver ciclos"); 
+		  }
+		  }
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-	}
-
-	private String[] llenarArray() {
-		Log.i(" ", "dentro de llenarArray");
-		if (listaCiclos.size()==0){
-			String[] arrayTemp={"No hay Datos"};
-			Log.i(" ", "no hay datos");
-			return arrayTemp;
-			
-		}
-		else{
-		String[] arrayTemp= new String[listaCiclos.size()];
-		for (int i=0;i<listaCiclos.size();i++){
-			arrayTemp[i]="Ciclo "+listaCiclos.get(i).getCiclo()+
-					" "+listaCiclos.get(i).getAnio()+" Estado:"+listaCiclos.get(i).getEstado();
-		}
-		Log.i("Primer elementos ",arrayTemp[0]);
-		
-		return arrayTemp;}
 	}
 
 	@Override
@@ -96,16 +94,8 @@ public class ListarCiclos extends Activity {
 	        	intent = new Intent(this, AgregarCiclo.class);
 	        	startActivity(intent);
 	            return true;
-	       /* case R.id.modificarCicloItem:
-	        	intent=new Intent(this,ModificarCiclo.class);
-	        	startActivity(intent);
-	            return true;*/
 	        case R.id.verCicloItem:
 	        	intent=new Intent(this,ListarCiclos.class);
-	        	startActivity(intent);
-	        	return true;
-	        case R.id.borrarCicloItem:
-	        	intent=new Intent(this,BorrarCiclos.class);
 	        	startActivity(intent);
 	        	return true;
 	        case R.id.cerrarSesionItem:
@@ -115,5 +105,49 @@ public class ListarCiclos extends Activity {
 			}
 			return super.onOptionsItemSelected(item);
 		}
+	
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+	    ContextMenuInfo menuInfo) {
+	    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+	    posicion=info.position;
+	    menu.setHeaderTitle(ciclos[info.position].substring(0, 12));
+	    MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_contextual_ciclos, menu);
+	      
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	  AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+	  int menuItemIndex = item.getItemId();
+	  Ciclo c=new Ciclo();
+	  c.setCiclo(Integer.valueOf(ciclos[posicion].substring(6, 7)));
+	  c.setAnio(Integer.valueOf(ciclos[posicion].substring(8, 12)));
+	  Log.i("Año",ciclos[posicion].substring(8, 12));
+	  Log.i("ciclo", ciclos[posicion].substring(6, 7));
+	  helper.abrir();
+	  switch(menuItemIndex){
+	  case R.id.EliminarCicloSM:
+		  Log.i("antes eliminar", "xxxx");
+		  helper.eliminar(c);	
+		  Log.i("despues eliminar", "xxxx");
+		  break;
+	  case R.id.ModificarCicloSM:
+		  Log.i("estado", ciclos[posicion].substring(20));
+		  if(ciclos[posicion].substring(20).equals("inactivo"))
+			  c.setEstado("activo");
+		  else
+			  c.setEstado("inactivo");
+		  helper.actualizar(c);  
+		  break;
+	   }
+	  helper.cerrar();
+	  	Intent inte=new Intent(this,ListarCiclos.class);
+    	startActivity(inte);
+	  return true;
+	}
+	
 
 }

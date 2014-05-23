@@ -8,9 +8,11 @@ import ues.semo.R.menu;
 import android.os.Build;
 import android.os.Bundle;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +26,7 @@ public class AgregarCiclo extends Activity {
 	String[] ciclo ={"1","2"};
 	ArrayAdapter<String> adapter;
 	EditText editAnio;
-	String ciclo12;
+	Spinner ciclo12;
 	ControlBD helper;
 
 	@Override
@@ -39,7 +41,16 @@ public class AgregarCiclo extends Activity {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp.setAdapter(adapter);
 		editAnio = (EditText)findViewById(R.id.editText1);
+		ciclo12=(Spinner)findViewById(R.id.spinner1);	
+		ponerSubtitulos();		
 	}
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void ponerSubtitulos(){
+		  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		    ActionBar ab = getActionBar();
+		    ab.setSubtitle("Crear ciclo"); 
+		  }
+		  }
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
@@ -72,16 +83,8 @@ public class AgregarCiclo extends Activity {
         	intent = new Intent(this, AgregarCiclo.class);
         	startActivity(intent);
             return true;
-        /*case R.id.modificarCicloItem:
-        	intent=new Intent(this,ModificarCiclo.class);
-        	startActivity(intent);
-            return true;*/
         case R.id.verCicloItem:
         	intent=new Intent(this,ListarCiclos.class);
-        	startActivity(intent);
-        	return true;
-        case R.id.borrarCicloItem:
-        	intent=new Intent(this,BorrarCiclos.class);
         	startActivity(intent);
         	return true;
         case R.id.cerrarSesionItem:
@@ -91,25 +94,29 @@ public class AgregarCiclo extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	public void onItemSelected(AdapterView<?> parent, View view, int pos,long id) {
-		if (parent.getId() == R.id.spinner1) {
-			ciclo12 = ((String) parent.getSelectedItem());
-			
-		}
-	}
 	public void insertar(View v) { 
-		Toast.makeText(this, ciclo12, Toast.LENGTH_SHORT).show();
-		 String anio=editAnio.getText().toString();
+		String ciclo=ciclo12.getSelectedItem().toString();
+		String anio=editAnio.getText().toString();
 		 String regInsertados; 
-		 Ciclo ciclo=new Ciclo(); 
-		ciclo.setAnio(Integer.valueOf(anio));
-		ciclo.setCiclo(Integer.valueOf(ciclo12));
-		ciclo.setEstado("inactivo");
+		 if(anio.equals("")){
+			Toast.makeText(this, "Debe ingresar un año", Toast.LENGTH_SHORT).show(); 
+		 }
+		 else
+		 if (anio.length()!=4){
+			 Toast.makeText(this, "El año debe ser de 4 numeros (ej:2004)", Toast.LENGTH_SHORT).show(); 
+		 }
+		 else{
+		 Ciclo cicloIns=new Ciclo(); 
+		 cicloIns.setAnio(Integer.valueOf(anio));
+		//ciclo.setCiclo(1);
+		 cicloIns.setCiclo(Integer.valueOf(ciclo));
+		 cicloIns.setEstado("inactivo");
 		
 		 helper.abrir(); 
-		 regInsertados=helper.insertar(ciclo); 
+		 regInsertados=helper.insertar(cicloIns); 
 		 helper.cerrar(); 
 		 Toast.makeText(this, regInsertados, Toast.LENGTH_SHORT).show(); 
+		 }
 		} 
 
 }

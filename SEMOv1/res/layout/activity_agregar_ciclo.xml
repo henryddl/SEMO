@@ -15,7 +15,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/textView1"
         android:ems="10"
-        android:inputType="numberPassword" >
+        android:inputType="number" >
 
         <requestFocus />
     </EditText>

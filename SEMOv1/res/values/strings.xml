@@ -36,7 +36,7 @@
     <string name="title_activity_actualizar_cuenta">Actualizar Cuenta</string>
     <string name="administrarDocentesLabel">Administrar Docentes</string>
     <string name="administrarCiclosLabel">Administrar Ciclo</string>
-    <string name="title_activity_administrar_docentes">AdministrarDocentesActivity</string>
+    <string name="title_activity_administrar_docentes">Administrar Docentes</string>
     <string name="buscarDocenteLabel">Buscar Docente</string>
     <string name="agregarDocenteLabel">Agregar Docente</string>
     <string name="modificarDocenteLabel">Actualizar Docente</string>
@@ -48,12 +48,26 @@
     <string name="modificarCicloLabel">Abrir/Cerrar Ciclo</string>
     <string name="verCicloLabel">Ver Lista Ciclo</string>
     <string name="borrarCicloLabel">Eliminar Ciclo</string>
-    <string name="title_activity_agregar_ciclo">AgregarCicloActivity</string>
+    <string name="title_activity_agregar_ciclo">Agregar Ciclo</string>
     <string name="anio_ciclo">Año</string>
-    <string name="ciclo_1o2">Ciclo(1 o 2)</string>
+    <string name="ciclo_1o2">Ciclo</string>
     <string name="boton_add_ciclo">Agregar</string>
-    <string name="title_activity_listar_ciclos">ListarCiclos</string>
-    <string name="title_activity_borrar_ciclos">BorrarCiclos</string>
+    <string name="title_activity_listar_ciclos">Listar Ciclos</string>
+    <string name="title_activity_borrar_ciclos">Borrar Ciclos</string>
     <string name="llenarBaseLabel">Llenar Base de Datos</string>
+    <string name="title_activity_agregar_docente">Agregar Docente</string>
+    <string name="codDocenteLabel">Codigo del Docente</string>
+    <string name="nombreDocenteLabel">Nombre del Docente</string>
+    <string name="apellidoDocenteLabel">Apellido del Docente</string>
+    <string name="crearDocenteBoton">Crear Docente</string>
+    <string name="limpiarForm">Limpiar campos</string>
+    <string name="title_activity_modificar_docente">Modificar Docente</string>
+    <string name="seleccionarDocente">Seleccione un Docente</string>
+    <string name="actualizarDocente">Actualizar Docente</string>
+    <string name="title_activity_eliminar_docente">EliminarDocente</string>
+    <string name="eliminarDocenteButton">Eliminar Docente</string>
+    <string name="title_activity_listar_docentes">ListarDocentes</string>
+    <string name="eliminarCicloContext">Eliminar</string>
+    <string name="activarCiclo">Activar/Desactivar</string>
 
 </resources>

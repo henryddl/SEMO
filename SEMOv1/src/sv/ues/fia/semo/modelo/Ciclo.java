@@ -10,6 +10,12 @@ public class Ciclo {
 		super();
 	}
 
+	public Ciclo(int anio2, int ciclo2, String estado2) {
+		this.anio=anio2;
+		this.ciclo=ciclo2;
+		this.estado=estado2;
+	}
+
 	public int getAnio() {
 		return anio;
 	}

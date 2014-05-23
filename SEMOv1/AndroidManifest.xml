@@ -76,27 +76,76 @@
         </activity>
         <activity
             android:name="ues.semo.AdministrarDocentesActivity"
-            android:label="@string/title_activity_administrar_docentes" >
+            android:label="@string/title_activity_administrar_docentes" 
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAdministrador" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAdministrador" />
+            
         </activity>
         <activity
             android:name="sv.ues.fia.semo.activity.AdministrarDocentes"
-            android:label="@string/title_activity_administrar_docentes" >
+            android:label="@string/title_activity_administrar_docentes"
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAdministrador" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAdministrador" />
         </activity>
         <activity
             android:name="sv.ues.fia.semo.activity.AdministrarCiclo"
-            android:label="@string/title_activity_administrar_ciclo" >
+            android:label="@string/title_activity_administrar_ciclo" 
+            android:parentActivityName="sv.ues.fia.semo.activity.MainAdministrador" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.MainAdministrador" />
         </activity>
         <activity
             android:name="sv.ues.fia.semo.activity.AgregarCiclo"
-            android:label="@string/title_activity_agregar_ciclo" >
+            android:label="@string/title_activity_agregar_ciclo" 
+            android:parentActivityName="sv.ues.fia.semo.activity.AdministrarCiclo" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.AdministrarCiclo" />
         </activity>
         <activity
             android:name="sv.ues.fia.semo.activity.ListarCiclos"
-            android:label="@string/title_activity_listar_ciclos" >
+            android:label="@string/title_activity_listar_ciclos" 
+            android:parentActivityName="sv.ues.fia.semo.activity.AdministrarCiclo" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.AdministrarCiclo" />
         </activity>
         <activity
-            android:name="sv.ues.fia.semo.activity.BorrarCiclos"
-            android:label="@string/title_activity_borrar_ciclos" >
+            android:name="sv.ues.fia.semo.activity.AgregarDocente"
+            android:label="@string/title_activity_agregar_docente" 
+            android:parentActivityName="sv.ues.fia.semo.activity.AdministrarDocentes" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.AdministrarDocentes" />
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.ModificarDocente"
+            android:label="@string/title_activity_modificar_docente" 
+            android:parentActivityName="sv.ues.fia.semo.activity.AdministrarDocentes" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.AdministrarDocentes" />
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.EliminarDocente"
+            android:label="@string/title_activity_eliminar_docente"
+            android:parentActivityName="sv.ues.fia.semo.activity.AdministrarDocentes" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.AdministrarDocentes" />
+        </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.ListarDocentes"
+            android:label="@string/title_activity_listar_docentes"
+            android:parentActivityName="sv.ues.fia.semo.activity.AdministrarDocentes" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.AdministrarDocentes" />
         </activity>
     </application>
 

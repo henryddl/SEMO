@@ -471,7 +471,7 @@ public class ControlBD {
 	//Actualizar un usuario
 	public String actualizar(Usuario usuario){
 		//verificar la integridad del usuario por codigo o por trigger
-		if(true /*verificarIntegridad()*/){			
+		try{			
 			String[] username = {usuario.getUsername()};
 			ContentValues cv = new ContentValues();
 			cv.put("password", usuario.getPassword());
@@ -479,23 +479,22 @@ public class ControlBD {
 			db.update("usuario", cv, "username = ?", username);
 			return "Registro Actualizado Correctamente";
 		}
-		else{
-			return "Registro con nombre de usuario " + usuario.getUsername() + " no existe";
+		catch(SQLException e){
+			return e.toString();
 		}
 		}
 
 	public String eliminar(Usuario usuario){
-		String regAfectados="filas afectadas= ";
+		String regAfectados="";
 		int contador=0;
-		if (true /*verificarIntegridad()*/) {
-		regAfectados="0";
-		}
-		else
-		{
+		try{
 		contador+=db.delete("usuario", "username='"+usuario.getUsername()+"'",
 		null);
-		regAfectados+=contador;
+		regAfectados+="filas afectadas= "+contador;
+		}catch(SQLException e){
+			regAfectados+=e.toString();
 		}
+
 		return regAfectados;
 		}
 
@@ -562,32 +561,31 @@ public class ControlBD {
 		//Actualizar un usuario
 		public String actualizar(Alumno alumno){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String[] id ={alumno.getCarnet()};
 			ContentValues cv = new ContentValues();
 			cv.put("username", alumno.getUsuario().getUsername());
-			cv.put("nombre", alumno.getNombre());
-			cv.put("apellido", alumno.getApellido());
+			cv.put("nombre_alumno", alumno.getNombre());
+			cv.put("apellido_alumno", alumno.getApellido());
 			db.update("alumno", cv, "carnet = ?", id);
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con carnet " + alumno.getCarnet() + " no existe";
+			catch(SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Alumno alumno){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			contador+=db.delete("alumno", "carnet='"+alumno.getCarnet()+"'",
 			null);
-			regAfectados+=contador;
+			regAfectados+="filas afectadas= "+contador;
+			}catch(SQLException e){
+				regAfectados=e.toString();
 			}
+
 			return regAfectados;
 			}
 	/*---------------------------------------------------------------------------*
@@ -628,6 +626,9 @@ public class ControlBD {
 			return null;
 			}
 			}
+		public Cursor consultarCodDocente(){
+			return db.rawQuery("SELECT CODDOCENTE FROM DOCENTE", null);			
+		}
 		//consultar todos los docentes
 		public List<Docente> consultarDocentes(){
 			List<Docente> docenteList = new ArrayList<Docente>();
@@ -651,33 +652,32 @@ public class ControlBD {
 			}
 		public String actualizar(Docente docente){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String[] id = {docente.getCoddocente()};	
 			ContentValues cv = new ContentValues();
 			cv.put("username", docente.getUsuario().getUsername());
-			cv.put("nombreDocente", docente.getNombre());
-			cv.put("apellidoDocente", docente.getApellido());
+			cv.put("nombre_Docente", docente.getNombre());
+			cv.put("apellido_Docente", docente.getApellido());
 			db.update("docente", cv, "codDocente = ?", id);
 
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con Codigo " + docente.getCoddocente() + " no existe";
+			catch(SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Docente docente){
 			String regAfectados="filas afectadas= ";
+			Log.i("codDocente en eliminar", docente.getCoddocente());
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			//borrar los registros de usuario
-			contador+=db.delete("docente", "codDOcente='"+docente.getCoddocente()+"'",
+			contador+=db.delete("docente", "codDocente='"+docente.getCoddocente()+"'",
 			null);
 			regAfectados+=contador;
+			}catch (SQLException e){
+				regAfectados=e.toString();
 			}
 			return regAfectados;
 			}
@@ -704,7 +704,7 @@ public class ControlBD {
 		//consultar un ciclo por su id
 		public Ciclo consultarCiclo(String anio, String ciclo){
 			String[] id = {anio,ciclo};
-			Cursor cursor = db.query("ciclo", camposCiclo, "anio = ? AND ciclo", id,null, null, null);
+			Cursor cursor = db.query("ciclo", camposCiclo, "anio = ? AND ciclo=?", id,null, null, null);
 			if(cursor.moveToFirst()){
 				Ciclo c = new Ciclo();
 				c.setCiclo(cursor.getInt(1));
@@ -716,56 +716,53 @@ public class ControlBD {
 			}
 			}
 		//consultar todos los ciclos
-		public List<Ciclo> consultarCiclos(){
+		public Ciclo[] consultarCiclos(){
 			List<Ciclo> cicloList = new ArrayList<Ciclo>();
+			Ciclo[] cicloArray;
 			Cursor cursor = db.query("ciclo", camposCiclo, null, null,null, null, null);
 			if(cursor.moveToFirst()){
 				Ciclo ciclo = new Ciclo();
-				int i=0;
 				do{
 					ciclo.setCiclo(cursor.getInt(1));
 					ciclo.setAnio(cursor.getInt(0));
 					ciclo.setEstado(cursor.getString(2));
 					cicloList.add(ciclo);
-					Log.i("Dato Lista", "Año "+cicloList.get(i).getAnio());
-					Log.i("Dato Cursor", "Año "+cursor.getString(0));
-					i++;
 				}
 				while (cursor.moveToNext());
 				 //se retorna el objeto
-				Log.i("esto retorna", cicloList.get(0).getEstado());
-				return cicloList;	
+				cicloArray = new Ciclo[cicloList.size()];
+				for (int i=0;i<cicloList.size();i++){
+					cicloArray[i]=new Ciclo(cicloList.get(i).getAnio(),
+							cicloList.get(i).getCiclo(),cicloList.get(i).getEstado());				
+				}
+				return cicloArray;	
 			}else{
-				Log.i("esto retorna", "vacio");
 			return null;
 			}
 			}
 		//Actualizar un usuario
 		public String actualizar(Ciclo ciclo){
-			if(true /*verificarIntegridad()*/){
+			try{
 				String[] id = {String.valueOf(ciclo.getAnio()),String.valueOf(ciclo.getCiclo())};
 			ContentValues cv = new ContentValues();
 			cv.put("estado", ciclo.getEstado());
-			db.update("ciclo", cv, "anio = ? AND ciclo = ", id);
+			db.update("ciclo", cv, "anio = ? AND ciclo = ?", id);
 
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con Año " + ciclo.getAnio() + " y ciclo "+ciclo.getCiclo()+" no existe";
+			catch(SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Ciclo ciclo){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
-			contador+=db.delete("ciclo","anio = "+ciclo.getAnio()+
-					" AND ciclo = "+ciclo.getCiclo(),null);
-			regAfectados+=contador;
+			try{
+			contador+=db.delete("ciclo","anio="+ciclo.getAnio()+" and ciclo="+ciclo.getCiclo(),null);
+			regAfectados+="filas afectadas= "+contador;
+			}catch(SQLException e){
+				regAfectados+=e.toString();
 			}
 			return regAfectados;
 			}
@@ -792,7 +789,7 @@ public class ControlBD {
 		//consultar una materia por su id
 		public Materia consultarMateria(String codigo){
 			String[] id = {codigo};
-			Cursor cursor = db.query("materia", camposMateria, "codigo = ?", id,null, null, null);
+			Cursor cursor = db.query("materia", camposMateria, "codMateria = ?", id,null, null, null);
 			if(cursor.moveToFirst()){
 				Materia materia = new Materia();
 				materia.setCodigo(cursor.getString(0));
@@ -823,32 +820,32 @@ public class ControlBD {
 			}
 		public String actualizar(Materia materia){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String[] id ={materia.getCodigo()};
 				ContentValues cv = new ContentValues();
 				cv.put("nombre", materia.getNombreMateria());
-				cv.put("cicloPensum", materia.getCicloPensum());
-				db.update("materia",cv,"codigo = ",id);
+				cv.put("ciclo_Pensum", materia.getCicloPensum());
+				db.update("materia",cv,"codMateria = ",id);
 
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con codigo " + materia.getCodigo() + " no existe";
+			catch(SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Materia materia){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
+			try {
+				//borrar los registros de usuario
+				contador+=db.delete("materia", "codigo='"+materia.getCodigo()+"'",
+				null);
+				regAfectados+="filas afectadas= "+contador;
 			}
-			else
-			{
-			//borrar los registros de usuario
-			contador+=db.delete("materia", "codigo='"+materia.getCodigo()+"'",
-			null);
-			regAfectados+=contador;
+			catch(SQLException e){
+				regAfectados+=e.toString();
+				
 			}
 			return regAfectados;
 			}
@@ -879,9 +876,10 @@ public class ControlBD {
 			return regInsertados;
 		}
 		//consultar un curso por su id
-		public Curso consultarCurso(String numCurso){
-			String[] id = {numCurso};
-			Cursor cursor = db.query("curso", camposCurso, "numCurso = ?", id,null, null, null);
+		public Curso consultarCurso(String numCurso, String anio, String ci,String codMateria){
+			String[] id = {numCurso,anio,ci,codMateria};
+			Cursor cursor = db.query("curso", camposCurso, "numCurso = ? AND anio=?" +
+					"AND ciclo=? AND codMateria=?", id,null, null, null);
 			if(cursor.moveToFirst()){
 				Curso curso = new Curso();
 				Ciclo ciclo = new Ciclo();
@@ -939,33 +937,34 @@ public class ControlBD {
 
 		public String actualizar(Curso curso){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
-				String[] id = {String.valueOf(curso.getNumCurso())};		
+			try{
+				String[] id = {String.valueOf(curso.getNumCurso()),
+						String.valueOf(curso.getCiclo().getAnio()),
+						String.valueOf(curso.getCiclo().getCiclo()),
+						curso.getDocente().getCoddocente()};		
 			ContentValues cv = new ContentValues();
-			cv.put("anio", curso.getCiclo().getAnio());
-			cv.put("ciclo", curso.getCiclo().getCiclo());
-			cv.put("codigo", curso.getMateria().getCodigo());
-			cv.put("codDocente", curso.getDocente().getCoddocente());
 			cv.put("aula", curso.getAula());
 			cv.put("hora", curso.getHora());
-			db.update("curso", cv, "numCurso = ?", id);			
+			db.update("curso", cv, "numCurso = ? AND anio=?" +
+					"AND ciclo=? AND codMateria=?", id);			
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con numero " + curso.getNumCurso() + " no existe";
+			catch(SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Curso curso){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
-			contador+=db.delete("curso", "numCurso='"+curso.getNumCurso()+"'",null);
-			regAfectados+=contador;
+			try{
+			contador+=db.delete("curso", "numCurso ="+curso.getNumCurso()
+					+" AND anio="+curso.getCiclo().getAnio()
+					+" AND ciclo="+curso.getCiclo().getCiclo()
+					+" AND codMateria='"+curso.getDocente().getCoddocente()+"'",null);
+			regAfectados+="filas afectadas= "+contador;
+			}catch(SQLException e){
+				regAfectados=e.toString();
 			}
 			return regAfectados;
 			}
@@ -976,10 +975,13 @@ public class ControlBD {
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
+			us.put("anio", categoria.getCurso().getCiclo().getAnio());
+			us.put("ciclo", categoria.getCurso().getCiclo().getCiclo());
+			us.put("codMateria", categoria.getCurso().getMateria().getCodigo());
 			us.put("idCategoria", categoria.getIdCategoria());
 			us.put("numCurso", categoria.getCurso().getNumCurso());
-			us.put("nombreCategoria", categoria.getNombreCategoria());
-			us.put("descripcionCategoria", categoria.getDescripcionCategoria());
+			us.put("nombre_Categoria", categoria.getNombreCategoria());
+			us.put("descripcion_Categoria", categoria.getDescripcionCategoria());
 			contador=db.insert("categoria", null, us);
 			if(contador==-1 || contador==0)
 			{
@@ -997,12 +999,18 @@ public class ControlBD {
 			if(cursor.moveToFirst()){
 				Categoria categoria = new Categoria();
 				Curso curso = new Curso();
-
-				categoria.setIdCategoria(cursor.getInt(0));
-				curso.setNumCurso(cursor.getInt(1));
+				Ciclo ci=new Ciclo();
+				Materia ma =new Materia();
+				ci.setAnio(cursor.getInt(0));
+				ci.setCiclo(cursor.getInt(1));
+				ma.setCodigo(cursor.getString(2));
+				curso.setCiclo(ci);
+				curso.setMateria(ma);
+				categoria.setIdCategoria(cursor.getInt(4));
+				curso.setNumCurso(cursor.getInt(3));
 				categoria.setCurso(curso);
-				categoria.setNombreCategoria(cursor.getString(2));
-				categoria.setDescripcionCategoria(cursor.getString(3));
+				categoria.setNombreCategoria(cursor.getString(5));
+				categoria.setDescripcionCategoria(cursor.getString(6));
 
 				 return categoria;		
 			}else{
@@ -1017,11 +1025,18 @@ public class ControlBD {
 				Categoria categoria = new Categoria();
 				do{					
 					Curso curso = new Curso();
-					categoria.setIdCategoria(cursor.getInt(0));
-					curso.setNumCurso(cursor.getInt(1));
+					Ciclo ci=new Ciclo();
+					Materia ma =new Materia();
+					ci.setAnio(cursor.getInt(0));
+					ci.setCiclo(cursor.getInt(1));
+					ma.setCodigo(cursor.getString(2));
+					curso.setCiclo(ci);
+					curso.setMateria(ma);
+					categoria.setIdCategoria(cursor.getInt(4));
+					curso.setNumCurso(cursor.getInt(3));
 					categoria.setCurso(curso);
-					categoria.setNombreCategoria(cursor.getString(2));
-					categoria.setDescripcionCategoria(cursor.getString(3));
+					categoria.setNombreCategoria(cursor.getString(5));
+					categoria.setDescripcionCategoria(cursor.getString(6));
 					categoriaList.add(categoria);
 				}
 				while (cursor.moveToNext());
@@ -1033,32 +1048,33 @@ public class ControlBD {
 
 		public String actualizar(Categoria categoria){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String[] id = {String.valueOf(categoria.getIdCategoria())};	
-				ContentValues cv = new ContentValues();
-				cv.put("numCurso", categoria.getCurso().getNumCurso());
-				cv.put("nombreCategoria", categoria.getNombreCategoria());
-				cv.put("descripcionCategoria", categoria.getDescripcionCategoria());
-				db.update("categoria", cv, "idCategoria = ?", id);	
+				ContentValues us = new ContentValues();
+				us.put("anio", categoria.getCurso().getCiclo().getAnio());
+				us.put("ciclo", categoria.getCurso().getCiclo().getCiclo());
+				us.put("codMateria", categoria.getCurso().getMateria().getCodigo());
+				us.put("numCurso", categoria.getCurso().getNumCurso());
+				us.put("nombre_Categoria", categoria.getNombreCategoria());
+				us.put("descripcion_Categoria", categoria.getDescripcionCategoria());
+				db.update("categoria", us, "idCategoria = ?", id);	
 
 				return "Registro Actualizado Correctamente";
 			}
-			else{
-				return "Registro con ID " + categoria.getIdCategoria() + " no existe";
+			catch(SQLException e){
+				return e.toString();
 			}
 			}
 
 		public String eliminar(Categoria categoria){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			contador+=db.delete("categoria", "idCategoria='"+categoria.getIdCategoria()+"'",
 			null);
-			regAfectados+=contador;
+			regAfectados+="filas afectadas= "+contador;
+			}catch(SQLException e){
+				regAfectados+=e.toString();
 			}
 			return regAfectados;
 			}
@@ -1072,8 +1088,8 @@ public class ControlBD {
 			ContentValues us =new ContentValues();
 			us.put("idSubCategoria", subcategoria.getIdSubCategoria());
 			us.put("idCategoria", subcategoria.getCategoria().getIdCategoria());
-			us.put("nombreSubCategoria", subcategoria.getNombreSubCategoria());
-			us.put("descripcionSubCategoria", subcategoria.getDescripcionSubcategoria());
+			us.put("nombreSub_Categoria", subcategoria.getNombreSubCategoria());
+			us.put("descripcion_SubCategoria", subcategoria.getDescripcionSubcategoria());
 			contador=db.insert("subcategoria", null, us);
 			if(contador==-1 || contador==0)
 			{
@@ -1126,32 +1142,30 @@ public class ControlBD {
 
 		public String actualizar(Subcategoria sc){
 			//verificar la integridad por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String[] id = {String.valueOf(sc.getIdSubCategoria())};
 				ContentValues cv = new ContentValues();
 				cv.put("idCategoria", sc.getCategoria().getIdCategoria());
-				cv.put("nombreSubCategoria", sc.getNombreSubCategoria());
-				cv.put("descripcionSubCategoria", sc.getDescripcionSubcategoria());
+				cv.put("nombreSub_Categoria", sc.getNombreSubCategoria());
+				cv.put("descripcion_SubCategoria", sc.getDescripcionSubcategoria());
 				db.update("subcategoria", cv, "idSubCategoria = ?", id);
 
 				return "Registro Actualizado Correctamente";
 			}
-			else{
-				return "Registro con id " + sc.getIdSubCategoria() + " no existe";
+			catch(SQLException e){
+				return e.toString();
 			}
 			}
 
 		public String eliminar(Subcategoria sc){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			contador+=db.delete("subcategoria", "idSubCategoria='"+sc.getIdSubCategoria()+"'",
 			null);
-			regAfectados+=contador;
+			regAfectados+="filas afectadas= "+contador;
+			}catch(SQLException e){
+				regAfectados+=e.toString();
 			}
 			return regAfectados;
 			}
@@ -1211,7 +1225,7 @@ public class ControlBD {
 
 		public String actualizar(Tipo tipo){
 			//verificar la integridad por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String [] id = {tipo.getCodTipo()};	
 				ContentValues cv = new ContentValues();
 				cv.put("tipoPregunta", tipo.getTipoPregunta());
@@ -1220,21 +1234,19 @@ public class ControlBD {
 
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con Codigo " + tipo.getCodTipo() + " no existe";
+			catch(SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Tipo tipo){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			contador+=db.delete("tipo", "codTipo='"+tipo.getCodTipo()+"'",null);
-			regAfectados+=contador;
+			regAfectados+="filas afectadas= "+contador;
+			}catch(SQLException e){
+				regAfectados+=e.toString();
 			}
 			return regAfectados;
 			}
@@ -1310,34 +1322,33 @@ public class ControlBD {
 
 		public String actualizar(Pregunta pregunta){
 			//verificar la integridadpor codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String [] id = {String.valueOf(pregunta.getIdPregunta())};		
 				ContentValues cv = new ContentValues();
 				cv.put("idSubCategoria", pregunta.getSc().getIdSubCategoria());
 				cv.put("codTipo", pregunta.getTipo().getCodTipo());
 				cv.put("pregunta", pregunta.getPregunta());
-				cv.put("puntajePregunta", pregunta.getPuntajePregunta());
+				cv.put("puntaje_Pregunta", pregunta.getPuntajePregunta());
 				db.update("pregunta", cv, "idPregunta = ?", id);			
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con id " + pregunta.getIdPregunta() + " no existe";
+			catch(SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Pregunta pregunta){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
 			//borrar los registros de usuario
+			try{
 			contador+=db.delete("pregunta", "idPregunta='"+pregunta.getIdPregunta()+"'",
 			null);
-			regAfectados+=contador;
+			regAfectados+="filas afectadas= "+contador;
+			}catch (SQLException e){
+				regAfectados=e.toString();
 			}
+			
 			return regAfectados;
 			}
 	/*---------------------------------------------------------------------------*
@@ -1351,7 +1362,7 @@ public class ControlBD {
 			us.put("idItem", item.getIdItem());
 			us.put("idPregunta", item.getPregunta().getIdPregunta());
 			us.put("respuesta", item.getRespuesta());
-			us.put("puntosRespuesta", item.getPuntosRespuesta());
+			us.put("puntos_Respuesta", item.getPuntosRespuesta());
 			contador=db.insert("item_respuesta", null, us);
 			if(contador==-1 || contador==0)
 			{
@@ -1405,7 +1416,7 @@ public class ControlBD {
 
 		public String actualizar(ItemRespuesta ir){
 			//verificar la integridad por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String[] id = {String.valueOf(ir.getIdItem())};
 				ContentValues cv = new ContentValues();
 				cv.put("idPregunta", ir.getPregunta().getIdPregunta());
@@ -1415,21 +1426,19 @@ public class ControlBD {
 
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con id " + ir.getIdItem() + " no existe";
+			catch(SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(ItemRespuesta ir){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			contador+=db.delete("item_respuesta", "idItem='"+ir.getIdItem()+"'",null);
-			regAfectados+=contador;
+			regAfectados+="filas afectadas= "+contador;
+			}catch(SQLException e){
+				regAfectados=e.toString();
 			}
 			return regAfectados;
 			}
@@ -1465,12 +1474,18 @@ public class ControlBD {
 			if(cursor.moveToFirst()){
 				Evaluacion ev = new Evaluacion();
 				Curso c = new Curso();
-
-				ev.setIdEval(cursor.getInt(0));
-				c.setNumCurso(cursor.getInt(1));
+				Ciclo ci=new Ciclo();
+				Materia ma=new Materia();
+				ci.setAnio(cursor.getInt(0));
+				ci.setCiclo(cursor.getInt(1));
+				ma.setCodigo(cursor.getString(2));
+				c.setMateria(ma);
+				c.setNumCurso(cursor.getInt(3));
+				ev.setIdEval(cursor.getInt(4));
+				ev.setNombreEval(cursor.getString(5));
+				ev.setPorcentajeEval(cursor.getDouble(6));
+				c.setCiclo(ci);
 				ev.setCurso(c);
-				ev.setNombreEval(cursor.getString(2));
-				ev.setPorcentajeEval(cursor.getDouble(3));
 
 				 return ev;		
 			}else{
@@ -1483,13 +1498,20 @@ public class ControlBD {
 			Cursor cursor = db.query("evaluacion", camposEvaluacion, null, null,null, null, null);
 			if(cursor.moveToFirst()){
 				Evaluacion ev = new Evaluacion();
-				do{					
-					Curso c = new Curso();					
-					ev.setIdEval(cursor.getInt(0));
-					c.setNumCurso(cursor.getInt(1));
+				do{
+					Curso c = new Curso();
+					Ciclo ci=new Ciclo();
+					Materia ma=new Materia();
+					ci.setAnio(cursor.getInt(0));
+					ci.setCiclo(cursor.getInt(1));
+					ma.setCodigo(cursor.getString(2));
+					c.setMateria(ma);
+					c.setNumCurso(cursor.getInt(3));
+					ev.setIdEval(cursor.getInt(4));
+					ev.setNombreEval(cursor.getString(5));
+					ev.setPorcentajeEval(cursor.getDouble(6));
+					c.setCiclo(ci);
 					ev.setCurso(c);
-					ev.setNombreEval(cursor.getString(2));
-					ev.setPorcentajeEval(cursor.getDouble(3));
 					evList.add(ev);
 				}
 				while (cursor.moveToNext());
@@ -1500,7 +1522,7 @@ public class ControlBD {
 			}
 		public String actualizar(Evaluacion ev){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String[] id = {String.valueOf(ev.getIdEval())};	
 			ContentValues cv = new ContentValues();
 			cv.put("numCurso", ev.getCurso().getNumCurso());
@@ -1509,22 +1531,16 @@ public class ControlBD {
 			db.update("evaluacion", cv, "idEval = ?", id);			
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con ID " + ev.getIdEval() + " no existe";
+			catch (SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Evaluacion ev){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
 			contador+=db.delete("evaluacion", "idEval='"+ev.getIdEval()+"'",null);
 			regAfectados+=contador;
-			}
 			return regAfectados;
 			}
 	/*---------------------------------------------------------------------------*
@@ -1590,7 +1606,7 @@ public class ControlBD {
 			}
 		public String actualizar(Configuracion conf){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String [] id = {String.valueOf(conf.getSc().getIdSubCategoria()),
 						String.valueOf(conf.getEv().getIdEval())};	
 				ContentValues cv = new ContentValues();
@@ -1600,24 +1616,20 @@ public class ControlBD {
 
 			return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con ID subcategoria " + conf.getSc().getIdSubCategoria()+
-					" e ID Evaluacion "+conf.getEv().getIdEval()+ " no existe";
+			catch (SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Configuracion conf){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
-			//borrar los registros de usuario
+			try{
 			contador+=db.delete("configuracion", "idSubCategoria = "+conf.getSc().getIdSubCategoria()+
 					" AND idEval ="+conf.getEv().getIdEval(),null);
-			regAfectados+=contador;
+			regAfectados+="filas afectadas= "+contador;
+			}catch (SQLException e){
+				regAfectados=e.toString();
 			}
 			return regAfectados;
 			}
@@ -1728,7 +1740,7 @@ public class ControlBD {
 			String regInsertados="Registro Insertado Nº = ";//lo haremos asi?
 			long contador=0;
 			ContentValues us =new ContentValues();
-			us.put("idCUestionario", ct.getIdCuestionaro());
+			us.put("idCuestionario", ct.getIdCuestionaro());
 			us.put("idEval", ct.getEv().getIdEval());
 			us.put("carnet", ct.getAlumno().getCarnet());
 			us.put("numPreguntas", ct.getNumPreguntas());
@@ -1800,7 +1812,7 @@ public class ControlBD {
 			}
 		public String actualizar(Cuestionario ct){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
+			try{
 				String[] id = {String.valueOf(ct.getIdCuestionaro())};
 				ContentValues cv = new ContentValues();
 				cv.put("idEval", ct.getEv().getIdEval());
@@ -1813,23 +1825,21 @@ public class ControlBD {
 				db.update("cuestionario", cv, "idCuestionario = ?", id);			
 				return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Registro con id " + ct.getIdCuestionaro() + " no existe";
+			catch (SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Cuestionario ct){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			//borrar los registros de usuario
 			contador+=db.delete("cuestionario", "idCuestionario='"+ct.getIdCuestionaro()+"'",
 			null);
-			regAfectados+=contador;
+			regAfectados+="filas afectadas= "+contador;
+			}catch (SQLException e){
+				regAfectados=e.toString();
 			}
 			return regAfectados;
 			}
@@ -1853,21 +1863,6 @@ public class ControlBD {
 			}
 			return regInsertados;
 		}
-		/*Creo que esta no es necesaria
-		public As_Preguntas consultarAs(String username){
-			String[] id = {username};
-			Cursor cursor = db.query("usuario", camposUsuario, "username = ?", id,null, null, null);
-			if(cursor.moveToFirst()){
-				Usuario usuario = new Usuario();
-				/*
-				 * se setean los atributos de usuario
-				 * usuario.setCarnet(cursor.getString(0));
-				 * 
-				 return usuario;		
-			}else{
-			return null;
-			}
-			}*/
 
 		//consultar todos los as de preguntas
 		public List<As_Preguntas> consultarAses(){
@@ -1891,40 +1886,16 @@ public class ControlBD {
 			return null;
 			}
 			}
-		/* tampoco es necesaria porque solo tiene PK
-		public String actualizar(Usuario usuario){
-			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()){
-				/*
-				 * Se recupera el id en un array tipo string
-				 * String[] id = {usuario.getUsername()};
-				 * 		
-			ContentValues cv = new ContentValues();
-			/*
-			 * Se actualizan los datos excepto el id
-			 * cv.put("atributo", usuario.getAtributo());
-			 * se actualiza el registro
-			 * db.update("usuario", cv, "username = ?", id);
-			 * 
-			
-			return "Registro Actualizado Correctamente";
-			}
-			else{
-			return "Registro con carnet " + usuario.getUsername() + " no existe";
-			}
-			}*/
-
+		
 		public String eliminar(As_Preguntas as){
 			String regAfectados="filas afectadas= ";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			contador+=db.delete("as_preguntas", "idPregunta="+as.getPregunta().getIdPregunta()+
 					" AND idCuestionario = "+as.getCuestionario().getIdCuestionaro(),null);
 			regAfectados+=contador;
+			}catch (SQLException e){
+				regAfectados=e.toString();
 			}
 			return regAfectados;
 			}
@@ -1937,7 +1908,9 @@ public class ControlBD {
 			long contador=0;
 			ContentValues us =new ContentValues();
 			us.put("idCuestionario",res.getCuestionario().getIdCuestionaro() );
-			us.put("respuestaAlumno", res.getRespuestaAlumno());
+			us.put("idpregunta",res.getPregunta().getIdPregunta());
+			us.put("idRespuesta",res.getIdRespuesta());
+			us.put("respuesta", res.getRespuestaAlumno());
 			us.put("puntosObtenidos", res.getPuntosObtenidos());
 			contador=db.insert("respuesta", null, us);
 			if(contador==-1 || contador==0)
@@ -1956,11 +1929,14 @@ public class ControlBD {
 			if(cursor.moveToFirst()){
 				Respuesta res = new Respuesta();
 				Cuestionario c = new Cuestionario();
+				Pregunta p = new Pregunta();
 				c.setIdCuestionaro(cursor.getInt(0));
-
+				p.setIdPregunta(cursor.getInt(1));
+				res.setIdRespuesta(cursor.getInt(2));
+				res.setRespuestaAlumno(cursor.getString(3));
+				res.setPuntosObtenidos(cursor.getInt(4));
 				res.setCuestionario(c);
-				res.setRespuestaAlumno(cursor.getString(1));
-				res.setPuntosObtenidos(cursor.getInt(2));
+				res.setPregunta(p);
 				 return res;		
 			}else{
 			return null;
@@ -1972,13 +1948,16 @@ public class ControlBD {
 			Cursor cursor = db.query("respuesta", camposRespuesta, null, null,null, null, null);
 			if(cursor.moveToFirst()){
 				Respuesta res = new Respuesta();
-				do{					
+				do{
 					Cuestionario c = new Cuestionario();
+					Pregunta p = new Pregunta();
 					c.setIdCuestionaro(cursor.getInt(0));
-
+					p.setIdPregunta(cursor.getInt(1));
+					res.setIdRespuesta(cursor.getInt(2));
+					res.setRespuestaAlumno(cursor.getString(3));
+					res.setPuntosObtenidos(cursor.getInt(4));
 					res.setCuestionario(c);
-					res.setRespuestaAlumno(cursor.getString(1));
-					res.setPuntosObtenidos(cursor.getInt(2));
+					res.setPregunta(p);
 					resList.add(res);
 				}
 				while (cursor.moveToNext());
@@ -1989,72 +1968,37 @@ public class ControlBD {
 			}
 			}
 		//Actualizar un usuario
-		public String actualizar(Respuesta respuesta){
+		public String actualizar(Respuesta res){
 			//verificar la integridad del usuario por codigo o por trigger
-			if(true /*verificarIntegridad()*/){
-				String[] id = {String.valueOf(respuesta.getCuestionario().getIdCuestionaro())};	
-				ContentValues cv = new ContentValues();
-				cv.put("respuestaAlumno", respuesta.getRespuestaAlumno());
-				cv.put("puntosObtenidos", respuesta.getPuntosObtenidos());
-				db.update("respuesta", cv, "idCuestionario = ?", id);
-
-			return "Registro Actualizado Correctamente";
+			try{
+				String[] id = {String.valueOf(res.getCuestionario().getIdCuestionaro())};	
+				ContentValues us = new ContentValues();
+				us.put("idCuestionario",res.getCuestionario().getIdCuestionaro() );
+				us.put("idpregunta",res.getPregunta().getIdPregunta());
+				us.put("respuesta", res.getRespuestaAlumno());
+				us.put("puntosObtenidos", res.getPuntosObtenidos());
+				db.update("respuesta", us, "idCuestionario=?", id);
+				return "Registro Actualizado Correctamente";
 			}
-			else{
-			return "Respuesta con id " + respuesta.getCuestionario().getIdCuestionaro() + " no existe";
+			catch (SQLException e){
+			return e.toString();
 			}
 			}
 
 		public String eliminar(Respuesta respuesta){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			contador+=db.delete("respuesta", "idCuestionario='"+
 			respuesta.getCuestionario().getIdCuestionaro()+"'",	null);
-			regAfectados+=contador;
+			regAfectados+="filas afectadas= "+contador;
+			}catch (SQLException e){
+				regAfectados=e.toString();
 			}
 			return regAfectados;
 			}
 
-	/*
-	 * metodo para verificar la integridad de los datos a ingresar; no es necesario puede hacerse con triggers
-	 * 
-	 * 
-	 * private boolean verificarIntegridad(Object dato, int relacion) throws
-	 * SQLException{ switch(relacion){ case 1: { //verificar que al insertar
-	 * nota exista carnet del alumno y el codigo de materia Nota nota =
-	 * (Nota)dato; String[] id1 = {nota.getCarnet()}; String[] id2 =
-	 * {nota.getCodmateria()}; abrir(); Cursor cursor1 = db.query("alumno",
-	 * null, "carnet = ?", id1, null, null, null); Cursor cursor2 =
-	 * db.query("materia", null, "codmateria = ?", id2, null, null, null);
-	 * if(cursor1.moveToFirst() && cursor2.moveToFirst()){ //Se encontraron
-	 * datos return true; } return false; } case 2: { //verificar que al
-	 * modificar nota exista carnet del alumno, el codigo de materia y el ciclo
-	 * Nota nota1 = (Nota)dato; String[] ids = {nota1.getCarnet(),
-	 * nota1.getCodmateria(), nota1.getCiclo()}; abrir(); Cursor c =
-	 * db.query("nota", null, "carnet = ? AND codmateria = ? AND ciclo = ?",
-	 * ids, null, null, null); if(c.moveToFirst()){ //Se encontraron datos
-	 * return true; } return false; } case 3: { Alumno alumno = (Alumno)dato;
-	 * Cursor c=db.query(true, "nota", new String[] { "carnet" },
-	 * "carnet='"+alumno.getCarnet()+"'",null, null, null, null, null);
-	 * if(c.moveToFirst()) return true; else return false; } case 4: { Materia
-	 * materia = (Materia)dato; Cursor cmat=db.query(true, "nota", new String[]
-	 * { "codmateria" }, "codmateria='"+materia.getCodmateria()+"'",null, null,
-	 * null, null, null); if(cmat.moveToFirst()) return true; else return false;
-	 * } case 5: { //verificar que exista alumno Alumno alumno2 = (Alumno)dato;
-	 * String[] id = {alumno2.getCarnet()}; abrir(); Cursor c2 =
-	 * db.query("alumno", null, "carnet = ?", id, null, null, null);
-	 * if(c2.moveToFirst()){ //Se encontro Alumno return true; } return false; }
-	 * case 6: { //verificar que exista Materia Materia materia2 =
-	 * (Materia)dato; String[] idm = {materia2.getCodmateria()}; abrir(); Cursor
-	 * cm = db.query("materia", null, "codmateria = ?", idm, null, null, null);
-	 * if(cm.moveToFirst()){ //Se encontro Materia return true; } return false;
-	 * } default: return false; } }
-	 */
+	
 //metodo para llenar la base de datos
 		//metodo para llenar la base de datos
 		public String llenarBD(){			
@@ -2207,7 +2151,11 @@ public class ControlBD {
 				j++;
 				if (j==10)
 					j=1;
-			}
+			}	
+			
 			return "Guardo Correctamente";
 					}	
+		public Cursor consultar(String consulta){
+			return db.rawQuery(consulta, null);
+		}
 }

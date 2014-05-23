@@ -4,7 +4,7 @@
     <item
         android:id="@+id/administrar_cuentas"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/administrarCuentaslabel"
          android:icon="@drawable/gear">
         <menu>
