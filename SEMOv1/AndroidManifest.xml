@@ -74,6 +74,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sv.ues.fia.semo.activity.MainAdministrador" />
         </activity>
+        <activity
+            android:name="sv.ues.fia.semo.activity.Curso"
+            android:label="@string/title_activity_curso"
+            android:parentActivityName="sv.ues.fia.semo.activity.ListarCursos" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sv.ues.fia.semo.activity.ListarCursos" />
+        </activity>
     </application>
 
 </manifest>

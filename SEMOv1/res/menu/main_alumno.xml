@@ -32,5 +32,6 @@
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
         android:title="@string/cerrarSesionLabel"/>
+    <item android:id="@+id/LLenarBD" android:title="@string/llenarBDLabel"></item>
     
 </menu>

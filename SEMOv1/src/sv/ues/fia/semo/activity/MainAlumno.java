@@ -1,5 +1,6 @@
 package sv.ues.fia.semo.activity;
 
+import sv.ues.fia.semo.bd.ControlBD;
 import ues.semo.R;
 import android.os.Bundle;
 import android.app.Activity;
@@ -11,7 +12,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 public class MainAlumno extends Activity {
-
+	String user;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -19,7 +20,7 @@ public class MainAlumno extends Activity {
 		
 		//Se Recibe el intent con  los datos extra.
 		Intent intent = getIntent();
-	    String user = intent.getStringExtra(Login.EXTRA_MESSAGE1);
+	    user = intent.getStringExtra(Login.EXTRA_MESSAGE1);
 	    Toast.makeText(this, "user:"+user, Toast.LENGTH_SHORT).show();
 		String pass = intent.getStringExtra(Login.EXTRA_MESSAGE2);
 		Toast.makeText(this, "pass:"+pass, Toast.LENGTH_SHORT).show();
@@ -44,6 +45,7 @@ public class MainAlumno extends Activity {
 	    switch (item.getItemId()) {
 	        case R.id.listaCursosItem:
 	        	intent = new Intent(this, ListarCursos.class);
+	        	intent.putExtra("user", user);
 	        	startActivity(intent);
 	            return true;
 	        case R.id.verNotasItem:
@@ -57,6 +59,12 @@ public class MainAlumno extends Activity {
 	        case R.id.cerrarSesionItem:
 	        	intent=new Intent(this,Login.class);
 	        	startActivity(intent);
+	        	return true;
+	        case R.id.LLenarBD:
+	        	ControlBD helper=new ControlBD(this);
+	        	helper.abrir();
+	        	helper.llenarBD();
+	        	helper.cerrar();
 	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
