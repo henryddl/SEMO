@@ -36,7 +36,7 @@ public final class R {
     public static final class id {
         public static final int EvaluacionesItem=0x7f08001a;
         public static final int InformacionItem=0x7f08001b;
-        public static final int action_settings=0x7f08001e;
+        public static final int action_settings=0x7f08001d;
         public static final int actualizar_cuenta=0x7f080015;
         public static final int administrarCuentaItem=0x7f080018;
         public static final int administrar_cuentas=0x7f080013;
@@ -64,7 +64,7 @@ public final class R {
         public static final int relative_layout=0x7f080005;
         public static final int salir=0x7f08001c;
         public static final int scrollView1=0x7f080000;
-        public static final int verNotasItem=0x7f08001d;
+        public static final int verNotasItem=0x7f08001e;
     }
     public static final class layout {
         public static final int activity_actualizar_cuenta=0x7f030000;

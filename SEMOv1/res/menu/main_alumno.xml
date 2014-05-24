@@ -13,12 +13,6 @@
         android:showAsAction="ifRoom|withText"
         android:icon="@drawable/gear"></item>
     <item
-        android:id="@+id/verNotasItem"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/verNotasLabel"
-        android:icon="@drawable/ic_action_paste"/>
-    <item
         android:id="@+id/cerrarSesionItem"
         android:orderInCategory="100"
         android:showAsAction="never"
