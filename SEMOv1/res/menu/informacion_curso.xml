@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/EvaluacionesItem"
+         android:title="@string/evaluacionesLabel" 
+         android:showAsAction="ifRoom|withText" 
+         android:icon="@drawable/ic_action_copy"></item>
+    <item android:id="@+id/InformacionItem" 
+        android:title="@string/informacionLabel" 
+        android:showAsAction="ifRoom|withText" 
+        android:icon="@drawable/ic_action_about"></item>
+
+</menu>
