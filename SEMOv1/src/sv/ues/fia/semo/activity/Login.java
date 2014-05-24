@@ -3,7 +3,10 @@ package sv.ues.fia.semo.activity;
 import sv.ues.fia.semo.bd.ControlBD;
 import sv.ues.fia.semo.modelo.Usuario;
 import ues.semo.R;
+import android.os.Build;
 import android.os.Bundle;
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
@@ -24,7 +27,8 @@ public class Login extends Activity {
 		setContentView(R.layout.activity_login);
 		
 		//Creando clase controlBD
-		helper=new ControlBD(this);		
+		helper=new ControlBD(this);	
+		ponerSubtitulos();
 	}
 
 	@Override
@@ -47,8 +51,8 @@ public class Login extends Activity {
 	
 	//Método asociado al onClick del botón "Iniciar Sesión"
 	public void Ingresar(View view){
-		EditText userEDTXT =(EditText)findViewById(R.id.editText1);
-		EditText passEDTXT =(EditText)findViewById(R.id.editText2);
+		EditText userEDTXT =(EditText)findViewById(R.id.passText1);
+		EditText passEDTXT =(EditText)findViewById(R.id.passText2);
 		ProgressBar barraCarga=(ProgressBar)findViewById(R.id.progressBar1);
 		
 		//Contiene el valor de usuario
@@ -126,6 +130,12 @@ public class Login extends Activity {
 		}
 	}//Fin de onClick
 		
-		
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void ponerSubtitulos(){
+		  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		    ActionBar ab = getActionBar();
+		    ab.setSubtitle("Iniciar Sesión"); 
+		  }
+		}	
 
 }

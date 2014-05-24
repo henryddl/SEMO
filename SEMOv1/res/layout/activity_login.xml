@@ -8,7 +8,7 @@
         android:layout_height="301dp" >
         
         <EditText
-                android:id="@+id/editText1"
+                android:id="@+id/passText1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="76dp"
@@ -18,11 +18,11 @@
                 android:layout_centerHorizontal="true" />
 
 		    <EditText
-		        android:id="@+id/editText2"
+		        android:id="@+id/passText2"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 				android:layout_centerHorizontal="true"
-		        android:layout_below="@+id/editText1"
+		        android:layout_below="@+id/passText1"
 		        android:layout_marginTop="14dp"
 		        android:drawableLeft="@drawable/pass_ic"
 		        android:ems="10"
@@ -31,7 +31,7 @@
 
 
 		    <Button
-		        android:id="@+id/button1"
+		        android:id="@+id/botonInformacion"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_centerHorizontal="true"
@@ -43,7 +43,7 @@
 		        android:id="@+id/progressBar1"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_alignBottom="@+id/editText2"
+		        android:layout_alignBottom="@+id/passText2"
 		        android:layout_centerHorizontal="true"
 		        android:visibility="invisible" />
 

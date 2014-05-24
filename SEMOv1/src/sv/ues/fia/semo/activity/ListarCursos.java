@@ -3,6 +3,7 @@ package sv.ues.fia.semo.activity;
 import sv.ues.fia.semo.bd.ControlBD;
 import ues.semo.R;
 import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,8 +35,10 @@ public class ListarCursos extends Activity implements OnItemClickListener{
 		//Se Recibe el intent con  los datos extra.
 		Intent intent = getIntent();
 	    user = intent.getStringExtra("user");
-		
+		Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
 	    llenarListView();
+	    
+	    ponerSubtitulos();
 	}
 
 	/**
@@ -71,14 +74,17 @@ public class ListarCursos extends Activity implements OnItemClickListener{
 			return true;
 		 case R.id.listaCursosItem:
 	        	intent = new Intent(this, ListarCursos.class);
+	        	intent.putExtra("user", user);
 	        	startActivity(intent);
 	            return true;
 	        case R.id.verNotasItem:
 	        	intent=new Intent(this,VerNotas.class);
+	        	intent.putExtra("user", user);
 	        	startActivity(intent);
 	            return true;
 	        case R.id.administrarCuentaItem:
 	        	intent=new Intent(this,AdministrarCuenta.class);
+	        	intent.putExtra("user", user);
 	        	startActivity(intent);
 	        	return true;
 	        case R.id.cerrarSesionItem:
@@ -93,7 +99,7 @@ public class ListarCursos extends Activity implements OnItemClickListener{
 		//Creando clase controlBD
 		helper=new ControlBD(this);
 		helper.abrir();
-		cursor=helper.consultaCursosActivos();
+		cursor=helper.consultar("SELECT  NOMBRE,CURSO.CODMATERIA,CICLO.CICLO,AULA,HORA,CODDOCENTE,CURSO.NUMCURSO,CICLO.ANIO FROM CURSO INNER JOIN MATERIA ON CURSO.CODMATERIA=MATERIA.CODMATERIA INNER JOIN CICLO ON CURSO.CICLO=CICLO.CICLO  WHERE CICLO.ESTADO='activo' AND CICLO.ANIO=CURSO.ANIO;");
 		
 		//La consulta es retornada con datos.
 		if(cursor.moveToFirst()){
@@ -120,16 +126,18 @@ public class ListarCursos extends Activity implements OnItemClickListener{
 	
 	public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
 			cursor.moveToPosition(position);
-			String nombre,codMateria,ciclo,aula,hora,codDocente;
+			String nombre,codMateria,ciclo,aula,hora,codDocente,numCurso,anio;
 			nombre=cursor.getString(0);
 			codMateria=cursor.getString(1);
 			ciclo=cursor.getString(2);
 			aula=cursor.getString(3);
 			hora=cursor.getString(4);
 			codDocente=cursor.getString(5);
+			numCurso=cursor.getString(6);
+			anio=cursor.getString(7);
 		
 			Intent intent;
-			intent=new Intent(this,Curso.class);
+			intent=new Intent(this,CursoActivity.class);
 			intent.putExtra("nombre", nombre);
 			intent.putExtra("codMateria", codMateria);
 			intent.putExtra("ciclo", ciclo);
@@ -137,7 +145,17 @@ public class ListarCursos extends Activity implements OnItemClickListener{
 			intent.putExtra("hora", hora);
 			intent.putExtra("codDocente", codDocente);
 			intent.putExtra("user", user);
+			intent.putExtra("numCurso", numCurso);
+			intent.putExtra("anio", anio);
+			//Tipo , llamado desde curso no inscrito
+			intent.putExtra("tipo", "no inscrito");
 			startActivity(intent);			     
 	 }
-	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void ponerSubtitulos(){
+		  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		    ActionBar ab = getActionBar();
+		    ab.setSubtitle("Lista de cursos"); 
+		  }
+		}
 }

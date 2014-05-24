@@ -1,37 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:yourapp="http://schemas.android.com/apk/res-auto" >
-
-    <item android:id="@+id/buscarItem" 
-        android:orderInCategory="100" 
-        android:title="@string/buscarCursoLabel" 
-        android:showAsAction="ifRoom" 
-        android:icon="@drawable/ic_action_search"
-        android:actionViewClass="android.widget.SearchView">
-    </item>
     <item 
         android:id="@+id/listaCursosItem" 
         android:orderInCategory="100" 
         android:title="@string/mostrarListaLabel" 
-        android:showAsAction="ifRoom" 
-        android:icon="@drawable/lista_ic">
+        android:icon="@drawable/lista_ic" android:showAsAction="ifRoom|withText">
     </item>
     <item 
         android:id="@+id/administrarCuentaItem"
         android:orderInCategory="100" 
         android:title="@string/administrarCuentaLabel" 
-        android:showAsAction="ifRoom"
+        android:showAsAction="ifRoom|withText"
         android:icon="@drawable/gear"></item>
     <item
         android:id="@+id/verNotasItem"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/verNotasLabel"
         android:icon="@drawable/ic_action_paste"/>
     <item
         android:id="@+id/cerrarSesionItem"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom"
+        android:showAsAction="never"
         android:title="@string/cerrarSesionLabel"/>
-    <item android:id="@+id/LLenarBD" android:title="@string/llenarBDLabel"></item>
     
 </menu>

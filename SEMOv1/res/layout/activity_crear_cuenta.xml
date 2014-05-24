@@ -9,11 +9,11 @@
         android:layout_height="446dp" >
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/passText2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/editText1"
-            android:layout_below="@+id/editText1"
+            android:layout_alignLeft="@+id/passText1"
+            android:layout_below="@+id/passText1"
             android:layout_marginTop="22dp"
             android:ems="10"
             android:hint="@string/contrasenia_CrearCuentaActivity"
@@ -24,8 +24,8 @@
             android:id="@+id/editText3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/editText2"
-            android:layout_below="@+id/editText2"
+            android:layout_alignLeft="@+id/passText2"
+            android:layout_below="@+id/passText2"
             android:layout_marginTop="24dp"
             android:ems="10"
             android:hint="@string/repetirContrasenia_CrearCuentaActivity"
@@ -33,7 +33,7 @@
             android:drawableLeft="@drawable/pass_ic" />
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/passText1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -44,7 +44,7 @@
             android:drawableLeft="@drawable/user_ic" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/informacionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -57,7 +57,7 @@
             android:id="@+id/radioGroup1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
+            android:layout_below="@+id/informacionText"
             android:layout_centerHorizontal="true" >
 
             <RadioButton
@@ -81,7 +81,7 @@
         </RadioGroup>
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/botonInformacion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/radioGroup1"

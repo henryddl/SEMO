@@ -27,8 +27,8 @@ public class CrearCuenta extends Activity {
 		setContentView(R.layout.activity_crear_cuenta);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		userText=(EditText)findViewById(R.id.editText1);
-		passText=(EditText)findViewById(R.id.editText2);
+		userText=(EditText)findViewById(R.id.passText1);
+		passText=(EditText)findViewById(R.id.passText2);
 		passText2=(EditText)findViewById(R.id.editText3);
 		rbg=(RadioGroup)findViewById(R.id.radioGroup1);
 		helper = new ControlBD(this); 

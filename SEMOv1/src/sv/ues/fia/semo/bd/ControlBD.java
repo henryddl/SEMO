@@ -875,14 +875,8 @@ public class ControlBD {
 		}
 		
 		//Método que consulta los cursos en el ciclo activo.
-		public Cursor consultaCursosActivos(){
-			
-			Cursor cursor;
-			
-			String sql="SELECT  NOMBRE,CURSO.CODMATERIA,CICLO.CICLO,AULA,HORA,CODDOCENTE FROM CURSO INNER JOIN MATERIA ON CURSO.CODMATERIA=MATERIA.CODMATERIA INNER JOIN CICLO ON CURSO.CICLO=CICLO.CICLO  WHERE CICLO.ESTADO='activo' AND CICLO.ANIO=CURSO.ANIO;";
-			cursor=db.rawQuery(sql, null);
-			
-			return cursor;
+		public Cursor consultar(String consulta){
+			return db.rawQuery(consulta, null);
 		}
 		
 		
@@ -1714,18 +1708,26 @@ public class ControlBD {
 			}
 
 		public String eliminar(Inscribe ins){
-			String regAfectados="filas afectadas= ";
+			String regAfectados="";
 			int contador=0;
-			if (true /*verificarIntegridad()*/) {
-			regAfectados="0";
-			}
-			else
-			{
+			try{
 			//borrar los registros de usuario
-			contador+=db.delete("inscribe", "numCurso="+ins.getCurso().getNumCurso()+
-					" AND carnet = '"+ins.getAlumno().getCarnet()+"'",null);
-			regAfectados+=contador;
+				String query="numCurso="+ins.getCurso().getNumCurso()
+						+" AND carnet = '"+ins.getAlumno().getCarnet()
+						+"' AND ciclo="+ins.getCurso().getCiclo().getCiclo()
+						+" AND anio="+ins.getCurso().getCiclo().getAnio()
+						+" AND codMateria='"+ins.getCurso().getMateria().getCodigo()+"'";
+				/*String query="numCurso="+ins.getCurso().getNumCurso()+
+						" AND carnet = '"+ins.getAlumno().getCarnet()+"' AND ciclo="+ins.getCurso().getCiclo().getCiclo()
+						+" AND anio="+ins.getCurso().getCiclo().getAnio()+" AND codMateria='"
+						+ins.getCurso().getMateria().getCodigo()+"'";*/
+				Log.i("where", query);
+			contador+=db.delete("inscribe", query,null);
+			regAfectados+="filas afectadas= "+contador;
+			}catch(SQLException e){
+				regAfectados+=e.toString();
 			}
+			//,,,codMateria,
 			return regAfectados;
 			}
 	/*---------------------------------------------------------------------------*

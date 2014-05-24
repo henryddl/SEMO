@@ -5,19 +5,24 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 
 public class VerNotas extends Activity {
-
+	String user;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ver_notas);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		//Se Recibe el intent con  los datos extra.
+				Intent intent = getIntent();
+			    user = intent.getStringExtra("user");
+				Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -53,14 +58,17 @@ public class VerNotas extends Activity {
 			return true;
 		 case R.id.listaCursosItem:
 	        	intent = new Intent(this, ListarCursos.class);
+	        	intent.putExtra("user", user);
 	        	startActivity(intent);
 	            return true;
 	        case R.id.verNotasItem:
 	        	intent=new Intent(this,VerNotas.class);
+	        	intent.putExtra("user", user);
 	        	startActivity(intent);
 	            return true;
 	        case R.id.administrarCuentaItem:
 	        	intent=new Intent(this,AdministrarCuenta.class);
+	        	intent.putExtra("user", user);
 	        	startActivity(intent);
 	        	return true;
 	        case R.id.cerrarSesionItem:

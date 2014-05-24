@@ -36,5 +36,12 @@
     <string name="title_activity_actualizar_cuenta">Actualizar Cuenta</string>
     <string name="llenarBDLabel">LLenar BD</string>
     <string name="title_activity_curso">Curso</string>
+    <string name="evaluacionesLabel">Evaluaciones</string>
+    <string name="informacionLabel">Información</string>
+    <string name="title_activity_informacion_curso">Informacion de Curso</string>
+    <string name="title_activity_gestionar_usuario_alumno">Gestionar Usuario Alumno</string>
+    <string name="newPass">Ingrese su nueva contraseña</string>
+    <string name="newPass2">Ingrese una vez más su contraseña</string>
+    <string name="newPassBoton">Actualizar Contraseña</string>
 
 </resources>

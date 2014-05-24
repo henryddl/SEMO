@@ -1,13 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:yourapp="http://schemas.android.com/apk/res-auto" >
-
-    <item android:id="@+id/buscarItem" 
-        android:orderInCategory="100" 
-        android:title="@string/buscarCursoLabel" 
-        android:showAsAction="ifRoom" 
-        android:icon="@drawable/ic_action_search"
-        android:actionViewClass="android.widget.SearchView">
-    </item>
     <item 
         android:id="@+id/listaCursosItem" 
         android:orderInCategory="100" 
